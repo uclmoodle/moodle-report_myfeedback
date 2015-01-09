@@ -1,0 +1,259 @@
+
+/*
+ * Table
+ */
+ 
+.path-report-myfeedback table.dataTable {
+	margin: 0 auto;
+	clear: both;
+	width: 100%;
+}
+
+.path-report-myfeedback table.dataTable thead th {
+	padding: 3px 18px 3px 10px;
+	border-bottom: 1px solid black;
+	font-weight: bold;
+	cursor: pointer;
+	*cursor: hand;
+}
+
+.path-report-myfeedback table.dataTable tfoot th {
+	padding: 3px 18px 3px 10px;
+	border-top: 1px solid black;
+	font-weight: bold;
+}
+
+.path-report-myfeedback table.dataTable td {
+	padding: 3px 10px;
+}
+
+.path-report-myfeedback table.dataTable td.center,
+.path-report-myfeedback table.dataTable td.dataTables_empty {
+	text-align: left;
+}
+
+.path-report-myfeedback table.dataTable tr.odd { background-color: #E2E4FF; }
+.path-report-myfeedback table.dataTable tr.even { background-color: white; }
+
+.path-report-myfeedback table.dataTable tr.odd td.sorting_1 { background-color: #D3D6FF; }
+.path-report-myfeedback table.dataTable tr.odd td.sorting_2 { background-color: #DADCFF; }
+.path-report-myfeedback table.dataTable tr.odd td.sorting_3 { background-color: #E0E2FF; }
+.path-report-myfeedback table.dataTable tr.even td.sorting_1 { background-color: #EAEBFF; }
+.path-report-myfeedback table.dataTable tr.even td.sorting_2 { background-color: #F2F3FF; }
+.path-report-myfeedback table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
+
+
+/*
+ * Table wrapper
+ */
+.path-report-myfeedback .dataTables_wrapper {
+	position: relative;
+	clear: both;
+	*zoom: 1;
+}
+
+
+/*
+ * Page length menu
+ */
+.path-report-myfeedback .dataTables_length {
+	float: left;
+}
+
+
+/*
+ * Filter
+ */
+.path-report-myfeedback .dataTables_filter {
+	float: right;
+	text-align: right;
+}
+
+
+/*
+ * Table information
+ */
+.path-report-myfeedback .dataTables_info {
+	clear: both;
+	float: left;
+}
+
+
+/*
+ * Pagination
+ */
+.path-report-myfeedback .dataTables_paginate {
+	float: right;
+	text-align: right;
+}
+
+/* Two button pagination - previous / next */
+.path-report-myfeedback .paginate_disabled_previous,
+.path-report-myfeedback .paginate_enabled_previous,
+.path-report-myfeedback .paginate_disabled_next,
+.path-report-myfeedback .paginate_enabled_next {
+	height: 19px;
+	float: left;
+	cursor: pointer;
+	*cursor: hand;
+	color: #111 !important;
+}
+.path-report-myfeedback .paginate_disabled_previous:hover,
+.path-report-myfeedback .paginate_enabled_previous:hover,
+.path-report-myfeedback .paginate_disabled_next:hover,
+.path-report-myfeedback .paginate_enabled_next:hover {
+	text-decoration: none !important;
+}
+.path-report-myfeedback .paginate_disabled_previous:active,
+.path-report-myfeedback .paginate_enabled_previous:active,
+.path-report-myfeedback .paginate_disabled_next:active,
+.path-report-myfeedback .paginate_enabled_next:active {
+	outline: none;
+}
+
+.path-report-myfeedback .paginate_disabled_previous,
+.path-report-myfeedback .paginate_disabled_next {
+	color: #666 !important;
+}
+.path-report-myfeedback .paginate_disabled_previous,
+.path-report-myfeedback .paginate_enabled_previous {
+	padding-left: 23px;
+}
+.path-report-myfeedback .paginate_disabled_next,
+.path-report-myfeedback .paginate_enabled_next {
+	padding-right: 23px;
+	margin-left: 10px;
+}
+
+/* Full number pagination */
+.path-report-myfeedback .paging_full_numbers {
+	height: 22px;
+	line-height: 22px;
+}
+.path-report-myfeedback .paging_full_numbers a:active {
+	outline: none
+}
+.path-report-myfeedback .paging_full_numbers a:hover {
+	text-decoration: none;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_button,
+.path-report-myfeedback .paging_full_numbers a.paginate_active {
+	border: 1px solid #aaa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 2px 5px;
+	margin: 0 3px;
+	cursor: pointer;
+	*cursor: hand;
+	color: #333 !important;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_button {
+	background-color: #ddd;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_button:hover {
+	background-color: #ccc;
+	text-decoration: none !important;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_active {
+	background-color: #99B3FF;
+}
+
+
+/*
+ * Processing indicator
+ */
+.path-report-myfeedback .dataTables_processing {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 250px;
+	height: 30px;
+	margin-left: -125px;
+	margin-top: -15px;
+	padding: 14px 0 2px 0;
+	border: 1px solid #ddd;
+	text-align: left;
+	color: #999;
+	font-size: 14px;
+	background-color: white;
+}
+
+
+/*
+ * Sorting
+ */
+.path-report-myfeedback .sorting { background-image:url([[pix:moodle|t/sort]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
+.path-report-myfeedback .sorting_asc { background-image:url([[pix:moodle|t/sort_asc]]) !important;background-position: center right !important; background-repeat: no-repeat !important; }
+.path-report-myfeedback .sorting_desc { background-image:url([[pix:moodle|t/sort_desc]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
+ 
+.path-report-myfeedback table.dataTable thead th:active,
+.path-report-myfeedback table.dataTable thead td:active {
+	outline: none;
+}
+
+
+/*
+ * Scrolling
+ */
+.path-report-myfeedback .dataTables_scroll {
+	clear: both;
+}
+
+.path-report-myfeedback .dataTables_scrollBody {
+	*margin-top: -1px;
+	-webkit-overflow-scrolling: touch;
+}
+
+.path-report-myfeedback table.grades {
+	color:#666;
+	font-size:12px;
+	background:#eaebec;
+	width: 100%;
+	border:#ccc 1px solid;
+}
+
+.path-report-myfeedback table.grades th {
+	padding:8px 10px 8px 10px;
+	border-top:1px solid #fafafa;
+	border-bottom:1px solid #e0e0e0;
+	background: #ededed;
+}
+
+.path-report-myfeedback table.grades th:first-child {
+	text-align: left;
+	padding-left:10px;
+	/*width: 80%;*/
+	border-right: 1px solid #e0e0e0;
+}
+
+.path-report-myfeedback table.grades tr {
+	text-align: left;
+	padding-left:10px;
+}
+.path-report-myfeedback table.grades td:first-child {
+	text-align: left;
+	padding-left:5px;
+	border-left: 0;
+}
+.path-report-myfeedback table.grades td, .path-report-myfeedback table.dataTable tr.odd {
+	padding:5px;
+	border-top: 1px solid #ffffff;
+	border-bottom:1px solid #e0e0e0;
+	border-left: 1px solid #e0e0e0;
+	min-width: 80px;
+	background: #fafafa !important;
+}
+.path-report-myfeedback table.grades tr.even td, .path-report-myfeedback table.dataTable tr.even {
+	background: #f6f6f6 !important;
+}
+.path-report-myfeedback table.grades tr:last-child td {
+	border-bottom:0;
+}
+.path-report-myfeedback table.grades tr:hover td {
+	background: #f2f2f2 !important;
+}
