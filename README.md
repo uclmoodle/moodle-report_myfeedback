@@ -34,38 +34,37 @@ Show draft submission under submission date where relevant
 Report checks for which plugins are installed (and visible?) so report doesn't crash if some plugins are not available
 Turnitin grade shows
 Turnitin submission GradeMark link
-Shows all feedback regardless of whether the student has submitted or not
-Only the student's own feedback and grades are shown
-Response files for Moodle Assignments are shown
+Shows all feedback regardless of whether the student has submitted anything or not
+Only the student's own feedback links and grades are shown
 Links to workshop
 Quiz high grade displays
 Workshop results display
-Quiz submission (completion) date set to -
+Quiz submission (completion) date set to '-'
 Quiz feedback linked via each attempt
-Hidden activities are not shown
 Hidden grades (and 'hidden until' grades) as set in the gradebook don't show
 Links to rubric and grading forms in assignments and workshops
 Multiple response files in Moodle Assignments display
 Group assignments submission files show
-Sumission date shows for the other group members (as well as the one who submitted)
-Hidden activities and non-released grades don't show!
+Submission date shows for the other group members (as well as the one who submitted)
+Hidden activities and non-released grades don't show
 'no submission' is displayed if none exists
-Multiple submission files in Moodle Assignments display
-The GradeMark link doesn't show when grademark is turned off in TII assignment options
-multiple parts display in TII - they show as separate submissions with (Part 1) (Part 2) after their titles
+The GradeMark link doesn't show when grademark is turned off in TII assignment options 
+- instead it links to the inbox from where comments can be viewed
+Multiple Turnitin parts display as separate submissions with (Part 1) (Part 2) after their titles
 Show 'no submission' in red if a file is expected and it's overdue
-mark offline assignments as such
-only show feedback when the workshop is closed!
+Mrk offline assignments as such
+Only shows feedback when the workshop is closed
 Draft assignment submissions are marked as such
-online text submissions
-The SQL statement check that the course, course grades and activity is visiable
+Online text submissions still show a submission link
+The SQL statement checks that the course, course grades and activity is visible
 The SQL checks that the grades for each assessment are visible
 Turnitin assignments only show feedback after post date
-workshops only show feedback when they are closed
-Check that Moodle Assignments that have a workflow enabled don't show grades before they are finalised!
+Workshops only show feedback when they are closed
+Moodle Assignments that have a workflow enabled don't show grades before they are finalised
 Moodle Assignments that don't have workflow enabled show grades as soon as they are graded
-Check Moodle old Assignments and new work - assume they will all be upgraded to new ones as part of the assignment upgrade process
+Moodle Assignments 2 (assign in the db not assignment) aare displayed 
+- old assignments need to be upgraded via the automated assignment upgrade process to display in this report
 
 NICE TO HAVE'S
 Display an icon showing where rubrics and grading forms are being used
-Check for extensions granted to individual students (or groups) so the Moodle assignment and quiz due date is accurate for each student!
+Check for extensions granted to individual students (or groups) so the Moodle assignment and quiz due date is accurate for each student
