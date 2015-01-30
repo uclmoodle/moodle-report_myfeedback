@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,17 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * My Feedback Block.
+ * My Feedback Report.
  *
- * @package   block_my_feedback
- * @author    Jessica Gramp <j.gramp@ucl.ac.uk> (based on block_my_Feedback by Karen Holland <kholland.dev@gmail.com>, Mei Jin, Jiajia Chen)
+ * @package   report_myfeedback
+ * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
+ * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
+ * 			  block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
+ *			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
+ *			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
+ *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
+ *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname']='My Feedback';
-$string['my_feedback']='My Feedback';
-$string['blocktitle']='My Feedback';
-$string['blockstring']='My Feedback string';
+$string['pluginname'] = 'My Feedback';
+$string['my_feedback'] = 'My Feedback';
+$string['blocktitle'] = 'My Feedback';
+$string['blockstring'] = 'My Feedback string';
 $string['gradetblheader_course'] = 'Course';
 $string['gradetblheader_assessment'] = 'Assessment';
 $string['gradetblheader_type'] = 'Type';

@@ -20,6 +20,7 @@ Admin and manager can see all grades for all users (unless permissions prohibit 
 This report is based on the work done by David Bezemer, which in turn is based on work done by Karen Holland, Mei Jin, Jiajia Chen. 
 This plugin also uses SQL originating from Richard Havinga, but adds information from additional Moodle activities.
 The code for using an external database is authored by Juan Leyva.
+The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and Dr John Mitchell <j.mitchell@ucl.ac.uk>
 
 The report requires jQuery to be enabled, otherwise sorting and searching will not be possible.
 

@@ -15,12 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Theme version info
+ * My Feedback Report.
  *
- * @package    report_my_feedback
- * @copyright  2013 UP learning, www.uplearning.nl
- * @authors    David Bezemer
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   report_myfeedback
+ * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
+ * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
+ * 			  block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
+ *			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
+ *			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
+ *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
+ *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $plugins = array(
