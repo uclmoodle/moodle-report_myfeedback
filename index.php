@@ -367,7 +367,7 @@ class report_myfeedback extends block_base {
 							   cm.id AS assignmentid,
 							   '' AS teamsubmission,
 							   su.submission_modified AS submissiondate,
-							   t.defaultdtdue AS duedate,
+							   tp.dtdue AS duedate,
 							   su.submission_title AS assessmentlink,
 							   su.submission_objectid AS tiiobjid,
 							   su.id AS subid,
@@ -410,7 +410,7 @@ class report_myfeedback extends block_base {
 							   cm.id AS assignmentid,
 							   '' AS teamsubmission,
 							   su.submission_modified AS submissiondate,
-							   t.defaultdtdue AS duedate,
+							   tp.dtdue AS duedate,
 							   su.submission_title AS assessmentlink,
 							   su.submission_objectid AS tiiobjid,
 							   su.id AS subid,
@@ -432,7 +432,7 @@ class report_myfeedback extends block_base {
                              AND (gi.hidden = 0 or gi.hidden < unix_timestamp(current_timestamp))
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
 						JOIN {context} con ON cm.id = con.instanceid
-						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
+						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
 						JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
