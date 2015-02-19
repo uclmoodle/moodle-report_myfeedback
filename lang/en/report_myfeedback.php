@@ -68,10 +68,10 @@ $string['submission'] = 'view submission';
 $string['feedback'] = 'view feedback';
 
 $string['dbhost'] = "DB Host";
-$string['dbhostinfo'] = "Remote Database host name (on which, we will be executing our SQL queries)";
+$string['dbhostinfo'] = "Remote Database host name (on which the SQL queries will be executed - must be a duplicate of this Moodle database instance - used for avoiding load issues on primary Moodle database).<br />Leave blank to use the default Moodle database.";
 $string['dbname'] = "DB Name";
-$string['dbnameinfo'] = "Remote Database name (on which, we will be executing our SQL queries)";
+$string['dbnameinfo'] = "Remote Database name (on which the SQL queries will be executed - must be a duplicate of this Moodle database instance - used for avoiding load issues on primary Moodle database).<br />Leave blank to use the default Moodle database.";
 $string['dbuser'] = "DB Username";
-$string['dbuserinfo'] = "Remote Database username (should have SELECT privileges on above DB)";
+$string['dbuserinfo'] = "Remote Database username (should have SELECT privileges on above DB).<br />Leave blank to use the default Moodle database.";
 $string['dbpass'] = "DB Password";
-$string['dbpassinfo'] = "Remote Database password (for above username)";
+$string['dbpassinfo'] = "Remote Database password (for above username).<br />Leave blank to use the default Moodle database.";

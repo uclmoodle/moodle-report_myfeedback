@@ -1,9 +1,5 @@
 <?php
-
 defined('MOODLE_INTERNAL') || die;
-
-//$ADMIN->add('reports', new admin_externalpage('report_myfeedback', get_string('pluginname', 'report_myfeedback'), "$CFG->wwwroot/report/myfeedback/index.php",'', empty($CFG->enablestats)));
-
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('report_myfeedback/dbhost', get_string('dbhost', 'report_myfeedback'),
                     get_string('dbhostinfo', 'report_myfeedback'), '', PARAM_URL, 30));
