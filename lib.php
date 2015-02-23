@@ -277,6 +277,8 @@ class report_myfeedback {
 		}
 		$this->content = new stdClass();
 		$sql = "";
+		$params = array();
+		$now = time();
 		if ($this->mod_is_available("assign")) {
 			$sql .= "SELECT c.id AS courseid,
 							c.fullname AS coursename,
@@ -306,7 +308,7 @@ class report_myfeedback {
 							apc.value AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid
-                             AND itemtype='mod' AND (gi.hidden = 0 or gi.hidden < unix_timestamp(current_timestamp))
+                             AND itemtype='mod' AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
@@ -318,7 +320,8 @@ class report_myfeedback {
 				   LEFT JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=?
 				   LEFT JOIN {assign_submission} su ON a.id = su.assignment AND su.userid = ?
 				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
-						WHERE cm.visible=1 ";
+						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
+			array_push($params, $now, $userid, $userid, $userid, $userid);
 		}
 		if ($this->mod_is_available("quiz")) {
 			// If it's not the first select statement add a union.
@@ -353,14 +356,15 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < unix_timestamp(current_timestamp))
+                             AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
 						JOIN {quiz} a ON a.id=gi.iteminstance
 						LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
-						WHERE cm.visible=1 ";
+						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
+			array_push($params, $now, $userid);
 		}
 		if ($this->mod_is_available("workshop")) {
 			// If it's not the first select statement add a union.
@@ -395,7 +399,7 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < unix_timestamp(current_timestamp))
+                             AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
@@ -403,7 +407,8 @@ class report_myfeedback {
 						JOIN {workshop} a ON gi.iteminstance = a.id AND a.phase = 50
 						JOIN {workshop_submissions} su ON a.id = su.workshopid AND su.authorid=?
 				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
-						WHERE cm.visible=1 ";
+						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
+			array_push($params, $now, $userid, $userid);
 		}
 		if ($this->mod_is_available("turnitintool")) {
 			// If it's not the first select statement add a union.
@@ -438,15 +443,17 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < unix_timestamp(current_timestamp))
+                             AND (gi.hidden = 0 or gi.hidden < ?) 
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {turnitintool} t ON t.id=gi.iteminstance
 						JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = ?
-						JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < unix_timestamp(current_timestamp)
-				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid ";
+						JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ? 
+				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
+			            WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
+			array_push($params, $now, $userid, $userid, $now);
 		}
 		if ($this->mod_is_available("turnitintooltwo")) {
 			// If it's not the first select statement add a union.
@@ -481,23 +488,20 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < unix_timestamp(current_timestamp))
+                             AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
 						JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
-						JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < unix_timestamp(current_timestamp)
-				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid ";
+						JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ?
+				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
+			            WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
+			array_push($params, $now, $userid, $userid, $now);
 		}
-		$sql .= "WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1
-						ORDER BY duedate ";
+		$sql .= " ORDER BY duedate";
 		// Get a number of records as a moodle_recordset using a SQL statement.
-		// These are the most params needed, but depending on how many modules are installed it may not need all.
-		$params = array($userid, $userid, $userid, $userid, $userid, $userid, $userid, $userid,
-				$userid, $userid, $userid
-		);
 		$rs = $remotedb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
 		// Print titles for each column: Course, Assessment, Type, Due Date, Submission Date,
 		// Submission, Feedback, Grade, Highest Grade.
@@ -629,7 +633,7 @@ class report_myfeedback {
 									}
 									break;
 						case "workshop":
-							$assessmenttype .= $string['workshop'] = get_string('workshop', 'report_myfeedback');
+							$assessmenttype .= get_string('workshop', 'report_myfeedback');
 							$submission = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
 									$record->assignmentid . "&id=" . $record->subid . "\">" .
 									get_string('submission', 'report_myfeedback') . "</a>";

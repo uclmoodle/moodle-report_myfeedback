@@ -24,6 +24,17 @@ The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl
 
 The report requires jQuery to be enabled, otherwise sorting and searching will not be possible.
 
+---
+Change log:
+
+v1.3 (Build: 2015022301)
+Fixed DB bugs and made cross DB compatible - will now work with Postgres and other supported DBs, as well as MySQL
+
+v1.2 (Build: 2015021720)
+made cross DB compatible - will now work with Postgres and other supported DBs, as well as MySQL
+
+---
+FEATURE LIST
 The features that have been implemented, tested and set aside for future revisions are listed below:
 
 TODO
