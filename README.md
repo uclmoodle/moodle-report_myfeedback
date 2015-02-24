@@ -27,6 +27,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+1.4 (Build: 2015022401)
+Fixed further Postgres database bugs where types in the unions were mismatched. Replaced empty strings in the SQL with null and -1 for big integers
+
 v1.3 (Build: 2015022301)
 Fixed DB bugs and made cross DB compatible - will now work with Postgres and other supported DBs, as well as MySQL
 
