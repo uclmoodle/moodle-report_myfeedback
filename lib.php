@@ -280,7 +280,7 @@ class report_myfeedback {
 		$params = array();
 		$now = time();
 		if ($this->mod_is_available("assign")) {
-			$sql .= "SELECT c.id AS courseid,
+			$sql .= "SELECT DISTINCT c.id AS courseid,
 							c.fullname AS coursename,
 							gi.itemname AS assessmentname,
 							gg.finalgrade AS grade,
@@ -294,7 +294,7 @@ class report_myfeedback {
 							-1 AS tiiobjid,
 							-1 AS subid,
 							-1 AS subpart,
-							null AS partname,
+							'' AS partname,
 							-1 AS usegrademark,
 							gg.feedback AS feedbacklink,
 							gg.rawgrademax AS highestgrade,
@@ -308,18 +308,18 @@ class report_myfeedback {
 							apc.value AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid
-                             AND itemtype='mod' AND (gi.hidden = 0 or gi.hidden < ?)
+                             AND itemtype='mod' AND (gi.hidden = 0 OR gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
 						JOIN {assign} a ON a.id=gi.iteminstance
 						JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND plugin = 'onlinetext'
+				    	JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=?
 						JOIN mdl_assign_user_flags auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
                         AND  auf.userid = ? OR a.markingworkflow = 0
-				   LEFT JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=?
+						JOIN {grading_areas} ga ON con.id = ga.contextid
 				   LEFT JOIN {assign_submission} su ON a.id = su.assignment AND su.userid = ?
-				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
 						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
 			array_push($params, $now, $userid, $userid, $userid, $userid);
 		}
@@ -328,32 +328,32 @@ class report_myfeedback {
 			if ($sql != "") {
 				$sql .= "UNION ";
 			}
-			$sql .= "SELECT c.id AS courseid,
+			$sql .= "SELECT DISTINCT c.id AS courseid,
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   gg.finalgrade AS grade,
 							   gi.itemmodule AS assessmenttype,
 							   a.id AS assignid,
 							   cm.id AS assignmentid,
-							   null AS teamsubmission,
-							   null AS submissiondate,
+							   -1 AS teamsubmission,
+							   -1 AS submissiondate,
 							   a.timeclose AS duedate,
 							   a.name AS assessmentlink,
-							   null AS tiiobjid,
+							   -1 AS tiiobjid,
 							   -1 AS subid,
-							   null AS subpart,
-							   null AS partname,
-							   null AS usegrademark,
+							   -1 AS subpart,
+							   '' AS partname,
+							   -1 AS usegrademark,
 							   gg.feedback AS feedbacklink,
 							   gg.rawgrademax AS highestgrade,
 							   gg.userid,
-							   null AS groupid,
-							   null AS assigngradeid,
+							   -1 AS groupid,
+							   -1 AS assigngradeid,
 							   con.id AS contextid,
 							   ga.activemethod,
-							   null  AS nosubmissions,
-							   null AS status,
-							   null AS onlinetext
+							   -1 AS nosubmissions,
+							   '' AS status,
+							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
@@ -371,32 +371,32 @@ class report_myfeedback {
 			if ($sql != "") {
 				$sql .= "UNION ";
 			}
-			$sql .= "SELECT c.id AS courseid,
+			$sql .= "SELECT DISTINCT c.id AS courseid,
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   gg.finalgrade AS grade,
 							   gi.itemmodule AS assessmenttype,
 							   a.id AS assignid,
 							   cm.id AS assignmentid,
-							   null AS teamsubmission,
+							   -1 AS teamsubmission,
 							   su.timemodified AS submissiondate,
 							   a.submissionend AS duedate,
 							   a.name AS assessmentlink,
-							   null AS tiiobjid,
+							   -1 AS tiiobjid,
 							   su.id AS subid,
-							   null AS subpart,
-							   null AS partname,
-							   null AS usegrademark,
+							   -1 AS subpart,
+							   '' AS partname,
+							   -1 AS usegrademark,
 							   gg.feedback AS feedbacklink,
 							   gg.rawgrademax AS highestgrade,
 							   gg.userid,
-							   null AS groupid,
-							   null AS assigngradeid,
+							   -1 AS groupid,
+							   -1 AS assigngradeid,
 							   con.id AS contextid,
 							   ga.activemethod,
 							   a.nattachments AS nosubmissions,
-							   null AS status,
-							   null AS onlinetext
+							   '' AS status,
+							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
@@ -415,14 +415,14 @@ class report_myfeedback {
 			if ($sql != "") {
 				$sql .= "UNION ";
 			}
-			$sql .= "SELECT c.id,
+			$sql .= "SELECT DISTINCT c.id,
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   su.submission_grade AS grade,
 							   gi.itemmodule AS assessmenttype,
-							   null AS assignid,
+							   -1 AS assignid,
 							   cm.id AS assignmentid,
-							   null AS teamsubmission,
+							   -1 AS teamsubmission,
 							   su.submission_modified AS submissiondate,
 							   tp.dtdue AS duedate,
 							   su.submission_title AS assessmentlink,
@@ -434,13 +434,13 @@ class report_myfeedback {
 							   gg.feedback AS feedbacklink,
 							   t.grade AS gradetype,
 							   su.userid,
-							   null AS groupid,
-							   null AS assigngradeid,
+							   -1 AS groupid,
+							   -1 AS assigngradeid,
 							   con.id AS contextid,
 							   ga.activemethod,
 							   t.numparts AS nosubmissions,
-							   null AS status,
-							   null AS onlinetext
+							   '' AS status,
+							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?) 
@@ -460,14 +460,14 @@ class report_myfeedback {
 			if ($sql != "") {
 				$sql .= "UNION ";
 			}
-			$sql .= "SELECT c.id,
+			$sql .= "SELECT DISTINCT c.id,
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   su.submission_grade AS grade,
 							   gi.itemmodule AS assessmenttype,
-							   null AS assignid,
+							   -1 AS assignid,
 							   cm.id AS assignmentid,
-							   null AS teamsubmission,
+							   -1 AS teamsubmission,
 							   su.submission_modified AS submissiondate,
 							   tp.dtdue AS duedate,
 							   su.submission_title AS assessmentlink,
@@ -479,13 +479,13 @@ class report_myfeedback {
 							   gg.feedback AS feedbacklink,
 							   t.grade AS gradetype,
 							   su.userid,
-							   null AS groupid,
-							   null AS assigngradeid,
+							   -1 AS groupid,
+							   -1 AS assigngradeid,
 							   con.id AS contextid,
 							   ga.activemethod,
 							   t.numparts AS nosubmissions,
-							   null AS status,
-							   null AS onlinetext
+							   '' AS status,
+							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
@@ -560,6 +560,7 @@ class report_myfeedback {
 											$userid, $record->contextid);
 								}
 							}
+							// For Moodle Assignments:
 							// Nosubmissions 1 = offline assignments - no files can be submitted.
 							// Nosubmissions 0 = file submissions are accepted.
 							// If file or online text submissions are enabled.
@@ -581,8 +582,10 @@ class report_myfeedback {
 											'report_myfeedback');
 								}
 							} else {
-								$submissiondate = get_string('offline_assignment',
-										'report_myfeedback');
+							    $assessmenttype .= " (" . get_string('offline_assignment',
+										'report_myfeedback') . ")";
+							    $submission = "-";
+							    $submissiondate = "-";
 							}
 							// Check whether an online PDF feedback file exists.
 							$onlinepdffeedback = false;
@@ -640,9 +643,6 @@ class report_myfeedback {
 							$feedbacktext = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
 									$record->assignmentid . "&id=" . $record->subid . "\">" .
 									get_string('feedback', 'report_myfeedback') . "</a>";
-							if ($record->nosubmissions == 0) {
-								$submissiondate = get_string('offline_assignment', 'report_myfeedback');
-							}
 							break;
 						case "quiz":
 							$assessmenttype .= get_string('quiz', 'report_myfeedback');
@@ -653,44 +653,45 @@ class report_myfeedback {
 							break;
 					}
 				}
-				// Mark late submissions in red.
-				$submissionmsg = "";
-				if (is_numeric($submissiondate) && (strlen($submissiondate) == 10)) {
-					$submissiondate = date('d-m-Y H:i', $submissiondate);
-					$submittedtime = $submissiondate;
-				} else if ($submissiondate != get_string('offline_assignment', 'report_myfeedback') &&
-						strpos($assessmenttype, "quiz") === false) {
-							if (strpos($submissiondate, "draft") === false) {
-								$submissiondate = get_string('no_submission', 'report_myfeedback');
-								$submissionmsg = get_string('no_submission_msg', 'report_myfeedback');
-							} else {
-								$submissiondate = get_string('draft_submission', 'report_myfeedback');
-								$submissionmsg = get_string('draft_submission_msg', 'report_myfeedback');
-							}
-							$submittedtime = time();
-						}
-						if ($submittedtime > $record->duedate &&
-								$submissiondate != get_string('offline_assignment', 'report_myfeedback')) {
-									if ($submissionmsg == "") {
-										$submissionmsg = get_string('late_submission_msg', 'report_myfeedback');
-									}
-									$alerticon = '<img src="' . 'pix/warning2-faded.png' . '" ' . 'class="icon" alt="-" title="' .
-											$submissionmsg . '" />';
-									$submissiondate = "<span style=\"color: red;\">" . $submissiondate . " $alerticon</span>";
+				// If no feedback or grade has been received don't display anything.
+				if(!($feedbacktext == '&nbsp;' && $record->grade == null)){
+					// Mark late submissions in red.
+					$submissionmsg = "";
+					if (is_numeric($submissiondate) && (strlen($submissiondate) == 10)) {
+						$submittedtime = $submissiondate;
+						$submissiondate = date('d-m-Y H:i', $submissiondate);
+					} else if (strpos($assessmenttype, "offline") === false && strpos($assessmenttype, "quiz") === false) {
+								if (strpos($submissiondate, "draft") === false) {
+									$submissiondate = get_string('no_submission', 'report_myfeedback');
+									$submissionmsg = get_string('no_submission_msg', 'report_myfeedback');
+								} else {
+									$submissiondate = get_string('draft_submission', 'report_myfeedback');
+									$submissionmsg = get_string('draft_submission_msg', 'report_myfeedback');
 								}
-								$newtext .= "<tr>";
-								$newtext .= "<td>" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
-										"/course/view.php?id=" . $record->courseid . "\">" . $record->coursename . "</a>" : "&nbsp;") .
-										"</td>";
-								$newtext .= "<td>" . $assignmentname . "</td>";
-								$newtext .= "<td>" . $assessmenttype . "</td>";
-								$newtext .= "<td>" . ($record->duedate ? date('d-m-Y H:i', $record->duedate) : "&nbsp;") . "</td>";
-								$newtext .= "<td>" . $submissiondate . "</td>";
-								$newtext .= "<td>" . $submission . "</td>";
-								$newtext .= "<td>" . $feedbacktext . "</td>"; // Including links to marking guide or rubric.
-								$newtext .= "<td>" . ($record->grade ? number_format($record->grade, 0) : "&nbsp;") . "</td>";
-								$newtext .= "<td>" . ($record->highestgrade ? number_format($record->highestgrade, 0) : "&nbsp;") . "</td>";
-								$newtext .= "</tr>";
+								$submittedtime = time();
+					}
+					if ($submissiondate != "-" && $submittedtime > $record->duedate) {
+						if ($submissionmsg == "") {
+							$submissionmsg = get_string('late_submission_msg', 'report_myfeedback');
+						}
+						$alerticon = '<img src="' . 'pix/warning2-faded.png' . '" ' . 'class="icon" alt="-" title="' .
+								$submissionmsg . '" />';
+						$submissiondate = "<span style=\"color: red;\">" . $submissiondate . " $alerticon</span>";
+					}
+					$newtext .= "<tr>";
+					$newtext .= "<td>" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
+							"/course/view.php?id=" . $record->courseid . "\">" . $record->coursename . "</a>" : "&nbsp;") .
+							"</td>";
+					$newtext .= "<td>" . $assignmentname . "</td>";
+					$newtext .= "<td>" . $assessmenttype . "</td>";
+					$newtext .= "<td>" . ($record->duedate ? date('d-m-Y H:i', $record->duedate) : "&nbsp;") . "</td>";
+					$newtext .= "<td>" . $submissiondate . "</td>";
+					$newtext .= "<td>" . $submission . "</td>";
+					$newtext .= "<td>" . $feedbacktext . "</td>"; // Including links to marking guide or rubric.
+					$newtext .= "<td>" . ($record->grade ? number_format($record->grade, 0) : "&nbsp;") . "</td>";
+					$newtext .= "<td>" . ($record->highestgrade ? number_format($record->highestgrade, 0) : "&nbsp;") . "</td>";
+					$newtext .= "</tr>";
+				}
 			}
 			$rs->close(); // Close the recordset!
 		}

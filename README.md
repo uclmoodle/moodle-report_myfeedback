@@ -1,7 +1,7 @@
 moodle-report_myfeedback
 ==================
 
-A Moodle Report that shows all userfeedback on one page
+A Moodle Report that shows all user feedback on one page
 
 Introduction:
 This report displays a searchable and sortable table with the User's grades and feedback across Moodle courses.
@@ -26,6 +26,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+
+1.5 (Build: 2015022701)
+Fixed further Postgres database bugs where types in the unions were mismatched. Only shows items in report when feedback or a grade has been left for the student. Report now indicates offline assignments. Updated 'Assessment name (part name)' table column title. Fixed on time submissions being marked as late. Fixed workshop with zero files not showing submission date (submissions could be online text).
 
 1.4 (Build: 2015022401)
 Fixed further Postgres database bugs where types in the unions were mismatched. Replaced empty strings in the SQL with null and -1 for big integers
