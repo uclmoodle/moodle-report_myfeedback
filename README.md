@@ -21,11 +21,18 @@ This report is based on the work done by David Bezemer, which in turn is based o
 This plugin also uses SQL originating from Richard Havinga, but adds information from additional Moodle activities.
 The code for using an external database is authored by Juan Leyva.
 The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and Dr John Mitchell <j.mitchell@ucl.ac.uk>
+The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
+through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
 
 The report requires jQuery to be enabled, otherwise sorting and searching will not be possible.
 
 ---
 Change log:
+
+1.6 (Build: 2015030401)
+Added alert message so students know the grades are provisional.
+Shortened the Assessment type titles.
+Display the Moodle short course name - the full name appears on mouse over.
 
 1.5 (Build: 2015022701)
 Fixed further Postgres database bugs where types in the unions were mismatched. Only shows items in report when feedback or a grade has been left for the student. Report now indicates offline assignments. Updated 'Assessment name (part name)' table column title. Fixed on time submissions being marked as late. Fixed workshop with zero files not showing submission date (submissions could be online text).

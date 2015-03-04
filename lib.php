@@ -281,6 +281,7 @@ class report_myfeedback {
 		$now = time();
 		if ($this->mod_is_available("assign")) {
 			$sql .= "SELECT DISTINCT c.id AS courseid,
+							c.shortname, 
 							c.fullname AS coursename,
 							gi.itemname AS assessmentname,
 							gg.finalgrade AS grade,
@@ -329,6 +330,7 @@ class report_myfeedback {
 				$sql .= "UNION ";
 			}
 			$sql .= "SELECT DISTINCT c.id AS courseid,
+							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   gg.finalgrade AS grade,
@@ -372,6 +374,7 @@ class report_myfeedback {
 				$sql .= "UNION ";
 			}
 			$sql .= "SELECT DISTINCT c.id AS courseid,
+							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   gg.finalgrade AS grade,
@@ -416,6 +419,7 @@ class report_myfeedback {
 				$sql .= "UNION ";
 			}
 			$sql .= "SELECT DISTINCT c.id,
+							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   su.submission_grade AS grade,
@@ -461,6 +465,7 @@ class report_myfeedback {
 				$sql .= "UNION ";
 			}
 			$sql .= "SELECT DISTINCT c.id,
+							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   su.submission_grade AS grade,
@@ -503,9 +508,10 @@ class report_myfeedback {
 		$sql .= " ORDER BY duedate";
 		// Get a number of records as a moodle_recordset using a SQL statement.
 		$rs = $remotedb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
+		$newtext = "<div>".get_string('provisional_grades', 'report_myfeedback')."</div><br />";
 		// Print titles for each column: Course, Assessment, Type, Due Date, Submission Date,
 		// Submission, Feedback, Grade, Highest Grade.
-		$newtext = "<table class=\"grades\" id=\"grades\">
+		$newtext .= "<table class=\"grades\" id=\"grades\">
 						<thead>
 							<tr>
 								<th>" .
@@ -680,7 +686,7 @@ class report_myfeedback {
 					}
 					$newtext .= "<tr>";
 					$newtext .= "<td>" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
-							"/course/view.php?id=" . $record->courseid . "\">" . $record->coursename . "</a>" : "&nbsp;") .
+							"/course/view.php?id=" . $record->courseid . "\" title=\"".$record->coursename."\">" . $record->shortname . "</a>" : "&nbsp;") .
 							"</td>";
 					$newtext .= "<td>" . $assignmentname . "</td>";
 					$newtext .= "<td>" . $assessmenttype . "</td>";

@@ -25,11 +25,14 @@
  *			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
  *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
  *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
+ *            The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
+ *            through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
+ *            http://bit.ly/IoEAssessmentCareersProject
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version = 2015022701;
+$plugin->version = 2015030401;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2013101800;
-$plugin->release = '1.5 (Build: 2015022701)';
+$plugin->release = '1.6 (Build: 2015030401)';
 $plugin->maturity = MATURITY_STABLE;
