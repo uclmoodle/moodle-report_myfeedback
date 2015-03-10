@@ -276,16 +276,54 @@ class report_myfeedback {
 			$userid = $USER->id;
 		}
 		$this->content = new stdClass();
-		$sql = "";
 		$params = array();
 		$now = time();
+		// Get any grade items entered directly in the Gradebook.
+		$sql = "SELECT DISTINCT c.id AS courseid,
+							c.shortname, 
+							c.fullname AS coursename,
+							gi.itemname AS assessmentname,
+							gg.finalgrade AS grade,
+							gi.itemtype AS assessmenttype,
+		                    gi.gradetype,
+		                    gi.scaleid,
+							-1 AS assignid,
+							-1 AS assignmentid,
+							-1 AS teamsubmission,
+							-1 AS submissiondate,
+							-1 AS duedate,
+							gi.itemname AS assessmentlink,
+							-1 AS tiiobjid,
+							-1 AS subid,
+							-1 AS subpart,
+							'' AS partname,
+							-1 AS usegrademark,
+							gg.feedback AS feedbacklink,
+							gg.rawgrademax AS highestgrade,
+							gg.userid,
+							-1 AS groupid,
+							-1 AS assigngradeid,
+							-1 AS contextid,
+							'' AS activemethod,
+							-1 AS nosubmissions,
+							'' AS status,
+							'' AS onlinetext
+						FROM {course} c
+						JOIN {grade_items} gi ON c.id=gi.courseid
+                             AND itemtype='manual' AND (gi.hidden = 0 OR gi.hidden < ?)
+						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+		                     AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+						WHERE c.visible=1 AND c.showgrades = 1 ";
+	    array_push($params, $now, $userid);
 		if ($this->mod_is_available("assign")) {
-			$sql .= "SELECT DISTINCT c.id AS courseid,
+			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
 							c.shortname, 
 							c.fullname AS coursename,
 							gi.itemname AS assessmentname,
 							gg.finalgrade AS grade,
 							gi.itemmodule AS assessmenttype,
+			                gi.gradetype,
+			                gi.scaleid,
 							a.id AS assignid,
 							cm.id AS assignmentid,
 							a.teamsubmission,
@@ -310,7 +348,8 @@ class report_myfeedback {
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid
                              AND itemtype='mod' AND (gi.hidden = 0 OR gi.hidden < ?)
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? 
+			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
@@ -325,16 +364,14 @@ class report_myfeedback {
 			array_push($params, $now, $userid, $userid, $userid, $userid);
 		}
 		if ($this->mod_is_available("quiz")) {
-			// If it's not the first select statement add a union.
-			if ($sql != "") {
-				$sql .= "UNION ";
-			}
-			$sql .= "SELECT DISTINCT c.id AS courseid,
+			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
 							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   gg.finalgrade AS grade,
 							   gi.itemmodule AS assessmenttype,
+			                   gi.gradetype,
+			                   gi.scaleid,
 							   a.id AS assignid,
 							   cm.id AS assignmentid,
 							   -1 AS teamsubmission,
@@ -360,6 +397,7 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
@@ -369,16 +407,14 @@ class report_myfeedback {
 			array_push($params, $now, $userid);
 		}
 		if ($this->mod_is_available("workshop")) {
-			// If it's not the first select statement add a union.
-			if ($sql != "") {
-				$sql .= "UNION ";
-			}
-			$sql .= "SELECT DISTINCT c.id AS courseid,
+			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
 							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   gg.finalgrade AS grade,
 							   gi.itemmodule AS assessmenttype,
+			                   gi.gradetype,
+			                   gi.scaleid,
 							   a.id AS assignid,
 							   cm.id AS assignmentid,
 							   -1 AS teamsubmission,
@@ -404,6 +440,7 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'workshop'
@@ -414,16 +451,14 @@ class report_myfeedback {
 			array_push($params, $now, $userid, $userid);
 		}
 		if ($this->mod_is_available("turnitintool")) {
-			// If it's not the first select statement add a union.
-			if ($sql != "") {
-				$sql .= "UNION ";
-			}
-			$sql .= "SELECT DISTINCT c.id,
+			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
 							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   su.submission_grade AS grade,
 							   gi.itemmodule AS assessmenttype,
+			                   gi.gradetype,
+			                   gi.scaleid,
 							   -1 AS assignid,
 							   cm.id AS assignmentid,
 							   -1 AS teamsubmission,
@@ -452,6 +487,7 @@ class report_myfeedback {
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {turnitintool} t ON t.id=gi.iteminstance
 						JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = ?
 						JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ? 
@@ -460,16 +496,14 @@ class report_myfeedback {
 			array_push($params, $now, $userid, $userid, $now);
 		}
 		if ($this->mod_is_available("turnitintooltwo")) {
-			// If it's not the first select statement add a union.
-			if ($sql != "") {
-				$sql .= "UNION ";
-			}
-			$sql .= "SELECT DISTINCT c.id,
+			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
 							   c.shortname, 
 							   c.fullname AS coursename,
 							   gi.itemname AS assessmentname,
 							   su.submission_grade AS grade,
 							   gi.itemmodule AS assessmenttype,
+			                   gi.gradetype,
+			                   gi.scaleid,
 							   -1 AS assignid,
 							   cm.id AS assignmentid,
 							   -1 AS teamsubmission,
@@ -498,6 +532,7 @@ class report_myfeedback {
 						JOIN {context} con ON cm.id = con.instanceid
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
 						JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
 						JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ?
@@ -545,6 +580,7 @@ class report_myfeedback {
 				$assignmentname = "<a href=\"" . $CFG->wwwroot . "/mod/" . $record->assessmenttype .
 				"/view.php?id=" . $record->assignmentid . "\">" . $record->assessmentname .
 				"</a>";
+				$duedate = ($record->duedate ? date('d-m-Y H:i', $record->duedate) : "&nbsp;");
 				// Submission date.
 				$submissiondate = "&nbsp;";
 				if ($record->submissiondate) {
@@ -556,7 +592,24 @@ class report_myfeedback {
 							$OUTPUT->pix_url('icon', $record->assessmenttype) . '" ' .
 							'class="icon" alt="' . $record->assessmenttype . '">';
 					switch ($record->assessmenttype) {
-						case "assign":
+					    case "manual":
+					        $assessmenttype = '<img src="' .
+					                $OUTPUT->pix_url('i/manual_item', 'core') . '" ' .
+					                'class="icon" alt="' . $record->assessmenttype . '">';
+					                // Bring the student to their user report in the gradebook.
+					                $assignmentname = "<a href=\"" . $CFG->wwwroot . "/grade/report/user/index.php?id=" . $record->courseid . "&userid=" . $record->userid . "\">" . $record->assessmentname .
+					                "</a>";
+					        $assessmenttype .= get_string('manual_gradeitem', 'report_myfeedback');
+					        $submission = "-";
+					        $submissiondate = "-";
+					        $duedate = "-";
+					        if($record->feedbacklink){
+					           $feedbacktext = "<a href=\"" . $CFG->wwwroot .
+					        "/grade/report/user/index.php?id=" . $record->courseid  . "&userid=" . $record->userid . "\">" .
+					        get_string('feedback', 'report_myfeedback') . "</a>";
+					        }
+					        break;
+					    case "assign":
 							$assessmenttype .= get_string('moodle_assignment', 'report_myfeedback');
 							if ($record->teamsubmission == 1) {
 								$assessmenttype .= " (" .
@@ -611,6 +664,7 @@ class report_myfeedback {
 									}
 									break;
 						case "turnitintool":
+						case "turnitintooltwo":
 							$assignmentname .= " (" . $record->partname . ")";
 							$assessmenttype .= get_string('turnitin_assignment', 'report_myfeedback');
 							$newwindowmsg = get_string('new_window_msg', 'report_myfeedback');
@@ -666,7 +720,7 @@ class report_myfeedback {
 					if (is_numeric($submissiondate) && (strlen($submissiondate) == 10)) {
 						$submittedtime = $submissiondate;
 						$submissiondate = date('d-m-Y H:i', $submissiondate);
-					} else if (strpos($assessmenttype, "offline") === false && strpos($assessmenttype, "quiz") === false) {
+					} else if (strpos($assessmenttype, "offline") === false && strpos($assessmenttype, "quiz") === false && strpos($record->assessmenttype, "manual") === false) {
 								if (strpos($submissiondate, "draft") === false) {
 									$submissiondate = get_string('no_submission', 'report_myfeedback');
 									$submissionmsg = get_string('no_submission_msg', 'report_myfeedback');
@@ -680,7 +734,7 @@ class report_myfeedback {
 						if ($submissionmsg == "") {
 							$submissionmsg = get_string('late_submission_msg', 'report_myfeedback');
 						}
-						$alerticon = '<img src="' . 'pix/warning2-faded.png' . '" ' . 'class="icon" alt="-" title="' .
+						$alerticon = '<img style="height:12px; width:12px;" src="' . $OUTPUT->pix_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
 								$submissionmsg . '" />';
 						$submissiondate = "<span style=\"color: red;\">" . $submissiondate . " $alerticon</span>";
 					}
@@ -690,7 +744,7 @@ class report_myfeedback {
 							"</td>";
 					$newtext .= "<td>" . $assignmentname . "</td>";
 					$newtext .= "<td>" . $assessmenttype . "</td>";
-					$newtext .= "<td>" . ($record->duedate ? date('d-m-Y H:i', $record->duedate) : "&nbsp;") . "</td>";
+					$newtext .= "<td>" . $duedate . "</td>";
 					$newtext .= "<td>" . $submissiondate . "</td>";
 					$newtext .= "<td>" . $submission . "</td>";
 					$newtext .= "<td>" . $feedbacktext . "</td>"; // Including links to marking guide or rubric.

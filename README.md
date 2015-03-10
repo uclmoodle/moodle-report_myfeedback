@@ -29,6 +29,13 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+1.7 (Build: 2015031001)
+Added manual grade items that are added directly to the gradebook.
+Doesn't show feedback or grades that have been hidden in the gradebook for an individual student.
+Fixed Turnitin v2 assignments not displaying the type, submission or feedback links.
+Added SQL to retrieve the gradetype (1=numeric) and scaleid in prepration for supporting letter and scale grades.
+Known issue: some users have reported double-ups of data in both MySQL and Postgres, however the developer has been unable to replicate this problem so it is still outstanding.
+
 1.6 (Build: 2015030401)
 Added alert message so students know the grades are provisional.
 Shortened the Assessment type titles.
@@ -51,9 +58,11 @@ FEATURE LIST
 The features that have been implemented, tested and set aside for future revisions are listed below:
 
 TODO
-Check both Turnitin V1 & V2 assignments show as well
+Check for extensions granted to individual students (or groups) so the Moodle assignment and quiz due date is accurate for each student
 
 TESTED
+Doesn't show feedback or grades that have been hidden in the gradebook for an individual student
+Check both Turnitin V1 & V2 assignments show as well
 Online PDF Feedback files generate the view feedback link for assignments
 Show draft submission under submission date where relevant
 Report checks for which plugins are installed (and visible?) so report doesn't crash if some plugins are not available
@@ -92,4 +101,3 @@ Moodle Assignments 2 (assign in the db not assignment) aare displayed
 
 NICE TO HAVE'S
 Display an icon showing where rubrics and grading forms are being used
-Check for extensions granted to individual students (or groups) so the Moodle assignment and quiz due date is accurate for each student

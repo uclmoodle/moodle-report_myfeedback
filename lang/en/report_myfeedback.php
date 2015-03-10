@@ -42,6 +42,7 @@ $string['gradetblheader_feedback'] = 'Feedback';
 $string['gradetblheader_grade'] = 'Grade';
 $string['gradetblheader_highestgrade'] = 'Available Grade';
 $string['noenrolments'] = 'This user has not yet been enrolled in any courses';
+$string['manual_gradeitem'] = 'manual item';
 $string['offline_assignment'] = 'offline';
 $string['turnitin_assignment'] = 'Turnitin';
 $string['moodle_assignment'] = 'Assignment';
@@ -66,8 +67,7 @@ $string['attempts'] = 'attempts';
 $string['review'] = 'review';
 $string['submission'] = 'view submission';
 $string['feedback'] = 'view feedback';
-$string['provisional_grades'] = 'The marks shown in this report are for a mixture of assessments; those that count towards your final grades and those that are intended to provide feedback on your learning. Assessments that count towards your final grades show only provisional marks. You should check the official student record system for final grades.';
-
+$string['provisional_grades'] = 'The marks shown here are provisional and may include marks for assessments that do not count towards your final grade. Please refer to the student record system to see a formal record of your grade.';
 $string['dbhost'] = "DB Host";
 $string['dbhostinfo'] = "Remote Database host name (on which the SQL queries will be executed - must be a duplicate of this Moodle database instance - used for avoiding load issues on primary Moodle database).<br />Leave blank to use the default Moodle database.";
 $string['dbname'] = "DB Name";
