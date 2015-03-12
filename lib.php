@@ -351,7 +351,7 @@ class report_myfeedback {
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? 
 			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
-						JOIN {context} con ON cm.id = con.instanceid
+						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
 						JOIN {assign} a ON a.id=gi.iteminstance
 						JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND plugin = 'onlinetext'
@@ -399,7 +399,7 @@ class report_myfeedback {
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
-						JOIN {context} con ON cm.id = con.instanceid
+						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
 						JOIN {quiz} a ON a.id=gi.iteminstance
 						LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
@@ -442,7 +442,7 @@ class report_myfeedback {
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
-						JOIN {context} con ON cm.id = con.instanceid
+						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'workshop'
 						JOIN {workshop} a ON gi.iteminstance = a.id AND a.phase = 50
 						JOIN {workshop_submissions} su ON a.id = su.workshopid AND su.authorid=?
@@ -484,7 +484,7 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?) 
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
-						JOIN {context} con ON cm.id = con.instanceid
+						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
@@ -529,7 +529,7 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
-						JOIN {context} con ON cm.id = con.instanceid
+						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
 			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
@@ -734,7 +734,7 @@ class report_myfeedback {
 						if ($submissionmsg == "") {
 							$submissionmsg = get_string('late_submission_msg', 'report_myfeedback');
 						}
-						$alerticon = '<img style="height:12px; width:12px;" src="' . $OUTPUT->pix_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
+						$alerticon = '<img class="smallicon" src="' . $OUTPUT->pix_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
 								$submissionmsg . '" />';
 						$submissiondate = "<span style=\"color: red;\">" . $submissiondate . " $alerticon</span>";
 					}
@@ -758,15 +758,5 @@ class report_myfeedback {
 		$newtext .= "</table>";
 		$this->content->text = $newtext;
 		return $this->content;
-	}
-
-	/**
-	 * Tell Moodle the report can only be shown once - not sure if this is relevant to reports, or just
-	 * blocks.
-	 *
-	 * @return bool only one report can be shown
-	 */
-	public function instance_allow_multiple() {
-		return false;
 	}
 }

@@ -32,6 +32,11 @@
 	text-align: left;
 }
 
+.path-report-myfeedback table.dataTable img.smallicon {
+	height: 12px; 
+	width: 12px;
+}
+
 .path-report-myfeedback table.dataTable tr.odd { background-color: #E2E4FF; }
 .path-report-myfeedback table.dataTable tr.even { background-color: white; }
 
@@ -41,7 +46,6 @@
 .path-report-myfeedback table.dataTable tr.even td.sorting_1 { background-color: #EAEBFF; }
 .path-report-myfeedback table.dataTable tr.even td.sorting_2 { background-color: #F2F3FF; }
 .path-report-myfeedback table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
-
 
 /*
  * Table wrapper

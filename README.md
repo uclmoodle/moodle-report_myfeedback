@@ -29,6 +29,11 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+1.8 (Build: 2015031201)
+Fixed duplicates appearing in the report by ensuring the context level is set to 70 so it only returns modules (e.g. assignments or quizzes).
+Made the small icon in the table 12x12px via css, rather than inserting style tags into the code (bad I know!).
+Removed the function instance_allow_multiple() - as this is only relevant to blocks, not reports.
+
 1.7 (Build: 2015031001)
 Added manual grade items that are added directly to the gradebook.
 Doesn't show feedback or grades that have been hidden in the gradebook for an individual student.
