@@ -354,7 +354,7 @@ class report_myfeedback {
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
 						JOIN {assign} a ON a.id=gi.iteminstance
-						JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND plugin = 'onlinetext'
+						JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND apc.name='enabled' AND plugin = 'onlinetext'
 				    	JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=?
 						JOIN mdl_assign_user_flags auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
                         AND  auf.userid = ? OR a.markingworkflow = 0

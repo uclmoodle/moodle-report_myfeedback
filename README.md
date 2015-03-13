@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+1.9 (Build: 2015031301)
+Fixed duplicates appearing in the report in Moodle 2.7+ when a word limit is enabled in online text Assignments.
+
 1.8 (Build: 2015031201)
 Fixed duplicates appearing in the report by ensuring the context level is set to 70 so it only returns modules (e.g. assignments or quizzes).
 Made the small icon in the table 12x12px via css, rather than inserting style tags into the code (bad I know!).
