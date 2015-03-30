@@ -312,9 +312,9 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid
                              AND itemtype='manual' AND (gi.hidden = 0 OR gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-		                     AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+		                     AND (gg.hidden = 0 OR gg.hidden < ?)
 						WHERE c.visible=1 AND c.showgrades = 1 ";
-	    array_push($params, $now, $userid);
+	    array_push($params, $now, $userid, $now);
 		if ($this->mod_is_available("assign")) {
 			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
 							c.shortname, 
@@ -349,7 +349,7 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid
                              AND itemtype='mod' AND (gi.hidden = 0 OR gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? 
-			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+			                 AND (gg.hidden = 0 OR gg.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
@@ -361,7 +361,7 @@ class report_myfeedback {
 						JOIN {grading_areas} ga ON con.id = ga.contextid
 				   LEFT JOIN {assign_submission} su ON a.id = su.assignment AND su.userid = ?
 						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $userid, $userid, $userid);
+			array_push($params, $now, $userid, $now, $userid, $userid, $userid);
 		}
 		if ($this->mod_is_available("quiz")) {
 			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
@@ -397,14 +397,14 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+			                 AND (gg.hidden = 0 OR gg.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
 						JOIN {quiz} a ON a.id=gi.iteminstance
 						LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
 						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid);
+			array_push($params, $now, $userid, $now);
 		}
 		if ($this->mod_is_available("workshop")) {
 			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
@@ -440,7 +440,7 @@ class report_myfeedback {
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden = 0 or gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+			                 AND (gg.hidden = 0 OR gg.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'workshop'
@@ -448,7 +448,7 @@ class report_myfeedback {
 						JOIN {workshop_submissions} su ON a.id = su.workshopid AND su.authorid=?
 				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
 						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $userid);
+			array_push($params, $now, $userid, $now, $userid);
 		}
 		if ($this->mod_is_available("turnitintool")) {
 			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
@@ -487,13 +487,13 @@ class report_myfeedback {
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+			                 AND (gg.hidden = 0 OR gg.hidden < ?)
 						JOIN {turnitintool} t ON t.id=gi.iteminstance
 						JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = ?
 						JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ? 
 				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
 			            WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $userid, $now);
+			array_push($params, $now, $userid, $now, $userid, $now);
 		}
 		if ($this->mod_is_available("turnitintooltwo")) {
 			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
@@ -532,13 +532,13 @@ class report_myfeedback {
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < 1425855676)
+			                 AND (gg.hidden = 0 OR gg.hidden < ?)
 						JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
 						JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
 						JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ?
 				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
 			            WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $userid, $now);
+			array_push($params, $now, $userid, $now, $userid, $now);
 		}
 		$sql .= " ORDER BY duedate";
 		// Get a number of records as a moodle_recordset using a SQL statement.

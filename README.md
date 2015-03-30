@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+2.0 (Build: 2015033001)
+Fixed bug with hardcoded timestamps.
+
 1.9 (Build: 2015031301)
 Fixed duplicates appearing in the report in Moodle 2.7+ when a word limit is enabled in online text Assignments.
 

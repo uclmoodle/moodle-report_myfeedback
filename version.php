@@ -31,8 +31,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version = 2015031301;
+$plugin->version = 2015033001;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2013101800;
-$plugin->release = '1.9 (Build: 2015031301)';
+$plugin->release = '2.0 (Build: 2015033001)';
 $plugin->maturity = MATURITY_STABLE;
