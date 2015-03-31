@@ -34,5 +34,5 @@
 $plugin->version = 2015033101;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2013101800;
-$plugin->release = '2.0 (Build: 2015033101)';
+$plugin->release = '2.1 (Build: 2015033101)';
 $plugin->maturity = MATURITY_STABLE;
