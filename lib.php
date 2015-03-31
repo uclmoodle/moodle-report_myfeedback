@@ -310,9 +310,9 @@ class report_myfeedback {
 							'' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid
-                             AND itemtype='manual' AND (gi.hidden = 0 OR gi.hidden < ?)
+                             AND itemtype='manual' AND (gi.hidden != 1 AND gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-		                     AND (gg.hidden = 0 OR gg.hidden < ?)
+		                     AND (gg.hidden != 1 AND gg.hidden < ?)
 						WHERE c.visible=1 AND c.showgrades = 1 ";
 	    array_push($params, $now, $userid, $now);
 		if ($this->mod_is_available("assign")) {
@@ -347,9 +347,9 @@ class report_myfeedback {
 							apc.value AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid
-                             AND itemtype='mod' AND (gi.hidden = 0 OR gi.hidden < ?)
+                             AND itemtype='mod' AND (gi.hidden != 1 AND gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? 
-			                 AND (gg.hidden = 0 OR gg.hidden < ?)
+			                 AND (gg.hidden != 1 AND gg.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
@@ -395,9 +395,9 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < ?)
+                             AND (gi.hidden != 1 AND gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < ?)
+			                 AND (gg.hidden != 1 AND gg.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
@@ -438,9 +438,9 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < ?)
+                             AND (gi.hidden != 1 AND gi.hidden < ?)
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < ?)
+			                 AND (gg.hidden != 1 AND gg.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'workshop'
@@ -482,12 +482,12 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < ?) 
+                             AND (gi.hidden != 1 AND gi.hidden < ?) 
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < ?)
+			                 AND (gg.hidden != 1 AND gg.hidden < ?)
 						JOIN {turnitintool} t ON t.id=gi.iteminstance
 						JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = ?
 						JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ? 
@@ -527,12 +527,12 @@ class report_myfeedback {
 							   '' AS onlinetext
 						FROM {course} c
 						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden = 0 or gi.hidden < ?)
+                             AND (gi.hidden != 1 AND gi.hidden < ?)
 						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
 						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
 						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
 						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden = 0 OR gg.hidden < ?)
+			                 AND (gg.hidden != 1 AND gg.hidden < ?)
 						JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
 						JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
 						JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ?

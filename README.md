@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+2.1 (Build: 2015033101)
+Fixed bug with hidden grades still showing.
+
 2.0 (Build: 2015033001)
 Fixed bug with hardcoded timestamps.
 
