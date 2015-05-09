@@ -269,281 +269,286 @@ class report_myfeedback {
 	 * @return str The table of submission and feedback for the user refrred to in the url after
 	 *         userid=
 	 */
+        public function get_data() {
+            global $remotedb, $USER;
+            $userid = optional_param('userid', 0, PARAM_INT); // User id.
+            if (empty($userid)) {
+                    $userid = $USER->id;
+            }
+            $this->content = new stdClass();
+            $params = array();
+            $now = time();
+            // Get any grade items entered directly in the Gradebook.
+            $sql = "SELECT DISTINCT c.id AS courseid,
+                                                    c.shortname, 
+                                                    c.fullname AS coursename,
+                                                    gi.itemname AS assessmentname,
+                                                    gg.finalgrade AS grade,
+                                                    gi.itemtype AS assessmenttype,
+                                gi.gradetype,
+                                gi.scaleid,
+                                                    -1 AS assignid,
+                                                    -1 AS assignmentid,
+                                                    -1 AS teamsubmission,
+                                                    -1 AS submissiondate,
+                                                    -1 AS duedate,
+                                                    gi.itemname AS assessmentlink,
+                                                    -1 AS tiiobjid,
+                                                    -1 AS subid,
+                                                    -1 AS subpart,
+                                                    '' AS partname,
+                                                    -1 AS usegrademark,
+                                                    gg.feedback AS feedbacklink,
+                                                    gg.rawgrademax AS highestgrade,
+                                                    gg.userid,
+                                                    -1 AS groupid,
+                                                    -1 AS assigngradeid,
+                                                    -1 AS contextid,
+                                                    '' AS activemethod,
+                                                    -1 AS nosubmissions,
+                                                    '' AS status,
+                                                    '' AS onlinetext
+                                            FROM {course} c
+                                            JOIN {grade_items} gi ON c.id=gi.courseid
+                         AND itemtype='manual' AND (gi.hidden != 1 AND gi.hidden < ?)
+                                            JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+                                 AND (gg.hidden != 1 AND gg.hidden < ?)
+                                            WHERE c.visible=1 AND c.showgrades = 1 ";
+        array_push($params, $now, $userid, $now);
+            if ($this->mod_is_available("assign")) {
+                    $sql .= "UNION SELECT DISTINCT c.id AS courseid,
+                                                    c.shortname, 
+                                                    c.fullname AS coursename,
+                                                    gi.itemname AS assessmentname,
+                                                    gg.finalgrade AS grade,
+                                                    gi.itemmodule AS assessmenttype,
+                                    gi.gradetype,
+                                    gi.scaleid,
+                                                    a.id AS assignid,
+                                                    cm.id AS assignmentid,
+                                                    a.teamsubmission,
+                                                    su.timemodified AS submissiondate,
+                                                    a.duedate AS duedate,
+                                                    a.name AS assessmentlink,
+                                                    -1 AS tiiobjid,
+                                                    -1 AS subid,
+                                                    -1 AS subpart,
+                                                    '' AS partname,
+                                                    -1 AS usegrademark,
+                                                    gg.feedback AS feedbacklink,
+                                                    gg.rawgrademax AS highestgrade,
+                                                    gg.userid,
+                                                    su.groupid,
+                                                    ag.id AS assigngradeid,
+                                                    con.id AS contextid,
+                                                    ga.activemethod,
+                                                    a.nosubmissions AS nosubmissions,
+                                                    su.status,
+                                                    apc.value AS onlinetext
+                                            FROM {course} c
+                                            JOIN {grade_items} gi ON c.id=gi.courseid
+                         AND itemtype='mod' AND (gi.hidden != 1 AND gi.hidden < ?)
+                                            JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? 
+                                     AND (gg.hidden != 1 AND gg.hidden < ?)
+                                            JOIN {course_modules} cm ON gi.iteminstance=cm.instance
+                                            JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
+                                            JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
+                                            JOIN {assign} a ON a.id=gi.iteminstance
+                                            JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND apc.name='enabled' AND plugin = 'onlinetext'
+                                    JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=?
+                                            JOIN mdl_assign_user_flags auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
+                    AND  auf.userid = ? OR a.markingworkflow = 0
+                                            JOIN {grading_areas} ga ON con.id = ga.contextid
+                               LEFT JOIN {assign_submission} su ON a.id = su.assignment AND su.userid = ?
+                                            WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
+                    array_push($params, $now, $userid, $now, $userid, $userid, $userid);
+            }
+            if ($this->mod_is_available("quiz")) {
+                    $sql .= "UNION SELECT DISTINCT c.id AS courseid,
+                                                       c.shortname, 
+                                                       c.fullname AS coursename,
+                                                       gi.itemname AS assessmentname,
+                                                       gg.finalgrade AS grade,
+                                                       gi.itemmodule AS assessmenttype,
+                                       gi.gradetype,
+                                       gi.scaleid,
+                                                       a.id AS assignid,
+                                                       cm.id AS assignmentid,
+                                                       -1 AS teamsubmission,
+                                                       -1 AS submissiondate,
+                                                       a.timeclose AS duedate,
+                                                       a.name AS assessmentlink,
+                                                       -1 AS tiiobjid,
+                                                       -1 AS subid,
+                                                       -1 AS subpart,
+                                                       '' AS partname,
+                                                       -1 AS usegrademark,
+                                                       gg.feedback AS feedbacklink,
+                                                       gg.rawgrademax AS highestgrade,
+                                                       gg.userid,
+                                                       -1 AS groupid,
+                                                       -1 AS assigngradeid,
+                                                       con.id AS contextid,
+                                                       ga.activemethod,
+                                                       -1 AS nosubmissions,
+                                                       '' AS status,
+                                                       '' AS onlinetext
+                                            FROM {course} c
+                                            JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
+                         AND (gi.hidden != 1 AND gi.hidden < ?)
+                                            JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+                                     AND (gg.hidden != 1 AND gg.hidden < ?)
+                                            JOIN {course_modules} cm ON gi.iteminstance=cm.instance
+                                            JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
+                                            JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
+                                            JOIN {quiz} a ON a.id=gi.iteminstance
+                                            LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
+                                            WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
+                    array_push($params, $now, $userid, $now);
+            }
+            if ($this->mod_is_available("workshop")) {
+                    $sql .= "UNION SELECT DISTINCT c.id AS courseid,
+                                                       c.shortname, 
+                                                       c.fullname AS coursename,
+                                                       gi.itemname AS assessmentname,
+                                                       gg.finalgrade AS grade,
+                                                       gi.itemmodule AS assessmenttype,
+                                       gi.gradetype,
+                                       gi.scaleid,
+                                                       a.id AS assignid,
+                                                       cm.id AS assignmentid,
+                                                       -1 AS teamsubmission,
+                                                       su.timemodified AS submissiondate,
+                                                       a.submissionend AS duedate,
+                                                       a.name AS assessmentlink,
+                                                       -1 AS tiiobjid,
+                                                       su.id AS subid,
+                                                       -1 AS subpart,
+                                                       '' AS partname,
+                                                       -1 AS usegrademark,
+                                                       gg.feedback AS feedbacklink,
+                                                       gg.rawgrademax AS highestgrade,
+                                                       gg.userid,
+                                                       -1 AS groupid,
+                                                       -1 AS assigngradeid,
+                                                       con.id AS contextid,
+                                                       ga.activemethod,
+                                                       a.nattachments AS nosubmissions,
+                                                       '' AS status,
+                                                       '' AS onlinetext
+                                            FROM {course} c
+                                            JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
+                         AND (gi.hidden != 1 AND gi.hidden < ?)
+                                            JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+                                     AND (gg.hidden != 1 AND gg.hidden < ?)
+                                            JOIN {course_modules} cm ON gi.iteminstance=cm.instance
+                                            JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
+                                            JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'workshop'
+                                            JOIN {workshop} a ON gi.iteminstance = a.id AND a.phase = 50
+                                            JOIN {workshop_submissions} su ON a.id = su.workshopid AND su.authorid=?
+                               LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
+                                            WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
+                    array_push($params, $now, $userid, $now, $userid);
+            }
+            if ($this->mod_is_available("turnitintool")) {
+                    $sql .= "UNION SELECT DISTINCT c.id AS courseid,
+                                                       c.shortname, 
+                                                       c.fullname AS coursename,
+                                                       gi.itemname AS assessmentname,
+                                                       su.submission_grade AS grade,
+                                                       gi.itemmodule AS assessmenttype,
+                                       gi.gradetype,
+                                       gi.scaleid,
+                                                       -1 AS assignid,
+                                                       cm.id AS assignmentid,
+                                                       -1 AS teamsubmission,
+                                                       su.submission_modified AS submissiondate,
+                                                       tp.dtdue AS duedate,
+                                                       su.submission_title AS assessmentlink,
+                                                       su.submission_objectid AS tiiobjid,
+                                                       su.id AS subid,
+                                                       su.submission_part AS subpart,
+                                                       tp.partname,
+                                                       t.usegrademark,
+                                                       gg.feedback AS feedbacklink,
+                                                       t.grade AS gradetype,
+                                                       su.userid,
+                                                       -1 AS groupid,
+                                                       -1 AS assigngradeid,
+                                                       con.id AS contextid,
+                                                       ga.activemethod,
+                                                       t.numparts AS nosubmissions,
+                                                       '' AS status,
+                                                       '' AS onlinetext
+                                            FROM {course} c
+                                            JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
+                         AND (gi.hidden != 1 AND gi.hidden < ?) 
+                                            JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
+                                            JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
+                                            JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
+                                            JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+                                     AND (gg.hidden != 1 AND gg.hidden < ?)
+                                            JOIN {turnitintool} t ON t.id=gi.iteminstance
+                                            JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = ?
+                                            JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ? 
+                               LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
+                                WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
+                    array_push($params, $now, $userid, $now, $userid, $now);
+            }
+            if ($this->mod_is_available("turnitintooltwo")) {
+                    $sql .= "UNION SELECT DISTINCT c.id AS courseid,
+                                                       c.shortname, 
+                                                       c.fullname AS coursename,
+                                                       gi.itemname AS assessmentname,
+                                                       su.submission_grade AS grade,
+                                                       gi.itemmodule AS assessmenttype,
+                                       gi.gradetype,
+                                       gi.scaleid,
+                                                       -1 AS assignid,
+                                                       cm.id AS assignmentid,
+                                                       -1 AS teamsubmission,
+                                                       su.submission_modified AS submissiondate,
+                                                       tp.dtdue AS duedate,
+                                                       su.submission_title AS assessmentlink,
+                                                       su.submission_objectid AS tiiobjid,
+                                                       su.id AS subid,
+                                                       su.submission_part AS subpart,
+                                                       tp.partname,
+                                                       t.usegrademark,
+                                                       gg.feedback AS feedbacklink,
+                                                       t.grade AS gradetype,
+                                                       su.userid,
+                                                       -1 AS groupid,
+                                                       -1 AS assigngradeid,
+                                                       con.id AS contextid,
+                                                       ga.activemethod,
+                                                       t.numparts AS nosubmissions,
+                                                       '' AS status,
+                                                       '' AS onlinetext
+                                            FROM {course} c
+                                            JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
+                         AND (gi.hidden != 1 AND gi.hidden < ?)
+                                            JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
+                                            JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
+                                            JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
+                                            JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
+                                     AND (gg.hidden != 1 AND gg.hidden < ?)
+                                            JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
+                                            JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
+                                            JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ?
+                               LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
+                                WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
+                    array_push($params, $now, $userid, $now, $userid, $now);
+            }
+            $sql .= " ORDER BY duedate";
+            // Get a number of records as a moodle_recordset using a SQL statement.
+            $rs = $remotedb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
+            return $rs;
+        }
+        
 	public function get_content() {
-		global $remotedb, $USER, $COURSE, $CFG, $OUTPUT, $maxcommentlength;
-		$userid = optional_param('userid', 0, PARAM_INT); // User id.
-		if (empty($userid)) {
-			$userid = $USER->id;
-		}
-		$this->content = new stdClass();
-		$params = array();
-		$now = time();
-		// Get any grade items entered directly in the Gradebook.
-		$sql = "SELECT DISTINCT c.id AS courseid,
-							c.shortname, 
-							c.fullname AS coursename,
-							gi.itemname AS assessmentname,
-							gg.finalgrade AS grade,
-							gi.itemtype AS assessmenttype,
-		                    gi.gradetype,
-		                    gi.scaleid,
-							-1 AS assignid,
-							-1 AS assignmentid,
-							-1 AS teamsubmission,
-							-1 AS submissiondate,
-							-1 AS duedate,
-							gi.itemname AS assessmentlink,
-							-1 AS tiiobjid,
-							-1 AS subid,
-							-1 AS subpart,
-							'' AS partname,
-							-1 AS usegrademark,
-							gg.feedback AS feedbacklink,
-							gg.rawgrademax AS highestgrade,
-							gg.userid,
-							-1 AS groupid,
-							-1 AS assigngradeid,
-							-1 AS contextid,
-							'' AS activemethod,
-							-1 AS nosubmissions,
-							'' AS status,
-							'' AS onlinetext
-						FROM {course} c
-						JOIN {grade_items} gi ON c.id=gi.courseid
-                             AND itemtype='manual' AND (gi.hidden != 1 AND gi.hidden < ?)
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-		                     AND (gg.hidden != 1 AND gg.hidden < ?)
-						WHERE c.visible=1 AND c.showgrades = 1 ";
-	    array_push($params, $now, $userid, $now);
-		if ($this->mod_is_available("assign")) {
-			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
-							c.shortname, 
-							c.fullname AS coursename,
-							gi.itemname AS assessmentname,
-							gg.finalgrade AS grade,
-							gi.itemmodule AS assessmenttype,
-			                gi.gradetype,
-			                gi.scaleid,
-							a.id AS assignid,
-							cm.id AS assignmentid,
-							a.teamsubmission,
-							su.timemodified AS submissiondate,
-							a.duedate AS duedate,
-							a.name AS assessmentlink,
-							-1 AS tiiobjid,
-							-1 AS subid,
-							-1 AS subpart,
-							'' AS partname,
-							-1 AS usegrademark,
-							gg.feedback AS feedbacklink,
-							gg.rawgrademax AS highestgrade,
-							gg.userid,
-							su.groupid,
-							ag.id AS assigngradeid,
-							con.id AS contextid,
-							ga.activemethod,
-							a.nosubmissions AS nosubmissions,
-							su.status,
-							apc.value AS onlinetext
-						FROM {course} c
-						JOIN {grade_items} gi ON c.id=gi.courseid
-                             AND itemtype='mod' AND (gi.hidden != 1 AND gi.hidden < ?)
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? 
-			                 AND (gg.hidden != 1 AND gg.hidden < ?)
-						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
-						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
-						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
-						JOIN {assign} a ON a.id=gi.iteminstance
-						JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND apc.name='enabled' AND plugin = 'onlinetext'
-				    	JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=?
-						JOIN mdl_assign_user_flags auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
-                        AND  auf.userid = ? OR a.markingworkflow = 0
-						JOIN {grading_areas} ga ON con.id = ga.contextid
-				   LEFT JOIN {assign_submission} su ON a.id = su.assignment AND su.userid = ?
-						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $now, $userid, $userid, $userid);
-		}
-		if ($this->mod_is_available("quiz")) {
-			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
-							   c.shortname, 
-							   c.fullname AS coursename,
-							   gi.itemname AS assessmentname,
-							   gg.finalgrade AS grade,
-							   gi.itemmodule AS assessmenttype,
-			                   gi.gradetype,
-			                   gi.scaleid,
-							   a.id AS assignid,
-							   cm.id AS assignmentid,
-							   -1 AS teamsubmission,
-							   -1 AS submissiondate,
-							   a.timeclose AS duedate,
-							   a.name AS assessmentlink,
-							   -1 AS tiiobjid,
-							   -1 AS subid,
-							   -1 AS subpart,
-							   '' AS partname,
-							   -1 AS usegrademark,
-							   gg.feedback AS feedbacklink,
-							   gg.rawgrademax AS highestgrade,
-							   gg.userid,
-							   -1 AS groupid,
-							   -1 AS assigngradeid,
-							   con.id AS contextid,
-							   ga.activemethod,
-							   -1 AS nosubmissions,
-							   '' AS status,
-							   '' AS onlinetext
-						FROM {course} c
-						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden != 1 AND gi.hidden < ?)
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden != 1 AND gg.hidden < ?)
-						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
-						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
-						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
-						JOIN {quiz} a ON a.id=gi.iteminstance
-						LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
-						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $now);
-		}
-		if ($this->mod_is_available("workshop")) {
-			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
-							   c.shortname, 
-							   c.fullname AS coursename,
-							   gi.itemname AS assessmentname,
-							   gg.finalgrade AS grade,
-							   gi.itemmodule AS assessmenttype,
-			                   gi.gradetype,
-			                   gi.scaleid,
-							   a.id AS assignid,
-							   cm.id AS assignmentid,
-							   -1 AS teamsubmission,
-							   su.timemodified AS submissiondate,
-							   a.submissionend AS duedate,
-							   a.name AS assessmentlink,
-							   -1 AS tiiobjid,
-							   su.id AS subid,
-							   -1 AS subpart,
-							   '' AS partname,
-							   -1 AS usegrademark,
-							   gg.feedback AS feedbacklink,
-							   gg.rawgrademax AS highestgrade,
-							   gg.userid,
-							   -1 AS groupid,
-							   -1 AS assigngradeid,
-							   con.id AS contextid,
-							   ga.activemethod,
-							   a.nattachments AS nosubmissions,
-							   '' AS status,
-							   '' AS onlinetext
-						FROM {course} c
-						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden != 1 AND gi.hidden < ?)
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden != 1 AND gg.hidden < ?)
-						JOIN {course_modules} cm ON gi.iteminstance=cm.instance
-						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
-						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'workshop'
-						JOIN {workshop} a ON gi.iteminstance = a.id AND a.phase = 50
-						JOIN {workshop_submissions} su ON a.id = su.workshopid AND su.authorid=?
-				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid
-						WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $now, $userid);
-		}
-		if ($this->mod_is_available("turnitintool")) {
-			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
-							   c.shortname, 
-							   c.fullname AS coursename,
-							   gi.itemname AS assessmentname,
-							   su.submission_grade AS grade,
-							   gi.itemmodule AS assessmenttype,
-			                   gi.gradetype,
-			                   gi.scaleid,
-							   -1 AS assignid,
-							   cm.id AS assignmentid,
-							   -1 AS teamsubmission,
-							   su.submission_modified AS submissiondate,
-							   tp.dtdue AS duedate,
-							   su.submission_title AS assessmentlink,
-							   su.submission_objectid AS tiiobjid,
-							   su.id AS subid,
-							   su.submission_part AS subpart,
-							   tp.partname,
-							   t.usegrademark,
-							   gg.feedback AS feedbacklink,
-							   t.grade AS gradetype,
-							   su.userid,
-							   -1 AS groupid,
-							   -1 AS assigngradeid,
-							   con.id AS contextid,
-							   ga.activemethod,
-							   t.numparts AS nosubmissions,
-							   '' AS status,
-							   '' AS onlinetext
-						FROM {course} c
-						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden != 1 AND gi.hidden < ?) 
-						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
-						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
-						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintool'
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden != 1 AND gg.hidden < ?)
-						JOIN {turnitintool} t ON t.id=gi.iteminstance
-						JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = ?
-						JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ? 
-				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
-			            WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $now, $userid, $now);
-		}
-		if ($this->mod_is_available("turnitintooltwo")) {
-			$sql .= "UNION SELECT DISTINCT c.id AS courseid,
-							   c.shortname, 
-							   c.fullname AS coursename,
-							   gi.itemname AS assessmentname,
-							   su.submission_grade AS grade,
-							   gi.itemmodule AS assessmenttype,
-			                   gi.gradetype,
-			                   gi.scaleid,
-							   -1 AS assignid,
-							   cm.id AS assignmentid,
-							   -1 AS teamsubmission,
-							   su.submission_modified AS submissiondate,
-							   tp.dtdue AS duedate,
-							   su.submission_title AS assessmentlink,
-							   su.submission_objectid AS tiiobjid,
-							   su.id AS subid,
-							   su.submission_part AS subpart,
-							   tp.partname,
-							   t.usegrademark,
-							   gg.feedback AS feedbacklink,
-							   t.grade AS gradetype,
-							   su.userid,
-							   -1 AS groupid,
-							   -1 AS assigngradeid,
-							   con.id AS contextid,
-							   ga.activemethod,
-							   t.numparts AS nosubmissions,
-							   '' AS status,
-							   '' AS onlinetext
-						FROM {course} c
-						JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
-                             AND (gi.hidden != 1 AND gi.hidden < ?)
-						JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND c.id=cm.course
-						JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
-						JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'turnitintooltwo'
-						JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ?
-			                 AND (gg.hidden != 1 AND gg.hidden < ?)
-						JOIN {turnitintooltwo} t ON t.id=gi.iteminstance
-						JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = ?
-						JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < ?
-				   LEFT JOIN {grading_areas} ga ON con.id = ga.contextid 
-			            WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
-			array_push($params, $now, $userid, $now, $userid, $now);
-		}
-		$sql .= " ORDER BY duedate";
-		// Get a number of records as a moodle_recordset using a SQL statement.
-		$rs = $remotedb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
-		$newtext = "<div>".get_string('provisional_grades', 'report_myfeedback')."</div><br />";
+            global $CFG, $OUTPUT;
+            $newtext = "<div>".get_string('provisional_grades', 'report_myfeedback')."</div><br />";
 		// Print titles for each column: Course, Assessment, Type, Due Date, Submission Date,
 		// Submission, Feedback, Grade, Highest Grade.
 		$newtext .= "<table class=\"grades\" id=\"grades\">
@@ -569,6 +574,7 @@ class report_myfeedback {
 								get_string('gradetblheader_highestgrade', 'report_myfeedback') . "</th>
 							</tr>
 						</thead>";
+		$rs = $this->get_data();
 		if ($rs->valid()) {
 			// The recordset contains records.
 			foreach ($rs as $record) {
