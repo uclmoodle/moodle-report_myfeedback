@@ -547,7 +547,11 @@ class report_myfeedback {
         }
         
 	public function get_content() {
-            global $CFG, $OUTPUT;
+            global $CFG, $OUTPUT, $USER;
+            $userid = optional_param('userid', 0, PARAM_INT); // User id.
+            if (empty($userid)) {
+                $userid = $USER->id;
+            }
             $newtext = "<div>".get_string('provisional_grades', 'report_myfeedback')."</div><br />";
 		// Print titles for each column: Course, Assessment, Type, Due Date, Submission Date,
 		// Submission, Feedback, Grade, Highest Grade.

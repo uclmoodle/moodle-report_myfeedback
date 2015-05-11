@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+2.2 (Build: 2015051001)
+Separated the data from the interface code. get_data() returns the resultset, get_content() calls get_data(). Enables re-use of the query and data elsewhere in moodle, without rendering the data in the way that the report does. Change contributed by Mike Grant.
+
 2.1 (Build: 2015033101)
 Fixed bug with hidden grades still showing.
 
