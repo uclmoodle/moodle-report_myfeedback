@@ -20,7 +20,7 @@ Admin and manager can see all grades for all users (unless permissions prohibit 
 This report is based on the work done by David Bezemer, which in turn is based on work done by Karen Holland, Mei Jin, Jiajia Chen. 
 This plugin also uses SQL originating from Richard Havinga, but adds information from additional Moodle activities.
 The code for using an external database is authored by Juan Leyva.
-The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and Dr John Mitchell <j.mitchell@ucl.ac.uk>
+The idea for this reporting tool originated with Dr Jason Davies and Dr John Mitchell
 The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
 through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
 
@@ -28,6 +28,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+
+2.3 (Build: 2015060803)
+Responsive table layout and tooltips for mobile access - both phone and tablet. Uses footable (http://fooplugins.com/footable-demos/) to dymanically shrink the table to show only core information. The rest is displayed underneath with a drop down toggle to view it. Features expand all and collapse all toggles, search, pagination and course filter. Uses tooltips (http://osvaldas.info/elegant-css-and-jquery-tooltip-responsive-mobile-friendly) that display when hovered-over on desktops and when clicked-on on mobile devices. Moved some hard-coded text to the languages file to ensure cross-language compatibility.
 
 2.2 (Build: 2015051001)
 Separated the data from the interface code. get_data() returns the resultset, get_content() calls get_data(). Enables re-use of the query and data elsewhere in moodle, without rendering the data in the way that the report does. Change contributed by Mike Grant.

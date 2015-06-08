@@ -30,4 +30,7 @@
 
 $plugins = array(
     'dataTables'     => array('files' => array('dataTables.js')),
+    'tooltip'        => array('files' => array('tooltip.js')),
+    'footable'       => array('files' => array('FooTable-2/js/footable.all.js', 'FooTable-2/css/footable.core.css', 'FooTable-2/css/footable.standalone.css', 'FooTable-2/css/fonts/footable.eot', 'FooTable-2/css/fonts/footable.ttf', 'FooTable-2/css/fonts/footable.svg', 'FooTable-2/css/fonts/footable.woff', 'FooTable-2/icomoon/footable.json')),
+    'tooltip'        => array('files' => array('tooltip.js', 'tooltip.css'))
 );

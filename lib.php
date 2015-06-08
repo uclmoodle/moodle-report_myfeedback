@@ -552,35 +552,41 @@ class report_myfeedback {
             if (empty($userid)) {
                 $userid = $USER->id;
             }
-            $newtext = "<div>".get_string('provisional_grades', 'report_myfeedback')."</div><br />";
-		// Print titles for each column: Course, Assessment, Type, Due Date, Submission Date,
-		// Submission, Feedback, Grade, Highest Grade.
-		$newtext .= "<table class=\"grades\" id=\"grades\">
+            $title = "<div>".get_string('provisional_grades', 'report_myfeedback')."</div><br />";
+            $table = "";
+            $script = "";
+		// Print titles for each column: Assessment, Type, Course, Due Date, Submission Date,
+		// Submission/Feedback, Grade/Highest Grade.
+	    $table .= '<table class="footable table feedback" data-filter="#filter" data-filter-text-only="true">
 						<thead>
+	                       <tr class="footable-group-row">
+                                <th data-group="group1" colspan="3">'.get_string('gradetblgroup1', 'report_myfeedback').'</th>
+                                <th data-group="group2" colspan="2">'.get_string('gradetblgroup2', 'report_myfeedback').'</th>
+                                <th data-group="group3" colspan="2">'.get_string('gradetblgroup3', 'report_myfeedback').'</th>
+                            </tr>
 							<tr>
-								<th>" .
-								get_string('gradetblheader_course', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_assessment', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_type', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_duedate', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_submissiondate', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_submission', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_feedback', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_grade', 'report_myfeedback') . "</th>
-								<th>" .
-								get_string('gradetblheader_highestgrade', 'report_myfeedback') . "</th>
+								<th data-group="group1" data-toggle="true">' .
+								get_string('gradetblheader_assessment', 'report_myfeedback') . '</th>
+								<th data-group="group1" data-hide="all">' .
+								get_string('gradetblheader_course', 'report_myfeedback') . '</th>
+								<th data-group="group1" data-hide="all">' .
+								get_string('gradetblheader_type', 'report_myfeedback') . '</th>
+								<th data-group="group2" data-hide="all">' .
+								get_string('gradetblheader_duedate', 'report_myfeedback') . '</th>
+								<th data-group="group2" data-hide="all">' .
+								get_string('gradetblheader_submission', 'report_myfeedback') . '</th>
+								<th data-group="group3" data-hide="phone">' .
+								get_string('gradetblheader_feedback', 'report_myfeedback') . '</th>
+								<th data-group="group3" data-hide="phone">' .
+								get_string('gradetblheader_grade', 'report_myfeedback') . '</th>
 							</tr>
-						</thead>";
+						</thead>
+					    <tbody>';
 		$rs = $this->get_data();
 		if ($rs->valid()) {
 			// The recordset contains records.
+			//Create the array to put the coursename into for displaying in the table filter.
+		    $coursenamefilter = array();
 			foreach ($rs as $record) {
 				// Put data into table for display here.
 				// Check permissions for course.
@@ -596,20 +602,20 @@ class report_myfeedback {
 				if ($record->submissiondate) {
 					$submissiondate = $record->submissiondate;
 				}
+				//Put the coursename into an array for displaying in the table filter.
+				$coursenamefilter[$record->shortname]=$record->coursename;
 				// Display information for each type of assessment activity.
-				if ($record->assessmenttype) {
-					$assessmenttype = '<img src="' .
-							$OUTPUT->pix_url('icon', $record->assessmenttype) . '" ' .
-							'class="icon" alt="' . $record->assessmenttype . '">';
+				$assessmenticon = "";
+				if ($record->assessmenttype) {			    
 					switch ($record->assessmenttype) {
 					    case "manual":
-					        $assessmenttype = '<img src="' .
+					        $assessmenttype = get_string('manual_gradeitem', 'report_myfeedback');
+					        $assessmenticon = '<img src="' .
 					                $OUTPUT->pix_url('i/manual_item', 'core') . '" ' .
-					                'class="icon" alt="' . $record->assessmenttype . '">';
-					                // Bring the student to their user report in the gradebook.
-					                $assignmentname = "<a href=\"" . $CFG->wwwroot . "/grade/report/user/index.php?id=" . $record->courseid . "&userid=" . $record->userid . "\">" . $record->assessmentname .
-					                "</a>";
-					        $assessmenttype .= get_string('manual_gradeitem', 'report_myfeedback');
+					                'class="icon" alt="' . $assessmenttype . '"  title="' . $assessmenttype . '" rel="tooltip" \>';
+					        // Bring the student to their user report in the gradebook.
+					        $assignmentname = "<a href=\"" . $CFG->wwwroot . "/grade/report/user/index.php?id=" . $record->courseid . "&userid=" . $record->userid . "\">" . $record->assessmentname .
+					        "</a>";
 					        $submission = "-";
 					        $submissiondate = "-";
 					        $duedate = "-";
@@ -620,7 +626,7 @@ class report_myfeedback {
 					        }
 					        break;
 					    case "assign":
-							$assessmenttype .= get_string('moodle_assignment', 'report_myfeedback');
+							$assessmenttype = get_string('moodle_assignment', 'report_myfeedback');
 							if ($record->teamsubmission == 1) {
 								$assessmenttype .= " (" .
 										get_string('groupwork', 'report_myfeedback') . ")";
@@ -644,7 +650,7 @@ class report_myfeedback {
 								if ($record->status == "draft") {
 									$submission .= " (" . get_string('draft', 'report_myfeedback').")";
 									// This will set it to no submission later because it checks for all numbers.
-									$submissiondate = "<i>" . $submissiondate . " (draft)</i>";
+									$submissiondate = "<i>" . $submissiondate . " " . get_string('draft', 'report_myfeedback') . "</i>";
 								}
 								if ($submission == null && $submissiondate == null) {
 									$submissiondate = get_string('no_submission',
@@ -676,10 +682,10 @@ class report_myfeedback {
 						case "turnitintool":
 						case "turnitintooltwo":
 							$assignmentname .= " (" . $record->partname . ")";
-							$assessmenttype .= get_string('turnitin_assignment', 'report_myfeedback');
+							$assessmenttype = get_string('turnitin_assignment', 'report_myfeedback');
 							$newwindowmsg = get_string('new_window_msg', 'report_myfeedback');
 							$newwindowicon = '<img src="' . 'pix/external-link.png' . '" ' .
-									' alt="-" title="' . $newwindowmsg . '" />';
+									' alt="-" title="' . $newwindowmsg . '" rel="tooltip" />';
 							if ($record->assignmentid && $record->subpart && $record->tiiobjid &&
 									$record->assessmentname) {
 										// Not sure what utp is, but it seems to work when set to 2 for admin and 1
@@ -706,7 +712,7 @@ class report_myfeedback {
 									}
 									break;
 						case "workshop":
-							$assessmenttype .= get_string('workshop', 'report_myfeedback');
+							$assessmenttype = get_string('workshop', 'report_myfeedback');
 							$submission = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
 									$record->assignmentid . "&id=" . $record->subid . "\">" .
 									get_string('submission', 'report_myfeedback') . "</a>";
@@ -715,13 +721,19 @@ class report_myfeedback {
 									get_string('feedback', 'report_myfeedback') . "</a>";
 							break;
 						case "quiz":
-							$assessmenttype .= get_string('quiz', 'report_myfeedback');
+							$assessmenttype = get_string('quiz', 'report_myfeedback');
 							$submission = "-";
 							$submissiondate = "-";
 							$feedbacktext = $this->get_quiz_attempts_link($record->assignid, $userid,
 									$record->assignmentid);
 							break;
 					}
+				}
+				//Add the assessment icon.
+				if($assessmenticon == ""){
+				    $assessmenticon = '<img src="' .
+				        $OUTPUT->pix_url('icon', $record->assessmenttype) . '" ' .
+				        'class="icon" alt="' . $assessmenttype . '" title="' . $assessmenttype . '"  rel="tooltip" />';
 				}
 				// If no feedback or grade has been received don't display anything.
 				if(!($feedbacktext == '&nbsp;' && $record->grade == null)){
@@ -730,8 +742,8 @@ class report_myfeedback {
 					if (is_numeric($submissiondate) && (strlen($submissiondate) == 10)) {
 						$submittedtime = $submissiondate;
 						$submissiondate = date('d-m-Y H:i', $submissiondate);
-					} else if (strpos($assessmenttype, "offline") === false && strpos($assessmenttype, "quiz") === false && strpos($record->assessmenttype, "manual") === false) {
-								if (strpos($submissiondate, "draft") === false) {
+					} else if (strpos($assessmenttype, get_string('offline_assignment', 'report_myfeedback')) === false && strpos($assessmenttype, get_string('quiz', 'report_myfeedback')) === false && strpos($record->assessmenttype, get_string('manual_gradeitem', 'report_myfeedback')) === false) {
+								if (strpos($submissiondate, get_string('draft', 'report_myfeedback')) === false) {
 									$submissiondate = get_string('no_submission', 'report_myfeedback');
 									$submissionmsg = get_string('no_submission_msg', 'report_myfeedback');
 								} else {
@@ -745,28 +757,115 @@ class report_myfeedback {
 							$submissionmsg = get_string('late_submission_msg', 'report_myfeedback');
 						}
 						$alerticon = '<img class="smallicon" src="' . $OUTPUT->pix_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
-								$submissionmsg . '" />';
+								$submissionmsg . '" rel="tooltip" />';
 						$submissiondate = "<span style=\"color: red;\">" . $submissiondate . " $alerticon</span>";
 					}
-					$newtext .= "<tr>";
-					$newtext .= "<td>" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
-							"/course/view.php?id=" . $record->courseid . "\" title=\"".$record->coursename."\">" . $record->shortname . "</a>" : "&nbsp;") .
-							"</td>";
-					$newtext .= "<td>" . $assignmentname . "</td>";
-					$newtext .= "<td>" . $assessmenttype . "</td>";
-					$newtext .= "<td>" . $duedate . "</td>";
-					$newtext .= "<td>" . $submissiondate . "</td>";
-					$newtext .= "<td>" . $submission . "</td>";
-					$newtext .= "<td>" . $feedbacktext . "</td>"; // Including links to marking guide or rubric.
-					$newtext .= "<td>" . ($record->grade ? number_format($record->grade, 0) : "&nbsp;") . "</td>";
-					$newtext .= "<td>" . ($record->highestgrade ? number_format($record->highestgrade, 0) : "&nbsp;") . "</td>";
-					$newtext .= "</tr>";
+					$table .= "<tr>";
+					$table .= "<td>" . $assessmenticon . $record->shortname . ": " . $assignmentname . "</td>";
+					$table .= '<td>' . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
+					        "/course/view.php?id=" . $record->courseid . "\" title=\"".$record->shortname."\">" . $record->coursename . "</a>" : "&nbsp;") .
+					        "</td>";
+					$table .= '<td>' . $assessmenttype . "</td>";
+					$table .= "<td>" . $duedate . "</td>";
+					$table .= "<td>" . $submissiondate . "</td>";
+					$table .= "<td>" . $feedbacktext . "</td>"; // Including links to marking guide or rubric.
+					$table .= "<td>" . ($record->grade ? number_format($record->grade, 0) : "&nbsp;") . " / " . ($record->highestgrade ? number_format($record->highestgrade, 0) : "&nbsp;") ."</td>";
+					$table .= "</tr>";
 				}
 			}
 			$rs->close(); // Close the recordset!
 		}
-		$newtext .= "</table>";
-		$this->content->text = $newtext;
+		$table .= '   </tbody>
+    		        	</tbody>
+                    	<tfoot>
+                    		<tr>
+                    			<td colspan="7">
+                    				<div class="pagination pagination-centered hide-if-no-paging"></div>
+                    			</td>
+                    		</tr>
+                    	</tfoot>
+		            </table>';
+		//The searchfilter is actually output before the table, but needs to be here in the code to enable the filtering
+		//to be setup for the data present in the table - e.g. filtering by Moodle courses.
+		$searchfilter = '<a data-trigger="footable_expand_all" class="toggle" href="#collapse" style="float:right;">[expand all]</a>
+	                 <a data-trigger="footable_collapse_all" class="toggle" style="display: none; float:right;" href="#collapse">[collapse all]</a>';
+		$searchfilter .= ' <select id="change-page-size">
+                        	    <option value="10">10</option>
+                        	    <option value="25">25</option>
+                        	    <option value="50">50</option>
+                        	    <option value="100">100</option>
+                    	    </select> ';
+		$searchfilter .= get_string('search', 'report_myfeedback') . ': <input id="filter" type="text" /> ';
+		//Sort the course name array into alphabetical order.
+		array_multisort($coursenamefilter, SORT_ASC);
+		$searchfilter .= get_string('gradetblheader_course', 'report_myfeedback') . ': <select class="filter-course">
+                                		<option></option>';
+		                                foreach($coursenamefilter as $courseshortname=>$coursefullname){
+                                    		$searchfilter .= '<option value="';
+                                    		$searchfilter .= $courseshortname .'">'. $coursefullname;
+                                    		$searchfilter .= '</option>';
+		                                }
+        $searchfilter .= '          </select>';
+		$searchfilter .= ' <a href="#clear" class="clear-filter" title="clear filter">[clear]</a>';
+		$script .= "   <script type=\"text/javascript\">
+                        	/* Initialise footable. */
+                            $(function () {
+                        		$('.footable').footable();
+                        	});
+                            /* Expand & collapse all rows. */
+                            $(function () {
+                                $('table').footable();
+		
+                                $('.toggle').click(function() {
+                                    $('.toggle').toggle();
+                                    $('table').trigger($(this).data('trigger')).trigger('footable_redraw');
+                                });
+                            });
+                            /* Exapand the first row on breakpoint. */
+                            $(function () {
+                                $('table').bind('footable_breakpoint', function() {
+                                    $('table').trigger('footable_expand_first_row');
+                                }).footable();
+                            });
+                            /* Change the entries shown per page. */
+                            $(function () {
+                			$('table').footable();
+            					$('#change-page-size').change(function (e) {
+            						e.preventDefault();
+            						var pageSize = $(this).val();
+            						$('.footable').data('page-size', pageSize);
+            						$('.footable').trigger('footable_initialized');
+            					});
+            					$('#change-nav-size').change(function (e) {
+            						e.preventDefault();
+            						var navSize = $(this).val();
+            						$('.footable').data('limit-navigation', navSize);
+            						$('.footable').trigger('footable_initialized');
+            					});
+                            });
+		                    /* Filter by course.*/
+                            $(function () {
+                                $('table').footable().bind('footable_filtering', function (e) {
+                                  var selected = $('.filter-course').find(':selected').val();
+                                  if (selected && selected.length > 0) {
+                                    e.filter += (e.filter && e.filter.length > 0) ? ' ' + selected : selected;
+                                    e.clear = !e.filter;
+                                  }
+                                });
+                            
+                                $('.clear-filter').click(function (e) {
+                                  e.preventDefault();
+                                  $('.filter-course').val('');
+                                  $('table.feedback').trigger('footable_clear_filter');
+                                });
+                            
+                                $('.filter-course').change(function (e) {
+                                  e.preventDefault();
+                                  $('table.feedback').trigger('footable_filter', {filter: $('#filter').val()});
+                                });
+                            });
+                        </script>";
+		$this->content->text = $title . $searchfilter . $table . $script;
 		return $this->content;
 	}
 }
