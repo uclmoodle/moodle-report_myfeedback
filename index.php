@@ -46,6 +46,8 @@ $PAGE->set_title(get_string('pluginname', 'report_myfeedback'));
 
 $PAGE->requires->jquery();
 $PAGE->requires->jquery_plugin('dataTables', 'report_myfeedback');
+$PAGE->requires->jquery_plugin('footable', 'report_myfeedback');
+$PAGE->requires->jquery_plugin('tooltip', 'report_myfeedback');
 
 require_login();
 
@@ -77,15 +79,13 @@ if (empty($user->username)) {
     echo $OUTPUT->notification(get_string('userdeleted'));
     die();
 }
-
 echo $OUTPUT->heading(
         get_string('pluginname', 'report_myfeedback') . " " . get_string('for', 'calendar') . " " .
         $userlinked);
-
 $content = $report->get_content();
 echo $content->text;
 echo $OUTPUT->container_start('info');
 echo $OUTPUT->container_end();
-// Enable sorting.
+// Enable sorting with dataTable.
 echo "<script>$('#grades').dataTable({'aaSorting': []});</script>";
 echo $OUTPUT->footer();
