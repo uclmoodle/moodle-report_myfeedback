@@ -691,7 +691,7 @@ class report_myfeedback {
 										// Not sure what utp is, but it seems to work when set to 2 for admin and 1
 										// for students.
 										// Link the submission to the plagiarism comparison report.
-										$submission = "<a href=\"" . $CFG->wwwroot . "/mod/turnitintool/view.php?id=" .
+										$submission = "<a href=\"" . $CFG->wwwroot . "/mod/".$record->assessmenttype."/view.php?id=" .
 												$record->assignmentid . "&jumppage=report&userid=" . $userid .
 												"&utp=1&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
 												"\" target=\"_blank\">" . get_string('submission', 'report_myfeedback') .
@@ -699,13 +699,13 @@ class report_myfeedback {
 										// If grademark marking is enabled.
 										if ($record->usegrademark == 1) {
 											// Link the submission to the gradebook.
-											$feedbacktext = "<a href=\"" . $CFG->wwwroot . "/mod/turnitintool/view.php?id=" .
+											$feedbacktext = "<a href=\"" . $CFG->wwwroot . "/mod/".$record->assessmenttype."/view.php?id=" .
 													$record->assignmentid . "&jumppage=grade&userid=" . $userid .
 													"&utp=1&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
 													"\" target=\"_blank\">" . get_string('feedback', 'report_myfeedback') .
 													"</a> $newwindowicon";
 										} else {
-											$feedbacktext = "<a href=\"" . $CFG->wwwroot . "/mod/turnitintool/view.php?id=" .
+											$feedbacktext = "<a href=\"" . $CFG->wwwroot . "/mod/".$record->assessmenttype."/view.php?id=" .
 													$record->assignmentid . "&do=submissions\">" .
 													get_string('feedback', 'report_myfeedback') . "</a>";
 										}
