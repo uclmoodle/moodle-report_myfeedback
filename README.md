@@ -29,8 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
-2.4 (Build: 2015060901)
+2.4 (Build: 2015090400)
 Removed the dataTables plugin from the plugin.php file and the dataTables.js file from the jquery folder, as it is now replaced with footables.
+Fixed turnitintooltwo so these assignments now point to the correct feedback and submission links - they used to point to turnitintool (V1).
 
 2.3 (Build: 2015060803)
 Responsive table layout and tooltips for mobile access - both phone and tablet. Uses footable (http://fooplugins.com/footable-demos/) to dymanically shrink the table to show only core information. The rest is displayed underneath with a drop down toggle to view it. Features expand all and collapse all toggles, search, pagination and course filter. Uses tooltips (http://osvaldas.info/elegant-css-and-jquery-tooltip-responsive-mobile-friendly) that display when hovered-over on desktops and when clicked-on on mobile devices. Moved some hard-coded text to the languages file to ensure cross-language compatibility.
