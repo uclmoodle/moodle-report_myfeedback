@@ -20,7 +20,7 @@ Admin and manager can see all grades for all users (unless permissions prohibit 
 This report is based on the work done by David Bezemer, which in turn is based on work done by Karen Holland, Mei Jin, Jiajia Chen. 
 This plugin also uses SQL originating from Richard Havinga, but adds information from additional Moodle activities.
 The code for using an external database is authored by Juan Leyva.
-The idea for this reporting tool originated with Dr Jason Davies and Dr John Mitchell
+The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and Dr John Mitchell <j.mitchell@ucl.ac.uk>
 The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
 through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
 
@@ -28,6 +28,39 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+
+2.6 (Build: 2015120302)
+Fixed excel export.
+The ColReorder now works on the feedback table.
+Reset table now available.  
+Changed overview table blank column heading to Available grade.
+Comment out the bar graph and range and put highest grade.  
+New function to get the available grade if it is a scale and not manual.  
+New function to get the available grade if it is a letter.  
+New function to get the available grade if manual and scale.  
+Manual item shows when display type is default.  
+The turnitin link now works. Added module id.
+Removed the header ‘Feedback comments’ as the Tab already says this
+Renamed ‘Submission / Full feedback’ label to ‘Submission / Feedback’ on overview tab, but on page 2 – left is as ‘Full feedback’
+Added ‘Assessment’ label to Feedback comments  tab
+Added ‘Submission date’ coln to Feedback comments  tab
+MyFeedback report now sorts by Submission date (latest first) by default
+Added bar graphs to Overview tab
+Have only view feedback or view submission if there is only one or the other but feedback will supercede. 
+Added Submission date to the feedback table  
+Added a different destroy button for the feedback table as it was clashing with the table on the overview tab.
+Fixed table not resetting on second click without refresh
+Removed the savestate from both tables.  
+Look back at the destroy table so it destroys the other datatables plugins as well.  
+Colvis label - set to overflow hidden.  
+Export table unicode/utf8 - symbols now show properly. 
+
+2.5 (Build: 2015090401)
+Only works on Moodle v2.8+ due to database schema changes (potentially v2.7, but this hasn't been tested).
+Shows scale grades, exports to excel, print view, filter each column.
+Uses dataTables rather than footable for table sorting and mobile responsiveness.
+Feedback comments tabs shows general feedback, rubrics and marking guides/grading forms for Moodle and Turnitin assignments.
+Feedback comments tab shows whether student has viewed their feedback.
 
 2.4 (Build: 2015090400)
 Removed the dataTables plugin from the plugin.php file and the dataTables.js file from the jquery folder, as it is now replaced with footables.

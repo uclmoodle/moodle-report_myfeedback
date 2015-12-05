@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,8 +22,8 @@
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
  * 			  block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
- *			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
- *			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
+ * 			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
+ * 			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
  *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
  *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
  *            The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
@@ -30,9 +31,8 @@
  *            http://bit.ly/IoEAssessmentCareersProject
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$plugin->version = 2015090400;
+$plugin->version = 2015120302;
 $plugin->component = 'report_myfeedback';
-$plugin->requires = 2013101800;
-$plugin->release = '2.4 (Build: 2015090400)';
+$plugin->requires = 2014111000;
+$plugin->release = '2.6 (Build: 2015120302)';
 $plugin->maturity = MATURITY_STABLE;

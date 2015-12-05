@@ -7,10 +7,10 @@
  *
  * This source file is distributed in the hope that it will be useful, but 
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the license files for details.
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the MIT license for details: http://opensource.org/licenses/MIT.
  */
- /* Had to rename the id tooltip2 (adding a 2 on the end of tooltip) 
- as it clashed with an existing Moodle class */
+/* Had to rename the id tooltip2 (adding a 2 on the end of tooltip) 
+as it clashed with an existing Moodle class */
 #tooltip2
 {
     font-size: 0.9em;
