@@ -190,26 +190,28 @@ class report_myfeedback {
      * Checks whether or not an online pdf feedback annotated file 
      * or any feedback file has been generated
      *
-     * @param str $contextid The course context id
+     * @param str $iteminstance The assign id
+     * @param str $userid The user id
      * @param str $gradeid The gradeid
-     * @param str $assessmenttype The module activity type
      * @return bool true if there's a pdf feedback annotated file 
      * or any feedback filed for the submission, otherwise false
      */
-    public function has_pdf_feedback_file($contextid, $gradeid) {
+    public function has_pdf_feedback_file($iteminstance, $userid, $gradeid) {
         global $remotedb;
         // Is there any online pdf annotation feedback or any feedback file?
-        if ($remotedb->record_exists('assignfeedback_editpdf_annot', array('gradeid' => $gradeid))) {
-            return true;
-        }
-        $sql = "SELECT max(id) as id
-                FROM {files}
-                WHERE contextid=? AND component=? AND filearea=?
-                AND itemid=?";
-        $params = array($contextid, 'assignfeedback_file', 'feedback_files', $gradeid);
-        $feedbackfile = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
+        /* if ($remotedb->record_exists('assignfeedback_editpdf_annot', array('gradeid' => $gradeid))) {
+          return true;
+          } */
+        $sql = "SELECT af.numfiles 
+                FROM {assign_grades} ag
+                JOIN {assignfeedback_file} af on ag.id=af.grade
+                AND ag.id=? AND ag.userid=? AND af.assignment=?";
+        $params = array($gradeid, $userid, $iteminstance);
+        $feedbackfile = $remotedb->get_record_sql($sql, $params);
         if ($feedbackfile) {
-            return true;
+            if ($feedbackfile->numfiles != 0) {
+                return true;
+            }
         }
         return false;
     }
@@ -222,18 +224,19 @@ class report_myfeedback {
      * @param type $assignid The workshop id
      * @return boolean true if there is a feedback file and false if there ain't
      */
-    public function has_workshop_feedback_file($contextid, $userid, $assignid) {
+    public function has_workshop_feedback_file($userid, $subid) {
         global $remotedb;
         // Is there any feedback file?
-        $sql = "SELECT max(f.id) as id
-                FROM {files} f                
-                JOIN {workshop_assessments} wa ON f.itemid=wa.id AND f.contextid=? AND f.component=?
-                JOIN {workshop_submissions} ws ON wa.submissionid=ws.id AND ws.authorid=?
-                JOIN {workshop} w ON ws.workshopid=w.id AND w.id=?";
-        $params = array($contextid, 'mod_workshop', $userid, $assignid);
-        $feedbackfile = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
+        $sql = "SELECT DISTINCT max(wa.id) as id, wa.feedbackauthorattachment
+                FROM {workshop_assessments} wa 
+                JOIN {workshop_submissions} ws ON wa.submissionid=ws.id 
+                AND ws.authorid=? AND ws.id=?";
+        $params = array($userid, $subid);
+        $feedbackfile = $remotedb->get_record_sql($sql, $params);
         if ($feedbackfile) {
-            return true;
+             if ($feedbackfile->feedbackauthorattachment != 0) {
+                return true;
+            }
         }
         return false;
     }
@@ -251,7 +254,7 @@ class report_myfeedback {
                 FROM {assign_user_flags}
                 WHERE userid=? AND assignment=?";
         $params = array($userid, $assignment);
-        $extension = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
+        $extension = $remotedb->get_record_sql($sql, $params);
         if ($extension) {
             return $extension->extensionduedate;
         }
@@ -272,7 +275,7 @@ class report_myfeedback {
                 FROM {quiz_overrides}
                 WHERE quiz=? AND userid=?";
         $params = array($assignid, $userid);
-        $override = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
+        $override = $remotedb->get_record_sql($sql, $params);
         if ($override) {
             return $override->timeclose;
         }
@@ -295,7 +298,7 @@ class report_myfeedback {
                 JOIN {groups_members} gm ON qo.groupid=gm.groupid 
                 AND qo.quiz=? AND gm.userid=?";
         $params = array($assignid, $userid);
-        $override = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
+        $override = $remotedb->get_record_sql($sql, $params);
         if ($override) {
             return $override->timeclose;
         }
@@ -310,15 +313,20 @@ class report_myfeedback {
      * @param type $userid The user id
      * @return str The date of the attempt or false if not attempted.
      */
-    public function get_quiz_submissiondate($assignid, $userid) {
+    public function get_quiz_submissiondate($assignid, $userid, $grade, $availablegrade, $sumgrades) {
         global $remotedb;
-        $sql = "SELECT max(timemodified) as timemodified
+        $a = $grade / $availablegrade * $sumgrades;
+        $sql = "SELECT id, timefinish, sumgrades
                 FROM {quiz_attempts}
                 WHERE quiz=? AND userid=?";
         $params = array($assignid, $userid);
-        $attempt = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
-        if ($attempt) {
-            return $attempt->timemodified;
+        $attempts = $remotedb->get_records_sql($sql, $params);
+        if ($attempts) {
+            foreach ($attempts as $attempt) {
+                if ($a == $attempt->sumgrades) {
+                    return $attempt->timefinish;
+                }
+            }
         }
         return false;
     }
@@ -334,19 +342,23 @@ class report_myfeedback {
      */
     public function get_quiz_attempts_link($quizid, $userid, $quizurlid) {
         global $CFG, $remotedb;
-        $sqlcount = "SELECT count(attempt) as attempts
+        $sqlcount = "SELECT count(attempt) as attempts, max(id) as id
                         FROM {quiz_attempts} qa
                         WHERE quiz=? and userid=?";
-        $params = array($quizid, $userid
-        );
-        $attemptcount = $remotedb->count_records_sql($sqlcount, $params, $limitfrom = 0, $limitnum = 0);
+        $params = array($quizid, $userid);
+        $attemptcount = $remotedb->get_records_sql($sqlcount, $params);
         $out = array();
-        if ($attemptcount > 0) {
-            $url = $CFG->wwwroot . "/mod/quiz/view.php?id=" . $quizurlid;
-            $attemptstext = ($attemptcount > 1) ? get_string('attempts', 'report_myfeedback') : get_string(
-                            'attempt', 'report_myfeedback');
-            $out[] = html_writer::link($url, get_string('review', 'report_myfeedback') . " " . $attemptcount . " " .
-                            $attemptstext);
+        if ($attemptcount) {
+            foreach ($attemptcount as $attempt) {
+                $a = $attempt->attempts;
+                if ($a > 0) {
+                    $url = $CFG->wwwroot . "/mod/quiz/review.php?attempt=" . $attempt->id;
+                    //$attemptstext = ($attemptcount > 1) ? get_string('attempts', 'report_myfeedback') : get_string(
+                    //               'attempt', 'report_myfeedback');
+                    $attemptstext = ($a > 1) ? 'review last of ' . $a . ' attempts' : 'review ' . $a . ' attempt';
+                    $out[] = html_writer::link($url, $attemptstext);
+                }
+            }
         }
         $br = html_writer::empty_tag('br');
         return implode($br, $out);
@@ -426,9 +438,9 @@ class report_myfeedback {
         $params = array($contextid, $assignmentid, $userid, $courseid);
         $paramsone = array('gradereport_user', 'viewed', $userid, $courseid);
         $paramstwo = array($userid, $courseid, $itemname, $courseid, $assignmentid);
-        $viewreport = $remotedb->get_record_sql($sql, $params, $limitfrom = 0, $limitnum = 1);
-        $userreport = $remotedb->get_record_sql($sqlone, $paramsone, $limitfrom = 0, $limitnum = 1);
-        $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo, $limitfrom = 0, $limitnum = 1);
+        $viewreport = $remotedb->get_record_sql($sql, $params);
+        $userreport = $remotedb->get_record_sql($sqlone, $paramsone);
+        $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo);
         if ($viewreport) {
             if ($gradeadded) {
                 $dateviewed = date('d-m-y', $viewreport->timecreated);
@@ -467,8 +479,8 @@ class report_myfeedback {
                 AND gi.courseid=? AND gi.id=?";
         $paramsone = array('gradereport_user', 'viewed', $userid, $courseid);
         $paramstwo = array($userid, $courseid, $gradeitemid);
-        $userreport = $remotedb->get_record_sql($sqlone, $paramsone, $limitfrom = 0, $limitnum = 1);
-        $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo, $limitfrom = 0, $limitnum = 1);
+        $userreport = $remotedb->get_record_sql($sqlone, $paramsone);
+        $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo);
         if ($userreport) {
             if ($gradeadded) {
                 $dateviewed = date('d-m-y', $userreport->timecreated);
@@ -786,12 +798,22 @@ class report_myfeedback {
     /**
      * Returns fractions in the grade and available grade only if there is a fraction in the number
      * @param float $grade The grade 
-     * @return float The whole number of fraction
+     * @param int $cid The Course id
+     * @param float $decimals The number of decimals if set in grade items 
+     * @return float The grade with the number of decimal places as set
      */
-    public function get_fraction($grade) {
-        $wholenum = floor($grade);
-        if ($wholenum < $grade || $wholenum > $grade) {
-            return number_format($grade, 2); //TODO: set decimal places based on the settings of the course/grade item
+    public function get_fraction($grade, $cid, $decimals) {
+        global $CFG;
+        //TODO: use my own function other than grade_get_setting because when we start using multiple DBs 
+        //then $DB would be the incorrect database or we need to set $DB to the database being used
+        if (fmod($grade, 1)) {
+            if (is_null($decimals)) {
+                $decima = grade_get_setting($cid, 'decimalpoints', $CFG->grade_decimalpoints);
+                if ($decima) {
+                    return number_format($grade, $decima);
+                }
+            }
+            return number_format($grade, $decimals);
         }
         return number_format($grade, 0);
     }
@@ -875,38 +897,72 @@ class report_myfeedback {
      * @return string Table with the list of users they have access to
      */
     public function get_all_accessible_users() {
-        global $remotedb, $COURSE, $USER;
-        $usertable = "<table style=\"max-width:420px;float:left;\" class=\"userstable\" id=\"userstable\">
+        global $remotedb, $USER, $CFG;
+        $usertable = "<table style=\"float:left;\" class=\"userstable\" id=\"userstable\">
                     <thead>
                             <tr class=\"tableheader\">
-                                <th></th>
+                                <th class=\"tblname\">Name</th><th class=\"tblrelationship\">Relationship</th>
                             </tr>
                         </thead>
                                                 <tbody>";
         $myusers = array();
-        //get all the users in the course you are programme admin
-        if ($mods = get_user_capability_course('report/myfeedback:progadmin', $userid = null, $doanything = false)) {
-            foreach ($mods as $value) {
-                $context = context_course::instance($value->id);
+        $admin_mods = array();
+        $tutor_mods = array();
+        //get all the users in the course you are programme admin for
+        if ($mods = enrol_get_users_courses($USER->id, $onlyactive = TRUE)) {
+            //get_user_capability_course('report/myfeedback:progadmin', $userid = null, $doanything = false)) {
+            foreach ($mods as $mod) {
+                if ($mod->visible) {
+                    $con = context_course::instance($mod->id);
+                    if (has_capability('report/myfeedback:progadmin', $con, $USER->id, $doanything = false)) {
+                        $admin_mods[] = $mod->id;
+                    }
+                    if (has_capability('moodle/course:changeshortname', $con, $USER->id, $doanything = false)) {
+                        $tutor_mods[] = $mod->id;
+                    }
+                }
+            }
+
+            foreach ($admin_mods as $value) {
+                $context = context_course::instance($value);
                 $query = 'select u.id as id, firstname, lastname, email from mdl_role_assignments as a, '
                         . 'mdl_user as u where contextid=' . $context->id . ' and roleid=5 and a.userid=u.id;';
                 $users = $remotedb->get_recordset_sql($query);
                 foreach ($users as $a) {
-                    $myusers[$a->id] = "<a href=\"/v288/report/myfeedback/index.php?userid=" . $a->id . "\" title=\"" .
+                    $myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $a->id . "\" title=\"" .
                             $a->email . "\" rel=\"tooltip\">" . $a->firstname . " " . $a->lastname . "</a>";
+                    $myusers[$a->id][1] = ''; //get_string('othertutee', 'report_myfeedback');
+                    $myusers[$a->id][2] = 1;
+                    $myusers[$a->id][3] = '';
                 }
             }
         }
-        // get all the users in the course you are a tutor in
-        if ($mods = get_user_capability_course('moodle/course:changeshortname', $userid = null, $doanything = false)) {
-            foreach ($mods as $value) {
-                $context = context_course::instance($value->id);
+        // get all the users in the course you are a tutor for
+        if ($tutor_mods) {
+            //get_user_capability_course('moodle/course:changeshortname', $userid = null, $doanything = false)) {
+            foreach ($tutor_mods as $value) {
+                $context = context_course::instance($value);
                 $query = 'select u.id as id, firstname, lastname, email from mdl_role_assignments as a, '
-                        . 'mdl_user as u where contextid=' . $context->id . ' and roleid=5 and a.userid=u.id;';
+                        . 'mdl_user as u where contextid=' . $context->id . ' and roleid=5 and a.userid=u.id';
                 $users = $remotedb->get_recordset_sql($query);
                 foreach ($users as $r) {
-                    $myusers[$r->id] = "<a href=\"/v288/report/myfeedback/index.php?userid=" . $r->id . "\" title=\"" .
+                    $myusers[$r->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $r->id . "\" title=\"" .
                             $r->email . "\" rel=\"tooltip\">" . $r->firstname . " " . $r->lastname . "</a>";
+                    $myusers[$r->id][1] = ''; //get_string('othertutee', 'report_myfeedback');
+                    $myusers[$r->id][2] = 2;
+                    if ($stmods = enrol_get_users_courses($r->id, $onlyactive = TRUE)) {
+                        $num = 0;
+                        foreach ($stmods as $stval) {
+                            if ($stval->visible) {
+                                $coursecontext = context_course::instance($stval->id);
+                                if (has_capability('moodle/course:changeshortname', $coursecontext, $USER->id, $doanything = false)) {
+                                    $myusers[$r->id][1] .= $stval->shortname . ", ";
+                                }
+                            }
+                        }
+                        $myusers[$r->id][1] = rtrim($myusers[$r->id][1], ", ");
+                    }
+                    $myusers[$r->id][3] = $myusers[$r->id][1];
                 }
             }
         }
@@ -919,17 +975,21 @@ class report_myfeedback {
                                                          AND c.instanceid = u.id
                                                          AND c.contextlevel = " . CONTEXT_USER, array($USER->id))) {
             foreach ($usercontexts as $u) {
-                $myusers[$u->id] = "<a href=\"/v288/report/myfeedback/index.php?userid=" . $u->id . "\" title=\"" .
+                $myusers[$u->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id . "\" title=\"" .
                         $u->email . "\" rel=\"tooltip\">" . $u->firstname . " " . $u->lastname . "</a>";
+                $myusers[$u->id][1] = get_string('personaltutee', 'report_myfeedback');
+                $myusers[$u->id][2] = 3;
+                $myusers[$u->id][3] = '';
             }
         }
 
-        foreach ($myusers as $k => $result) {
+        foreach ($myusers as $result) {
             $usertable.= "<tr>";
-            $usertable.="<td>" . $result . "</td>";
+            $usertable.="<td>" . $result[0] . "</td>";
+            $usertable.="<td class=\"ellip\" data-sort=$result[2] title=\"$result[3]\" rel=\"tooltip\">" . $result[1] . "</td>";
             $usertable.="</tr>";
         }
-        $usertable.="</tbody><tfoot><tr><td></td></tr></tfoot></table>";
+        $usertable.="</tbody><tfoot><tr><td></td><td></td></tr></tfoot></table>";
         return $usertable;
     }
 
@@ -1054,6 +1114,145 @@ class report_myfeedback {
     }
 
     /**
+     * Return the position the user's grade falls into for the bar graph
+     * @global obj $remotedb The DB object
+     * @param int $itemid Grade item id
+     * @param int $grade The grade
+     * @return int How much percentage of the bar should be shaded
+     */
+    public function get_activity_min_and_max_grade($itemid, $grade) {
+        global $remotedb;
+        $sql = "SELECT min(finalgrade) as min, max(finalgrade) as max FROM {grade_grades}
+                WHERE itemid = ?";
+        $params = array($itemid);
+        $activity = $remotedb->get_record_sql($sql, $params);
+        $loc = 100;
+        if ($activity) {
+            $res = (int) $activity->max - (int) $activity->min;
+            if ($res > 0) {
+                $p_res = $res / 5;
+                $pos1 = $activity->min + $p_res;
+                $pos2 = $activity->min + $p_res * 2;
+                $pos3 = $activity->min + $p_res * 3;
+                $pos4 = $activity->min + $p_res * 4;
+                if ($grade < $pos1) {
+                    $loc = 20;
+                }
+                if ($grade >= $pos1 && $grade < $pos2) {
+                    $loc = 40;
+                }
+                if ($grade >= $pos2 && $grade < $pos3) {
+                    $loc = 60;
+                }
+                if ($grade >= $pos3 && $grade < $pos4) {
+                    $loc = 80;
+                }
+                if ($grade >= $pos4) {
+                    $loc = 100;
+                }
+            }
+        }
+        return $loc;
+    }
+
+    /**
+     * get the self-reflective notes for each grade item added by the user
+     * 
+     * @global obj $remotedb The DB object
+     * @param int $userid The user id who the notes relate to
+     * @param int $gradeitemid The id of the specific grade item
+     * @return str The self-reflective notes
+     */
+    public function get_notes($userid, $gradeitemid, $instn) {
+        global $remotedb;
+
+        $sql = "SELECT DISTINCT notes
+                 FROM {report_myfeedback}
+                 WHERE userid=? AND gradeitemid=? AND iteminstance=?";
+        $params = array($userid, $gradeitemid, $instn);
+        $usernotes = $remotedb->get_record_sql($sql, $params);
+        $displaynotes = '';
+        if ($usernotes) {
+            $displaynotes = $usernotes->notes;
+        }
+        return $displaynotes;
+    }
+
+    /**
+     * get the non-Moodle feedback for each grade item added by the user
+     * 
+     * @global obj $remotedb The DB object
+     * @param int $userid The user id who the notes relate to
+     * @param int $gradeitemid The id of the specific grade item
+     * @return str The non-Moodle feedback
+     */
+    public function get_turnitin_feedback($userid, $gradeitemid, $inst) {
+        global $remotedb;
+
+        $sql = "SELECT DISTINCT modifierid, feedback
+                 FROM {report_myfeedback}
+                 WHERE userid=? AND gradeitemid=? AND iteminstance=?";
+        $params = array($userid, $gradeitemid, $inst);
+        $turnitinfeedback = $remotedb->get_record_sql($sql, $params);
+        if ($turnitinfeedback) {
+            return $turnitinfeedback;
+        }
+        return null;
+    }
+
+    public function get_archived_dbs_old() {
+        $dbs = get_config('report_myfeedback');
+        $ac_year = array();
+        foreach ($dbs as $k => $val) {
+            for ($i = 1; $i < 6; $i++) {
+                if ($k == 'dbname' . $i && $val) {
+                    $ac_year[] = $this->get_academic_year($i);
+                }
+            }
+        }
+        return $ac_year;
+    }
+
+    public function get_academic_year_old($ac_year = null) {
+        $month = date("m");
+        $year = date("Y-m-d", strtotime("- {$ac_year} Years"));
+        $academicyear = date("y", strtotime($year)) . "/" . date("y", strtotime($year . "+ 1 Years"));
+        if ($month < 9) {
+            $academicyear = date("y", strtotime($year . "- 1 Years")) . "/" . date("y", strtotime($year));
+        }
+        return $academicyear;
+    }
+
+    public function get_archived_dbs() {
+        $dbs = get_config('report_myfeedback');
+        $ac_year = array();
+        $archived_years = 1;
+        foreach ($dbs as $k => $val) {
+            if ($k == 'archivedyears' && $val) {
+                $archived_years = $val;
+            }
+        }
+        foreach ($dbs as $k => $val) {
+            if ($k == 'dbhostarchive' && $val) {
+                for ($i = 1; $i <= $archived_years; $i++) {
+                    $ac_year[] = $this->get_academic_years($i);
+                }
+            }
+        }
+        return $ac_year;
+    }
+
+    public function get_academic_years($ac_year = null) {
+        $month = date("m");
+        $year = date("Y-m-d", strtotime("- {$ac_year} Years"));
+        $academicyear = date("y", strtotime($year)) . date("y", strtotime($year . "+ 1 Years"));
+        if ($month < 9) {
+            $academicyear = date("y", strtotime($year . "- 1 Years")) . date("y", strtotime($year));
+        }
+        return $academicyear;
+    }
+
+    /**
      * Get content to populate the feedback table
      *
      * @return str The table of submission and feedback for the user referred to in the url after
@@ -1082,6 +1281,7 @@ class report_myfeedback {
                             gi.scaleid,
                             gi.aggregationcoef2 AS weighting,
                             gi.display AS display,
+                            gi.decimals AS decimals,
                             -1 AS assignid,
                             -1 AS assignmentid,
                             -1 AS teamsubmission,
@@ -1097,7 +1297,7 @@ class report_myfeedback {
                             -1 AS partname,
                             -1 AS usegrademark,
                             gg.feedback AS feedbacklink,
-                            gg.rawgrademax AS highestgrade,
+                            gi.grademax AS highestgrade,
                             gg.userid,
                             -1 AS groupid,
                             -1 AS assigngradeid,
@@ -1105,7 +1305,8 @@ class report_myfeedback {
                             '' AS activemethod,
                             -1 AS nosubmissions,
                             '' AS status,
-                            '' AS onlinetext
+                            '' AS onlinetext,
+                            -1 as sumgrades
                         FROM {course} c
                         JOIN {grade_items} gi ON c.id=gi.courseid
                              AND itemtype='manual' AND (gi.hidden != 1 AND gi.hidden < ?)
@@ -1127,6 +1328,7 @@ class report_myfeedback {
                             gi.scaleid,
                             gi.aggregationcoef2 AS weighting,
                             gi.display AS display,
+                            gi.decimals AS decimals,
                             a.id AS assignid,
                             cm.id AS assignmentid,
                             a.teamsubmission,
@@ -1142,7 +1344,7 @@ class report_myfeedback {
                             -1 AS partname,
                             -1 AS usegrademark,
                             gg.feedback AS feedbacklink,
-                            gg.rawgrademax AS highestgrade,
+                            gi.grademax AS highestgrade,
                             gg.userid,
                             su.groupid,
                             ag.id AS assigngradeid,
@@ -1150,7 +1352,8 @@ class report_myfeedback {
                             ga.activemethod,
                             a.nosubmissions AS nosubmissions,
                             su.status,
-                            apc.value AS onlinetext
+                            apc.value AS onlinetext,
+                            -1 as sumgrades
                         FROM {course} c
                         JOIN {grade_items} gi ON c.id=gi.courseid
                              AND itemtype='mod' AND (gi.hidden != 1 AND gi.hidden < ?)
@@ -1183,10 +1386,11 @@ class report_myfeedback {
                                gi.scaleid,
                                gi.aggregationcoef2 AS weighting,
                                gi.display AS display,
+                               gi.decimals AS decimals,
                                a.id AS assignid,
                                cm.id AS assignmentid,
                                -1 AS teamsubmission,
-                               -1 AS submissiondate,
+                               gg.timecreated AS submissiondate,
                                a.timeclose AS duedate,
                                a.name AS assessmentlink,
                                a.reviewattempt AS reviewattempt,
@@ -1198,7 +1402,7 @@ class report_myfeedback {
                                -1 AS partname,
                                -1 AS usegrademark,
                                gg.feedback AS feedbacklink,
-                               gg.rawgrademax AS highestgrade,
+                               gi.grademax AS highestgrade,
                                gg.userid,
                                -1 AS groupid,
                                -1 AS assigngradeid,
@@ -1206,7 +1410,8 @@ class report_myfeedback {
                                ga.activemethod,
                                -1 AS nosubmissions,
                                '' AS status,
-                               '' AS onlinetext
+                               '' AS onlinetext,
+                               a.sumgrades as sumgrades
                         FROM {course} c
                         JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden != 1 AND gi.hidden < ?)
@@ -1234,6 +1439,7 @@ class report_myfeedback {
                                gi.scaleid,
                                gi.aggregationcoef2 AS weighting,
                                gi.display AS display,
+                               gi.decimals AS decimals,
                                a.id AS assignid,
                                cm.id AS assignmentid,
                                -1 AS teamsubmission,
@@ -1249,7 +1455,7 @@ class report_myfeedback {
                                -1 AS partname,
                                -1 AS usegrademark,
                                gg.feedback AS feedbacklink,
-                               gg.rawgrademax AS highestgrade,
+                               gi.grademax AS highestgrade,
                                gg.userid,
                                -1 AS groupid,
                                -1 AS assigngradeid,
@@ -1257,7 +1463,8 @@ class report_myfeedback {
                                ga.activemethod,
                                a.nattachments AS nosubmissions,
                                '' AS status,
-                               '' AS onlinetext
+                               '' AS onlinetext,
+                               -1 as sumgrades
                         FROM {course} c
                         JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden != 1 AND gi.hidden < ?)
@@ -1286,6 +1493,7 @@ class report_myfeedback {
                                gi.scaleid,
                                gi.aggregationcoef2 AS weighting,
                                gi.display AS display,
+                               gi.decimals AS decimals,
                                -1 AS assignid,
                                cm.id AS assignmentid,
                                -1 AS teamsubmission,
@@ -1301,7 +1509,7 @@ class report_myfeedback {
                                tp.partname,
                                t.usegrademark,
                                gg.feedback AS feedbacklink,   
-                               t.grade AS highestgrade,
+                               tp.maxmarks AS highestgrade,
                                su.userid,
                                -1 AS groupid,
                                -1 AS assigngradeid,
@@ -1309,7 +1517,8 @@ class report_myfeedback {
                                ga.activemethod,
                                t.numparts AS nosubmissions,
                                '' AS status,
-                               '' AS onlinetext
+                               '' AS onlinetext,
+                               -1 as sumgrades
                         FROM {course} c
                         JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden != 1 AND gi.hidden < ?) 
@@ -1339,6 +1548,7 @@ class report_myfeedback {
                                gi.scaleid,
                                gi.aggregationcoef2 AS weighting,
                                gi.display AS display,
+                               gi.decimals AS decimals,
                                -1 AS assignid,
                                cm.id AS assignmentid,
                                -1 AS teamsubmission,
@@ -1354,7 +1564,7 @@ class report_myfeedback {
                                tp.partname,                               
                                t.usegrademark,
                                gg.feedback AS feedbacklink,
-                               t.grade AS highestgrade,
+                               tp.maxmarks AS highestgrade,
                                su.userid,
                                -1 AS groupid,
                                -1 AS assigngradeid,
@@ -1362,7 +1572,8 @@ class report_myfeedback {
                                ga.activemethod,
                                t.numparts AS nosubmissions,
                                '' AS status,
-                               '' AS onlinetext
+                               '' AS onlinetext,
+                               -1 as sumgrades
                         FROM {course} c
                         JOIN {grade_items} gi ON c.id=gi.courseid AND itemtype='mod'
                              AND (gi.hidden != 1 AND gi.hidden < ?)
@@ -1394,11 +1605,19 @@ class report_myfeedback {
         $exceltable = array();
         $reset_print_excel1 = null;
         $reset_print_excel = null;
+        $nonfeedbacktextlink = null;
         $tz = $this->user_timezone();
         $usertimezone = $this->timezone_letter($tz);
+        $relativegrademsg = get_string('relativegradedescription', 'report_myfeedback');
+        $relectivenotesmsg = get_string('relectivenotesdescription', 'report_myfeedback');
+        $infoicon = '<img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . $relectivenotesmsg . '" rel="tooltip"/>';
+        /* $togglemsg = get_string('togglegradedescription', 'report_myfeedback');        
+          $infoicon1 = '<img src=\"' . 'pix/info.png' . '\" ' .
+          ' alt=\"-\" title=\"' . $togglemsg . '\" rel=\"tooltip\"/>'; *///Relative grade toggle
         $title = "<div>" . get_string('provisional_grades', 'report_myfeedback') . "</div><br />";
         // Print titles for each column: Assessment, Type, Due Date, Submission Date,
-        // Submission/Feedback, Grade/Highest Grade.
+        // Submission/Feedback, Grade/Relative Grade.
         $table = "<table class=\"grades\" id=\"grades\" width=\"100%\">
                     <thead>
                             <tr class=\"tableheader\">
@@ -1418,8 +1637,10 @@ class report_myfeedback {
                 get_string('gradetblheader_grade', 'report_myfeedback') . "</th>
                                                             <th>" .
                 get_string('gradetblheader_range', 'report_myfeedback') . "</th>
-                            <th class='bar'>" .
-                get_string('gradetblheader_bar', 'report_myfeedback') . "</th>
+                            <th class='bar'><div class='t-rel off'>" .
+                get_string('gradetblheader_bar', 'report_myfeedback') . "</div>
+                <div class='t-rel'>" . /*
+                  get_string('gradetblheader_relativegrade', 'report_myfeedback') . " " . $infoicon . */ "</div></th>
                             </tr>
                         </thead>
                                                 <tbody>";
@@ -1436,9 +1657,11 @@ class report_myfeedback {
                                 <th>" .
                 get_string('gradetblheader_submissiondate', 'report_myfeedback') . "</th>
                                 <th>" .
-                get_string('gradetblheader_grade', 'report_myfeedback') . "</th>
+                get_string('gradetblheader_grade', 'report_myfeedback') . "</th>                                
                                 <th>" .
-                get_string('gradetblheader_generalfeedback', 'report_myfeedback') . "</th>
+                get_string('gradetblheader_feedback', 'report_myfeedback') . "</th>
+                                <th class=\"hidefromtutor\">" .
+                get_string('gradetblheader_selfreflectivenotes', 'report_myfeedback') . " " . $infoicon . "</th>
                                 <th>" .
                 get_string('gradetblheader_feedback', 'report_myfeedback') . "</th>
                                 <th>" .
@@ -1463,6 +1686,12 @@ class report_myfeedback {
                 $feedbackfileicon = "&nbsp;";
                 $quizgrade = 'yes';
                 $assignment = $record->assessmentname;
+                $subs = 'allsubmissions';
+                $utp = 2;
+                if ($userid == $USER->id) {
+                    $subs = 'submissions';
+                    $utp = 1;
+                }
                 /* if (strlen($record->assessmentname) > 35) {
                   $assignment = substr($record->assessmentname, 0, 32) . '...';
                   } */
@@ -1525,7 +1754,7 @@ class report_myfeedback {
                             $onlinepdffeedback = false;
                             if ($record->assigngradeid) {
                                 $onlinepdffeedback = $this->has_pdf_feedback_file(
-                                        $record->contextid, $record->assigngradeid);
+                                        $record->gi_iteminstance, $userid, $record->assigngradeid);
                             }
 
                             // If there are any comments or other feedback (such as online PDF
@@ -1578,31 +1807,38 @@ class report_myfeedback {
                             $newwindowmsg = get_string('new_window_msg', 'report_myfeedback');
                             $newwindowicon = '<img src="' . 'pix/external-link.png' . '" ' .
                                     ' alt="-" title="' . $newwindowmsg . '" rel="tooltip"/>';
-                            if ($record->assignmentid && $record->subpart && $record->tiiobjid &&
-                                    $record->assessmentname) {
-                                // Not sure what utp is, but it seems to work when set to 2 for admin and 1
-                                // for students.
-                                // Link the submission to the plagiarism comparison report.
-                                // If grademark marking is enabled.
-                                if ($record->usegrademark == 1) {
-                                    // Link the submission to the gradebook.
-                                    $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
-                                            $record->assessmenttype . "/view.php?id=" .
-                                            $record->assignmentid . "&jumppage=grade&userid=" . $userid .
-                                            "&utp=1&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
-                                            "\" target=\"_blank\">" . get_string('feedback', 'report_myfeedback') .
-                                            "</a> $newwindowicon";
-                                } else {
-                                    $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
-                                            $record->assessmenttype . "/view.php?id=" .
-                                            $record->assignmentid . "&do=submissions\" target=\"_blank\">" .
-                                            get_string('feedback', 'report_myfeedback') . "</a> $newwindowicon";
-                                }
-
-                                $submission = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                            $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                                    $record->assessmenttype . "/view.php?id=" .
+                                    $record->assignmentid . "&do=" . $subs . "\" target=\"_blank\">" .
+                                    get_string('feedback', 'report_myfeedback') . "</a> $newwindowicon";
+                            $nonfeedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                                    $record->assessmenttype . "/view.php?id=" .
+                                    $record->assignmentid . "&do=" . $subs . "\" target=\"_blank\" title=\"" . get_string('viewfeedbacktitle', 'report_myfeedback') .
+                                    "\" rel=\"tooltip\"/>" . get_string('viewfeedback', 'report_myfeedback') . "</a> $newwindowicon";
+                            // if ($record->assignmentid && $record->subpart && $record->tiiobjid &&
+                            //   $record->assessmentname) {
+                            // Not sure what utp is, but it seems to work when set to 2 for admin and 1
+                            // for students.
+                            // Link the submission to the plagiarism comparison report.
+                            // If grademark marking is enabled.
+                            if ($record->usegrademark == 1) {
+                                // Link the submission to the gradebook.
+                                $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
                                         $record->assessmenttype . "/view.php?id=" .
-                                        $record->assignmentid . "&do=submissions\" target=\"_blank\">" .
-                                        get_string('submission', 'report_myfeedback') . "</a> $newwindowicon";
+                                        $record->assignmentid . "&jumppage=grade&userid=" . $userid .
+                                        "&utp=" . $utp . "&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
+                                        "\" target=\"_blank\">" . get_string('feedback', 'report_myfeedback') .
+                                        "</a> $newwindowicon";
+                                $nonfeedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                                        $record->assessmenttype . "/view.php?id=" .
+                                        $record->assignmentid . "&jumppage=grade&userid=" . $userid .
+                                        "&utp=" . $utp . "&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
+                                        "\" target=\"_blank\" title=\"" . get_string('viewfeedbacktitle', 'report_myfeedback') .
+                                        "\" rel=\"tooltip\"/>" . get_string('viewfeedback', 'report_myfeedback') . "</a> $newwindowicon";
+                            }
+                            //}
+                            if ($record->grade == NULL) {
+                                $feedbacktextlink = '';
                             }
                             break;
                         case "turnitintooltwo":
@@ -1611,49 +1847,43 @@ class report_myfeedback {
                             $newwindowmsg = get_string('new_window_msg', 'report_myfeedback');
                             $newwindowicon = '<img src="' . 'pix/external-link.png' . '" ' .
                                     ' alt="-" title="' . $newwindowmsg . '" rel="tooltip"/>';
-                            if ($record->assignmentid && $record->subpart && $record->tiiobjid &&
-                                    $record->assessmentname) {
-                                // Not sure what utp is, but it seems to work when set to 2 for admin and 1
-                                // for students.
-                                // Link the submission to the plagiarism comparison report.
-                                $submission = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                            $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                                    $record->assessmenttype . "/view.php?id=" .
+                                    $record->assignmentid . "&partid=" . $record->subpart . "\" target=\"_blank\">" .
+                                    get_string('feedback', 'report_myfeedback') . "</a> $newwindowicon";
+                            $nonfeedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                                    $record->assessmenttype . "/view.php?id=" .
+                                    $record->assignmentid . "&partid=" . $record->subpart . "\" target=\"_blank\" title=\"" . get_string('viewfeedbacktitle', 'report_myfeedback') .
+                                    "\" rel=\"tooltip\"/>" . get_string('viewfeedback', 'report_myfeedback') . "</a> $newwindowicon";
+                            //if ($record->assignmentid && $record->subpart && $record->tiiobjid &&
+                            //      $record->assessmentname) {
+                            // Not sure what utp is, but it seems to work when set to 2 for admin and 1
+                            // for students.
+                            // Link the submission to the plagiarism comparison report.
+                            // If grademark marking is enabled.
+                            if ($record->usegrademark == 1) {
+                                // Link the submission to the gradebook.
+                                $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
                                         $record->assessmenttype . "/view.php?id=" .
-                                        $record->assignmentid . "&jumppage=report&userid=" . $userid .
-                                        "&utp=1&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
-                                        "\" target=\"_blank\">" . get_string('submission', 'report_myfeedback') .
+                                        $record->assignmentid . "&viewcontext=box&do=grademark&submissionid=" . $record->tiiobjid .
+                                        "\" target=\"_blank\">" . get_string('feedback', 'report_myfeedback') .
                                         "</a> $newwindowicon";
-                                // If grademark marking is enabled.
-                                if ($record->usegrademark == 1) {
-                                    // Link the submission to the gradebook.
-                                    $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
-                                            $record->assessmenttype . "/view.php?id=" .
-                                            $record->assignmentid . "&jumppage=grade&userid=" . $userid .
-                                            "&utp=1&partid=" . $record->subpart . "&objectid=" . $record->tiiobjid .
-                                            "\" target=\"_blank\">" . get_string('feedback', 'report_myfeedback') .
-                                            "</a> $newwindowicon";
-                                } else {
-                                    $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
-                                            $record->assessmenttype . "/view.php?id=" .
-                                            $record->assignmentid . "&do=submissions\" target=\"_blank\">" .
-                                            get_string('feedback', 'report_myfeedback') . "</a> $newwindowicon";
-                                }
+                                $nonfeedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/" .
+                                        $record->assessmenttype . "/view.php?id=" .
+                                        $record->assignmentid . "&viewcontext=box&do=grademark&submissionid=" . $record->tiiobjid .
+                                        "\" target=\"_blank\" title=\"" . get_string('viewfeedbacktitle', 'report_myfeedback') .
+                                        "\" rel=\"tooltip\"/>" . get_string('viewfeedback', 'report_myfeedback') . "</a> $newwindowicon";
+                            }
+                            //}
+                            if ($record->grade == NULL) {
+                                $feedbacktextlink = '';
                             }
                             break;
                         case "workshop":
                             $assessmenttype = get_string('workshop', 'report_myfeedback');
-                            $submission = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
-                                    $record->assignmentid . "&id=" . $record->subid . "\">" .
-                                    get_string('submission', 'report_myfeedback') . "</a>";
-                            if ($record->feedbacklink) {
-                                $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
-                                        $record->assignmentid . "&id=" . $record->subid . "\">" .
-                                        get_string('feedback', 'report_myfeedback') . "</a>";
-                                $feedbacktext = $record->feedbacklink;
-                            }
 
                             // Check whether an online PDF annotated feedback or any feedback file exists.
-                            $workshopfeedback = $this->has_workshop_feedback_file(
-                                    $record->contextid, $userid, $record->assignid);
+                            $workshopfeedback = $this->has_workshop_feedback_file($userid, $record->subid);
 
                             //Add an icon if has pdf file
                             if ($workshopfeedback) {
@@ -1663,11 +1893,21 @@ class report_myfeedback {
                                         'class="icon" alt="' . $feedbackfile . '" title="' . $feedbackfile . '" rel="tooltip">';
                             }
 
+                            $submission = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
+                                    $record->assignmentid . "&id=" . $record->subid . "\">" .
+                                    get_string('submission', 'report_myfeedback') . "</a>";
+                            if ($record->feedbacklink || $workshopfeedback) {
+                                $feedbacktextlink = "<a href=\"" . $CFG->wwwroot . "/mod/workshop/submission.php?cmid=" .
+                                        $record->assignmentid . "&id=" . $record->subid . "\">" .
+                                        get_string('feedback', 'report_myfeedback') . "</a>";
+                                if ($record->feedbacklink) {
+                                    $feedbacktext = $record->feedbacklink;
+                                }
+                            }
                             break;
                         case "quiz":
                             $assessmenttype = get_string('quiz', 'report_myfeedback');
                             $submission = "-";
-
                             //Checking if the user was given an overridden extension or as part of a group
                             $overrideextension = $this->check_quiz_extension($record->assignid, $userid);
                             $overrideextensiongroup = $this->check_quiz_group_extension($record->assignid, $userid);
@@ -1700,7 +1940,7 @@ class report_myfeedback {
                             }
 
                             //Checking for quiz last attempt date as submission date
-                            $submit = $this->get_quiz_submissiondate($record->assignid, $userid);
+                            $submit = $this->get_quiz_submissiondate($record->assignid, $userid, $record->grade, $record->highestgrade, $record->sumgrades);
                             if ($submit) {
                                 $submissiondate = $submit;
                             }
@@ -1741,7 +1981,7 @@ class report_myfeedback {
                                 } else {
                                     $feedbacktextlink = '&nbsp;';
                                 }
-                                //Added teh marks as well but if set to not show at all then this is just as hiding the grade in the gradebook and wont
+                                //Added the marks as well but if set to not show at all then this is just as hiding the grade in the gradebook and wont
                                 //show the review links or the feedback text if these are set.
                                 if ($review2 == 256 || $review2 == 4352 || $review2 == 65792 || $review2 == 69888) {
                                     $quizgrade = 'yes';
@@ -1845,12 +2085,11 @@ class report_myfeedback {
                                 $submissionmsg . '" rel="tooltip"/>';
                         $submissiondate = "<span style=\"color: #990000;\">" . $submissiondate . " $alerticon</span>";
                     }
-                    if (strlen($record->shortname) > 20) {
-                        $shortname = substr($record->shortname, 0, 17) . '...';
-                    } else {
-                        $shortname = $record->shortname;
-                    }
-
+                    /* if (strlen($record->shortname) > 20) {
+                      $shortname = substr($record->shortname, 0, 17) . '...';
+                      } else { */
+                    $shortname = $record->shortname;
+                    //}*/
                     //Display grades in the format defined within each Moodle course
                     $realgrade = null;
                     $mingrade = null;
@@ -1863,7 +2102,7 @@ class report_myfeedback {
                           if ($inst == $record->gradeitemid) {
                           $realgrade = $real->grades[$userid]->str_grade;
                           if (is_numeric($realgrade)) {
-                          $realgrade = $this->get_fraction($realgrade);
+                          $realgrade = $this->get_fraction($realgrade, $record->courseid, $record->decimals);
                           }
                           }
                           } */
@@ -1894,64 +2133,70 @@ class report_myfeedback {
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_LETTER_PERCENTAGE)) {
                                         $realgrade = $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) .
-                                                " (" . $this->get_fraction($record->grade) / $this->get_fraction($record->highestgrade) * 100 . "%)";
+                                                " (" . $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%)";
                                         $mingrade = $this->get_min_grade_letter($record->gradeitemid, $userid, $record->courseid) . " (0)";
                                         $graderange = $this->get_all_grade_letters($record->courseid);
                                         $availablegrade = $this->get_available_grade_letter($record->courseid, $record->grade) .
-                                                " (" . $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "%)";
+                                                " (" . $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "%)";
                                     } else if (($gradedisplay == GRADE_DISPLAY_TYPE_LETTER_REAL) ||
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_LETTER_REAL)) {
                                         $realgrade = $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) .
-                                                " (" . $this->get_fraction($record->grade) . ")";
+                                                " (" . $this->get_fraction($record->grade, $record->courseid, $record->decimals) . ")";
                                         $mingrade = $this->get_min_grade_letter($record->courseid, $record->grade) . " (0)";
                                         $graderange = $this->get_all_grade_letters($record->courseid);
                                         $availablegrade = $this->get_available_grade_letter($record->courseid, $record->grade) .
-                                                " (" . $this->get_fraction($record->highestgrade) . ")";
+                                                " (" . $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . ")";
                                     } else if (($gradedisplay == GRADE_DISPLAY_TYPE_PERCENTAGE) ||
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_PERCENTAGE)) {
-                                        $realgrade = $this->get_fraction($record->grade) . "%";
+                                        $realgrade = $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%";
                                         $mingrade = "0";
-                                        $availablegrade = $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "%";
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "%";
                                     } else if (($gradedisplay == GRADE_DISPLAY_TYPE_PERCENTAGE_LETTER) ||
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_PERCENTAGE_LETTER)) {
-                                        $realgrade = $this->get_fraction($record->grade) . "% (" .
+                                        $realgrade = $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "% (" .
                                                 $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) . ")";
                                         $mingrade = "0 (" . $this->get_min_grade_letter($record->courseid, $record->grade) . ")";
                                         $graderange = $this->get_all_grade_letters($record->courseid);
-                                        $availablegrade = $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "% (" .
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "% (" .
                                                 $this->get_available_grade_letter($record->courseid, $record->grade) . ")";
                                     } else if (($gradedisplay == GRADE_DISPLAY_TYPE_PERCENTAGE_REAL) ||
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_PERCENTAGE_REAL)) {
-                                        $realgrade = $this->get_fraction($record->grade) . "% (" .
-                                                $this->get_fraction($record->grade) . ")";
+                                        $realgrade = $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "% (" .
+                                                $this->get_fraction($record->grade, $record->courseid, $record->decimals) . ")";
                                         $mingrade = "0 (0)";
-                                        $availablegrade = $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "% (" .
-                                                $this->get_fraction($record->highestgrade) . ")";
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "% (" .
+                                                $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . ")";
                                     } else if (($gradedisplay == GRADE_DISPLAY_TYPE_REAL_LETTER) ||
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_REAL_LETTER)) {
-                                        $realgrade = $this->get_fraction($record->grade) . " (" .
+                                        $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals) . " (" .
                                                 $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) . ")";
                                         $mingrade = "0 (" . $this->get_min_grade_letter($record->courseid, $record->grade) . ")";
                                         $graderange = $this->get_all_grade_letters($record->courseid);
-                                        $availablegrade = $this->get_fraction($record->highestgrade) . " (" .
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . " (" .
                                                 $this->get_available_grade_letter($record->courseid, $record->grade) . ")";
                                     } else if (($gradedisplay == GRADE_DISPLAY_TYPE_REAL_PERCENTAGE) ||
                                             ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                             $cfggradetype == GRADE_DISPLAY_TYPE_REAL_PERCENTAGE)) {
-                                        $realgrade = $this->get_fraction($record->grade) . " (" .
-                                                $this->get_fraction($record->grade) . "%)";
+                                        $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals) . " (" .
+                                                $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%)";
                                         $mingrade = "0 (0)";
-                                        $availablegrade = $this->get_fraction($record->highestgrade) . " (" .
-                                                $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "%)";
-                                    } else {
-                                        $realgrade = $this->get_fraction($record->grade);
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . " (" .
+                                                $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "%)";
+                                    } else if (($gradedisplay == GRADE_DISPLAY_TYPE_REAL) ||
+                                            ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
+                                            $cfggradetype == GRADE_DISPLAY_TYPE_REAL)) {
+                                        $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals);
                                         $mingrade = "0";
-                                        $availablegrade = $this->get_fraction($record->highestgrade);
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals);
+                                    } else {
+                                        $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals);
+                                        $mingrade = "0";
+                                        $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals);
                                     }
                                     break;
                             }
@@ -1983,75 +2228,88 @@ class report_myfeedback {
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_LETTER_PERCENTAGE)) {
                                     $realgrade = $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) .
-                                            " (" . $this->get_fraction($record->grade) . "%)";
+                                            " (" . $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%)";
                                     $mingrade = $this->get_min_grade_letter($record->courseid, $record->grade) . " (0)";
                                     $graderange = $this->get_all_grade_letters($record->courseid);
                                     $availablegrade = $this->get_available_grade_letter($record->courseid, $record->grade) .
-                                            " (" . $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "%)";
+                                            " (" . $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "%)";
                                 } else if (($gradedisplay == GRADE_DISPLAY_TYPE_LETTER_REAL) ||
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_LETTER_REAL)) {
                                     $realgrade = $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) .
-                                            " (" . $this->get_fraction($record->grade) . ")";
+                                            " (" . $this->get_fraction($record->grade, $record->courseid, $record->decimals) . ")";
                                     $mingrade = $this->get_min_grade_letter($record->courseid, $record->grade) . " (0)";
                                     $graderange = $this->get_all_grade_letters($record->courseid);
                                     $availablegrade = $this->get_available_grade_letter($record->courseid, $record->grade) .
-                                            " (" . $this->get_fraction($record->highestgrade) . ")";
+                                            " (" . $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . ")";
                                 } else if (($gradedisplay == GRADE_DISPLAY_TYPE_PERCENTAGE) ||
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_PERCENTAGE)) {
-                                    $realgrade = $this->get_fraction($record->grade) . "%";
+                                    $realgrade = $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%";
                                     $mingrade = "0";
-                                    $availablegrade = $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "%";
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "%";
                                 } else if (($gradedisplay == GRADE_DISPLAY_TYPE_PERCENTAGE_LETTER) ||
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_PERCENTAGE_LETTER)) {
-                                    $realgrade = $this->get_fraction($record->grade) . "% (" .
+                                    $realgrade = $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "% (" .
                                             $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) . ")";
                                     $mingrade = "0 (" . $this->get_min_grade_letter($record->courseid, $record->grade) . ")";
                                     $graderange = $this->get_all_grade_letters($record->courseid);
-                                    $availablegrade = $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "% (" .
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "% (" .
                                             $this->get_available_grade_letter($record->courseid, $record->grade) . ")";
                                 } else if (($gradedisplay == GRADE_DISPLAY_TYPE_PERCENTAGE_REAL) ||
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_PERCENTAGE_REAL)) {
-                                    $realgrade = $this->get_fraction($record->grade) . "% (" .
-                                            $this->get_fraction($record->grade) . ")";
+                                    $realgrade = $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "% (" .
+                                            $this->get_fraction($record->grade, $record->courseid, $record->decimals) . ")";
                                     $mingrade = "0 (0)";
-                                    $availablegrade = $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "% (" .
-                                            $this->get_fraction($record->highestgrade) . ")";
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) / $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) * 100 . "% (" .
+                                            $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . ")";
                                 } else if (($gradedisplay == GRADE_DISPLAY_TYPE_REAL_LETTER) ||
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_REAL_LETTER)) {
-                                    $realgrade = $this->get_fraction($record->grade) . " (" .
+                                    $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals) . " (" .
                                             $this->get_grade_letter($record->courseid, $record->grade / $record->highestgrade * 100) . ")";
                                     $mingrade = "0 (" . $this->get_min_grade_letter($record->courseid, $record->grade) . ")";
                                     $graderange = $this->get_all_grade_letters($record->courseid);
-                                    $availablegrade = $this->get_fraction($record->highestgrade) . " (" .
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . " (" .
                                             $this->get_available_grade_letter($record->courseid, $record->grade) . ")";
                                 } else if (($gradedisplay == GRADE_DISPLAY_TYPE_REAL_PERCENTAGE) ||
                                         ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
                                         $cfggradetype == GRADE_DISPLAY_TYPE_REAL_PERCENTAGE)) {
-                                    $realgrade = $this->get_fraction($record->grade) . " (" .
-                                            $this->get_fraction($record->grade) . "%)";
+                                    $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals) . " (" .
+                                            $this->get_fraction($record->grade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%)";
                                     $mingrade = "0 (0)";
-                                    $availablegrade = $this->get_fraction($record->highestgrade) . " (" .
-                                            $this->get_fraction($record->highestgrade) / $this->get_fraction($record->highestgrade) * 100 . "%)";
-                                } else {
-                                    $realgrade = $this->get_fraction($record->grade);
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . " (" .
+                                            $this->get_fraction($record->highestgrade / $record->highestgrade * 100, $record->courseid, $record->decimals) . "%)";
+                                } else if (($gradedisplay == GRADE_DISPLAY_TYPE_REAL) ||
+                                        ($gradedisplay == GRADE_DISPLAY_TYPE_DEFAULT &&
+                                        $cfggradetype == GRADE_DISPLAY_TYPE_REAL)) {
+                                    $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals);
                                     $mingrade = "0";
-                                    $availablegrade = $this->get_fraction($record->highestgrade);
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals);
+                                } else {
+                                    $realgrade = $this->get_fraction($record->grade, $record->courseid, $record->decimals);
+                                    $mingrade = "0";
+                                    $availablegrade = $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals);
                                 }
                         }
                     }
 
                     //horizontal bar only needed if grade type is value and not letter or scale
-                    $grade_percent = $record->grade / $record->highestgrade * 100;
+                    if ($gradetype == GRADE_TYPE_VALUE && $gradedisplay != GRADE_DISPLAY_TYPE_LETTER) {
+                        /* $width = $this->get_activity_min_and_max_grade($record->gradeitemid, $record->grade); *///relative grade toggle
+                        $grade_percent = $record->grade / $record->highestgrade * 100;
 
-                    $horbar = "<td class=\"bar\"><div class=\"horizontal-bar\"><div style=\"width:" . $grade_percent .
-                            "%\" class=\"grade-bar\">&nbsp;</div></div>"
-                            . "<div class=\"available-grade\">"
-                            . $this->get_fraction($record->grade) . "/" . $this->get_fraction($record->highestgrade) . "</div></td>";
+                        $horbar = "<td><div class=\"horizontal-bar t-rel off\"><div style=\"width:" . $grade_percent .
+                                "%\" class=\"grade-bar\">&nbsp;</div></div>"
+                                . "<div class=\"available-grade t-rel off\">"
+                                . $this->get_fraction($record->grade, $record->courseid, $record->decimals) . "/" . $this->get_fraction($record->highestgrade, $record->courseid, $record->decimals) . "</div></td>";
+                        /*  <div class=\"horizontal-bar t-rel\"><div style=\"width:" . $width .
+                          "%\" class=\"grade-bar\">&nbsp;</div></div>"
+                          . "<div class=\"available-grade t-rel\"><span style=\"float:left\">min</span><span style=\"float:right\">max</span></div>
+                          </td>"; *///relative grade toggle
+                    }
                     if ($gradetype != GRADE_TYPE_VALUE) {
                         $horbar = "<td>-</td>";
                     }
@@ -2075,13 +2333,14 @@ class report_myfeedback {
 
                     //If no grade is given then don't display 0
                     if ($record->grade == NULL) {
-                        $grade_tbl2 = $realgrade = "-";
+                        $grade_tbl2 = "-";
+                        $realgrade = "-";
                     }
 
                     //implement weighting
                     $weighting = '-';
                     if ($record->weighting != 0 && $gradetype == 1) {
-                        $weighting = number_format(($record->weighting * 100), 0, '.', ',') . '%'; //only 1 decimal place
+                        $weighting = number_format(($record->weighting * 100), 0, '.', ',') . '%';
                     }
 
                     //Data for the viewed feedback
@@ -2118,7 +2377,7 @@ class report_myfeedback {
                             has_capability('report/myfeedback:progadmin', $coursecontext, $USER->id, $doanything = false) ||
                             has_capability('moodle/course:changeshortname', $coursecontext, $USER->id, $doanything = false)) {
                         $table .= "<tr>";
-                        $table .= "<td>" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
+                        $table .= "<td class=\"ellip\">" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
                                         "/course/view.php?id=" . $record->courseid . "\" title=\"" . $record->coursename .
                                         "\" rel=\"tooltip\">" . $shortname . "</a>" : "&nbsp;") . "</td>";
                         $table .= "<td>" . $assessmenticon . $assignmentname . "</td>";
@@ -2126,10 +2385,7 @@ class report_myfeedback {
                         $table .= "<td data-sort=$due_datesort>" . $duedate . "</td>";
                         $table .= "<td data-sort=$sub_datesort>" . $submissiondate . "</td>";
                         $table .= "<td>" . $feedbacktextlink . "</td>"; // Including links to marking guide or rubric.
-                        //$table .= "<td>" . $weighting . "</td>";
-                        $table .= "<td>" . $realgrade . "</td>"; //($record->grade ? number_format($record->grade, 0) : "&nbsp;") . "</td>";
-                        //($record->grade ? number_format($record->grade, 0) : "&nbsp;") . " / " .
-                        //$record->highestgrade ? number_format($record->highestgrade, 0) : "&nbsp;") . "</td>";
+                        $table .= "<td>" . $realgrade . "</td>";
                         $table .= "<td title=\"$graderange\" rel=\"tooltip\">" . $mingrade . " - " . $availablegrade . "</td>";
                         $table .= $horbar;
                         $table .= "</tr>";
@@ -2146,20 +2402,118 @@ class report_myfeedback {
                         $exceltable[$x]['Viewed'] = $viewexport;
                         ++$x;
 
+                        $fileicon = ' <img src="' . $OUTPUT->pix_url('i/edit', 'core') . '" ' . 'class="icon" alt="edit">';
+                        //The reflective notes and turnitin feedback
+                        $tdid = $record->gradeitemid;
+                        if (!$instn = $record->subpart) {
+                            $instn = null;
+                        }
+                        $tutorhidden = 'nottutor';
+                        $notes = '';
+                        $noteslink = '<a href="#" class="addnote" data-toggle="modal" title="' . get_string('addnotestitle', 'report_myfeedback') . '" rel="tooltip" data-uid="' .
+                                $userid . '" data-gid="' . $tdid . '" data-inst="' . $instn . '">' . get_string('addnotes', 'report_myfeedback') . '</a>';
+
+                        if ($usernotes = $this->get_notes($userid, $record->gradeitemid, $instn)) {
+                            $notes = nl2br($usernotes);
+                            $noteslink = '<a href="#" class="addnote" data-toggle="modal" title="' . get_string('editnotestitle', 'report_myfeedback') . '" rel="tooltip" data-uid="' .
+                                    $userid . '" data-gid="' . $tdid . '" data-inst="' . $instn . '">' . get_string('editnotes', 'report_myfeedback') . '</a>';
+                        }
+                        //Only the user can add/edit their own self-reflective notes
+                        if ($USER->id != $userid) {
+                            $noteslink = '';
+                        }
+                        //Module tutor who are not personal tutor for the student can't see the notes
+                        if (has_capability('moodle/course:changeshortname', $coursecontext, $USER->id, $doanything = false) && !has_capability('moodle/user:viewdetails', $usercontext)) {
+                            $notes = '';
+                            $tutorhidden = 'hidefromtutor';
+                            echo '<style> .hidefromtutor{display:none}</style>';
+                        }
+
+                        $feedbacklink = get_string('addfeedback', 'report_myfeedback') . '<a href="#" class="addfeedback" data-toggle="modal" title="' . get_string('addfeedbacktitle', 'report_myfeedback') . '" rel="tooltip" data-uid="' .
+                                $userid . '" data-gid="' . $tdid . '" data-inst="' . $instn . '">' . get_string('copyfeedback', 'report_myfeedback') . '</a>' .
+                                ' or ' . $nonfeedbacktextlink;
+                        $selfadded = 0;
+                        $studentcopy = '';
+                        $studentadded = 'notstudent';
+                        if ($record->assessmenttype == 'turnitintool' || $record->assessmenttype == 'turnitintooltwo') {
+                            if ($nonmoodlefeedback = $this->get_turnitin_feedback($userid, $record->gradeitemid, $instn)) {
+                                if ($nonmoodlefeedback->feedback) {
+                                    if ($nonmoodlefeedback->modifierid) {
+                                        $selfadded = $nonmoodlefeedback->modifierid;
+                                    }
+                                    if ($userid == $selfadded) {
+                                        $studentadded = 'student';
+                                        $studentcopy = '<b><u>' . get_string('studentaddedfeedback', 'report_myfeedback') . '</u></b><br>';
+                                        if ($USER->id == $userid) {
+                                            $studentcopy = '<b><u>' . get_string('selfaddedfeedback', 'report_myfeedback') . '</u></b><br>';
+                                        }
+                                    }
+
+                                    $feedbacklink = '<a href="#" class="addfeedback" data-toggle="modal" title="' . get_string('editfeedbacktitle', 'report_myfeedback') . '" rel="tooltip" data-uid="' .
+                                            $userid . '" data-gid="' . $tdid . '" data-inst="' . $instn . '">' . $fileicon . '</a>';
+                                    $feedbacktext = $studentcopy . "<div id=\"feed-val" . $tdid . $instn . "\">" . nl2br($nonmoodlefeedback->feedback) . "</div><div style=\"float:right;\">" . $feedbacklink . "</div>";
+                                } else {
+                                    $feedbacktext = $feedbacklink;
+                                }
+                            } else {
+                                $feedbacktext = $feedbacklink;
+                            }
+                        }
+
+                        //The self-reflective notes bootstrap modal
+                        echo '<div style="height: 0; width: 0;" class="container">
+                            <div style="display: none;" id="Abs2" class="modal hide fade">
+                            <div class="modal-header"><a class="close" data-dismiss="modal">×</a>
+                            <h3>' . get_string("addeditnotes", "report_myfeedback") . '</h3>
+                            </div>
+                            <div class="modal-body">
+                            <form  method="POST"  id="notesform" action="reflectivenotes.php" >
+                            <textarea id="notename" class="autoexpand" name="notename" wrap="hard" rows="4" data-min-rows="4" cols="60" value=""></textarea>
+                            <input type="hidden" name="grade_id" id="grade_id" value="" />                            
+                            <input type="hidden" name="instance1" id="instance1" value="" />
+                            <input type="hidden" name="userid" id="user_id" value="" /> 
+                            <input type="submit" id="submitnotes" value="' . get_string("savenotes", "report_myfeedback") . '" />
+                            </form>
+                            
+                            </div>
+                            <div class="modal-footer"><a class="btn" href="#" data-dismiss="modal">Close</a></div>
+                            </div>
+                            </div>';
+
+                        //The non-moodle(turnitin) feedback bootstrap modal
+                        echo '<div style="height: 0; width: 0;" class="container">
+                            <div style="display: none;" id="Abs1" class="modal hide fade">
+                            <div class="modal-header"><a class="close" data-dismiss="modal">×</a>
+                            <h3>' . get_string("addeditfeedback", "report_myfeedback") . '</h3>
+                            </div>
+                            <div class="modal-body">
+                            <form  method="POST"  id="feedform" action="nonmoodlefeedback.php" >
+                            <textarea id="feedname" class="autoexpand" name="feedname" wrap="hard" rows="4" data-min-rows="4" cols="60" value=""></textarea>
+                            <input type="hidden" name="grade_id2" id="grade_id2" value="" />
+                            <input type="hidden" name="instance" id="instance" value="" />
+                            <input type="hidden" name="userid2" id="user_id2" value="" /> 
+                            <input type="submit" id="submitfeed" value="' . get_string("savefeedback", "report_myfeedback") . '" />
+                            </form>
+                            </div>
+                            <div class="modal-footer"><a class="btn" href="#" data-dismiss="modal">Close</a></div>
+                            </div>
+                            </div>';
+
                         //The feedback comments table
                         if ($feedbacktext != '-' || $feedbackfileicon != '&nbsp;' || $feedbacktextlink != '&nbsp;') {
                             $commentstable .= "<tr>";
-                            $commentstable .= "<td data-filter=$record->shortname>" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
+                            $commentstable .= "<td class=\"ellip\">" . ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
                                             "/course/view.php?id=" . $record->courseid . "\" title=\"" . $record->coursename .
                                             "\" rel=\"tooltip\">" . $shortname . "</a>" : "&nbsp;") . "</td>";
                             $commentstable .= "<td style=\"text-align:left;\">" . $assessmenticon . $assignmentname . "</td>";
                             $commentstable .= "<td style=\"text-align:left;\">" . $assessmenttype . "</td>";
                             $commentstable .= "<td data-sort=$sub_datesort>" . $submissiondate . "</td>";
                             $commentstable .= "<td>" . $grade_tbl2 . "</td>";
-                            $commentstable .= "<td width=\"400\" style=\"border:3px solid #ccc; text-align:left;\">" . $feedbacktext . "</td>";
+                            $commentstable .= "<td class=\"feed-val-2 $studentadded\" width=\"400\" style=\"border:3px solid #ccc; text-align:left;\">" . $feedbacktext . "</td>";
+                            $commentstable .= "<td class=\"note-val-2 $tutorhidden \"><div id=\"note-val" . $tdid . $instn . "\">" . $notes . "</div><div>" . $noteslink . "</div></td>";
                             $commentstable .= "<td>" . $feedbacktextlink . $feedbackfileicon . "</td>";
                             $commentstable .= "<td>" . $viewed . "</td>";
-                            $commentstable.= "</tr>";
+                            $commentstable .= "</tr>";
                         }
                     }
                 }
@@ -2191,6 +2545,7 @@ class report_myfeedback {
                 get_string('reset_table', 'report_myfeedback') . "\">
                 <input id=\"exportexcel\" type=\"button\" value=\"" . get_string('export_to_excel', 'report_myfeedback') . "\">
                 <input id=\"reportPrint\" type=\"button\" value=\"" . get_string('print_report', 'report_myfeedback') . "\"></div>";
+        //   <input id=\"toggle-grade\" type=\"button\" value=\"" . get_string('togglegrade', 'report_myfeedback') ."\">//relative grade toggle
         $reset_print_excel1 = "<div style=\"float:right;\" class=\"buttonswrapper\"><input id=\"ftableDestroy\" type=\"button\" value=\"" .
                 get_string('reset_table', 'report_myfeedback') . "\">
                 <input id=\"exportexcel\" type=\"button\" value=\"" . get_string('export_to_excel', 'report_myfeedback') . "\">
@@ -2206,12 +2561,12 @@ class report_myfeedback {
             $this->content->text = $feedbackcomments . $reset_print_excel1 . $commentstable;
         }
         if ($tab == 'tutor') {
-				$personaltutor = "<h2>" . get_string('tabs_tutor', 'report_myfeedback') . "</h2><br />" .
-						"<a href=\"mailto:tutor@example.com\" class=\"btn warning\">" . get_string('email_tutor', 'report_myfeedback') . "</a>" .
-						"<a href=\"#\" target=\"_blank\" class=\"btn warning\">" .
-						get_string('meet_tutor', 'report_myfeedback') . "</a>" .
-						"<h2>" . get_string('tutor_messages', 'report_myfeedback') . "</h2>";
-				$this->content->text = $personaltutor;
+            $personaltutor = "<h2>" . get_string('tabs_tutor', 'report_myfeedback') . "</h2><br />" .
+                    "<a href=\"mailto:tutor@example.com\" class=\"btn warning\">" . get_string('email_tutor', 'report_myfeedback') . "</a>" .
+                    "<a href=\"https://outlook.office365.com/owa/?realm=ucl.ac.uk#path=/calendar\" target=\"_blank\" class=\"btn warning\">" .
+                    get_string('meet_tutor', 'report_myfeedback') . "</a>" .
+                    "<h2>" . get_string('tutor_messages', 'report_myfeedback') . "</h2>";
+            $this->content->text = $personaltutor;
         }
         return $this->content;
     }

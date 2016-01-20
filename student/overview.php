@@ -90,6 +90,10 @@ window.location.href= 'export.php';
 $('#reportPrint').on( 'click', function () {
         print();
 });
+
+$('#toggle-grade').on( 'click', function () {
+$('.t-rel').toggleClass('off');
+});
  
 table.columns().flatten().each( function ( colIdx ) {
     // Create the select list and search operation

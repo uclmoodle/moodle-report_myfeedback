@@ -38,6 +38,25 @@ window.location.href= 'export.php';
 $('#reportPrint').on( 'click', function () {
         print();
 });
- 
+
+$('#feedbackcomments').on('click', '.addnote', function () {
+   var gradeid = $(this).data('gid');
+   var instn = $(this).data('inst');
+   $('#grade_id').val(gradeid);
+   $('#instance1').val(instn);
+   $('#user_id').val($(this).data('uid'));
+   $('#notename').val($('#note-val'+gradeid+instn).text());
+   $('#Abs2').modal('show');
+});
+
+$('#feedbackcomments').on('click', '.addfeedback', function () {
+   var gradeid2 = $(this).data('gid');
+   var instn = $(this).data('inst');
+   $('#grade_id2').val(gradeid2);
+   $('#instance').val(instn);
+   $('#user_id2').val($(this).data('uid'));
+   $('#feedname').val($('#feed-val'+gradeid2+instn).text());
+   $('#Abs1').modal('show');
+});
 } ); 
    </script>";

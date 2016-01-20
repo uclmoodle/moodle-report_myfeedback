@@ -15,7 +15,8 @@ echo $tutees;
 echo "<script type=\"text/javascript\">
    $(document).ready(function() {
     var usertable = $('#userstable').DataTable({
-    'dom': 'lfrtip'
+    'dom': 'lfrtip',
+    'order': [[1, 'desc' ], [0, 'asc' ]]
 });
 } ); 
    </script>";

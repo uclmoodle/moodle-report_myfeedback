@@ -96,6 +96,10 @@
     margin-left: 10px;
 }
 
+.path-report-myfeedback .dataTables_paginate .paginate_button {
+    margin-right: 5px;
+}
+
 /* Two button pagination - previous / next */
 .path-report-myfeedback .paginate_disabled_previous,
 .path-report-myfeedback .paginate_enabled_previous,
@@ -748,7 +752,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback #userstable_wrapper {
-    max-width: 420px;
+    max-width: 720px;
 }
 
 .path-report-myfeedback #userstable_filter {
@@ -881,6 +885,35 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     display: block
 }
 
+.path-report-myfeedback #toggle-grade {
+    font-size: 12px;
+}
+
+.path-report-myfeedback .t-rel {
+    display: none;
+}
+
+.path-report-myfeedback .t-rel.off {
+    display: block;
+}
+
+.path-report-myfeedback .ellip {
+    overflow: hidden;
+    max-width: 120px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.path-report-myfeedback .student {
+    background-color: #FCFCE0;
+}
+
+.path-report-myfeedback table#feedbackcomments td.note-val-2 {
+    min-width: 200px;
+    border: 3px solid #ccc;
+    text-align: left;
+}
+
 @media print {
     #page-header, .navbar, #page-navbar, 
     #block-region-side-pre, #page-footer,
@@ -909,6 +942,9 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 @media only screen and (max-width: 579px) {
     .path-report-myfeedback .dataTables_filter {
         margin-right: 0;
+    }
+    .path-report-myfeedback #userstable_wrapper {
+        max-width: 420px;
     }
 }
 

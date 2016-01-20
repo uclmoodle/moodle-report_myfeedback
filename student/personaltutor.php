@@ -27,11 +27,15 @@ if ($mytutorid) {
 
     echo $mytutorobj->department . "  " . $programme .
     '<br>' . get_string('email_address', 'report_myfeedback') .
-    ' ' . $mytutorobj->email . '<p> </p>';
+    ' <a href="mailto:' . $mytutorobj->email . '">'. $mytutorobj->email .'<p> </p>';
 
-    echo '</div></div><div class="personaltutoremail">
+    echo '</div></div>';
+    if ($USER->id == $userid) {
+        echo '<div class="personaltutoremail">
        <a href="mailto:' . $mytutorobj->email . '?Subject=Your%20Personal%20Tutee">'
-    . get_string("email_tutor", "report_myfeedback") . '</a></div></div>';
+        . get_string("email_tutor", "report_myfeedback") . '</a></div>';
+    }
+    echo '</div>';
 } else {
-   echo get_string('notutor', 'report_myfeedback');
+    echo get_string('notutor', 'report_myfeedback');
 }

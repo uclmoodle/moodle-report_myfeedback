@@ -55,7 +55,7 @@ if ($my_mods) {
     ' <span class="enrolledon">' . $courselist . '</span></p></div>
             <div class="mymods-container-right">
             <p class="mymods-content personaltutoremail">
-            <a href="#" target="_blank">Student Record System</a></p>  
+            <a href="https://evision.ucl.ac.uk/urd/sits.urd/run/siw_lgn" target="_blank">Student Record System</a></p>  
              
             <p class="mymods-content personaltutoremail">Download grades</p>
             </div></div>';
