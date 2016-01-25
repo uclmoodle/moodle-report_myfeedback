@@ -1,0 +1,973 @@
+
+/*
+ * Table
+ */
+
+.path-report-myfeedback table.dataTable {
+    margin: 0 auto;
+    clear: both;
+    width: 100%;
+}
+
+.path-report-myfeedback table.dataTable thead th {
+    padding: 10px 18px 10px 10px;
+    border-bottom: 1px solid black;
+    font-weight: bold;
+    cursor: pointer;
+    *cursor: hand;
+}
+
+.path-report-myfeedback table.dataTable tfoot th {
+    padding: 3px 18px 3px 10px;
+    border-top: 1px solid black;
+    font-weight: bold;
+}
+
+.path-report-myfeedback table.dataTable td {
+    padding: 3px 10px;
+}
+
+.path-report-myfeedback table.dataTable td.center,
+.path-report-myfeedback table.dataTable td.dataTables_empty {
+    text-align: left;
+}
+
+.path-report-myfeedback table.dataTable img.smallicon {
+    height: 12px; 
+    width: 12px;
+}
+
+.path-report-myfeedback table.dataTable tr.odd { background-color: #FFF;/*#E2E4FF;*/ }
+.path-report-myfeedback table.dataTable tr.even { background-color: #FCFCF0; }
+
+.path-report-myfeedback table.dataTable tr.odd td.sorting_1 { background-color: #FCFCE7;/*#F0f5f7;/*#D3D6FF;*/ }
+.path-report-myfeedback table.dataTable tr.odd td.sorting_2 { background-color: #FCFCF0;/*#DADCFF;*/ }
+.path-report-myfeedback table.dataTable tr.odd td.sorting_3 { background-color: #E0E2FF; }
+.path-report-myfeedback table.dataTable tr.even td.sorting_1 { background-color: #FCFCE0;/*#dce9f9; /*#EAEBFF;*/ }
+.path-report-myfeedback table.dataTable tr.even td.sorting_2 { background-color: #FCFCF0; /*#F2F3FF;*/ }
+.path-report-myfeedback table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
+
+/*
+ * Table wrapper
+ */
+.path-report-myfeedback .dataTables_wrapper {
+    position: relative;
+    clear: both;
+    *zoom: 1;
+}
+
+.path-report-myfeedback .dataTables_wrapper label,
+.path-report-myfeedback .dataTables_wrapper .ColVis {
+    margin-bottom: 0;
+}
+
+/*
+ * Page length menu
+ */
+.path-report-myfeedback .dataTables_length {
+    float: left;
+}
+
+
+/*
+ * Filter
+ */
+.path-report-myfeedback .dataTables_filter {
+    float: right;
+    text-align: right;
+    margin-right: 20%;
+}
+
+/*
+ * Table information
+ */
+.path-report-myfeedback .dataTables_info {
+    clear: both;
+    float: left;
+}
+
+
+/*
+ * Pagination
+ */
+.path-report-myfeedback .dataTables_paginate {
+    float: right;
+    text-align: right;
+    margin-left: 10px;
+}
+
+.path-report-myfeedback .dataTables_paginate .paginate_button {
+    margin-right: 5px;
+}
+
+/* Two button pagination - previous / next */
+.path-report-myfeedback .paginate_disabled_previous,
+.path-report-myfeedback .paginate_enabled_previous,
+.path-report-myfeedback .paginate_disabled_next,
+.path-report-myfeedback .paginate_enabled_next {
+    height: 19px;
+    float: left;
+    cursor: pointer;
+    *cursor: hand;
+    color: #111 !important;
+}
+.path-report-myfeedback .paginate_disabled_previous:hover,
+.path-report-myfeedback .paginate_enabled_previous:hover,
+.path-report-myfeedback .paginate_disabled_next:hover,
+.path-report-myfeedback .paginate_enabled_next:hover {
+    text-decoration: none !important;
+}
+.path-report-myfeedback .paginate_disabled_previous:active,
+.path-report-myfeedback .paginate_enabled_previous:active,
+.path-report-myfeedback .paginate_disabled_next:active,
+.path-report-myfeedback .paginate_enabled_next:active {
+    outline: none;
+}
+
+.path-report-myfeedback .paginate_disabled_previous,
+.path-report-myfeedback .paginate_disabled_next {
+    color: #666 !important;
+}
+.path-report-myfeedback .paginate_disabled_previous,
+.path-report-myfeedback .paginate_enabled_previous {
+    padding-left: 23px;
+}
+.path-report-myfeedback .paginate_disabled_next,
+.path-report-myfeedback .paginate_enabled_next {
+    padding-right: 23px;
+    margin-left: 10px;
+}
+
+/* Full number pagination */
+.path-report-myfeedback .paging_full_numbers {
+    height: 22px;
+    line-height: 22px;
+}
+.path-report-myfeedback .paging_full_numbers a:active {
+    outline: none
+}
+.path-report-myfeedback .paging_full_numbers a:hover {
+    text-decoration: none;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_button,
+.path-report-myfeedback .paging_full_numbers a.paginate_active {
+    border: 1px solid #aaa;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 2px 5px;
+    margin: 0 3px;
+    cursor: pointer;
+    *cursor: hand;
+    color: #333 !important;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_button {
+    background-color: #ddd;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_button:hover {
+    background-color: #ccc;
+    text-decoration: none !important;
+}
+
+.path-report-myfeedback .paging_full_numbers a.paginate_active {
+    background-color: #99B3FF;
+}
+
+
+/*
+ * Processing indicator
+ */
+.path-report-myfeedback .dataTables_processing {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 250px;
+    height: 30px;
+    margin-left: -125px;
+    margin-top: -15px;
+    padding: 14px 0 2px 0;
+    border: 1px solid #ddd;
+    text-align: left;
+    color: #999;
+    font-size: 14px;
+    background-color: white;
+}
+
+
+/*
+ * Sorting
+ */
+.path-report-myfeedback .sorting { background-image:url([[pix:moodle|t/sort]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
+.path-report-myfeedback .sorting_asc { background-image:url([[pix:moodle|t/sort_asc]]) !important;background-position: center right !important; background-repeat: no-repeat !important; }
+.path-report-myfeedback .sorting_desc { background-image:url([[pix:moodle|t/sort_desc]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
+
+.path-report-myfeedback table.dataTable thead th:active,
+.path-report-myfeedback table.dataTable thead td:active {
+    outline: none;
+}
+
+
+/*
+ * Scrolling
+ */
+.path-report-myfeedback .dataTables_scroll {
+    clear: both;
+}
+
+.path-report-myfeedback .dataTables_scrollBody {
+    *margin-top: -1px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.path-report-myfeedback table.grades,
+.path-report-myfeedback table#feedbackcomments {
+    color:#666;
+    font-size:13px;
+    /*background:#eaebec;*/
+    width: 100%;
+}
+
+.path-report-myfeedback table.grades th {
+    padding:8px 10px 8px 10px;
+    border-top:1px solid #fafafa;
+    border-bottom:1px solid #e0e0e0;
+    background: #dce9f9;
+    background-image: linear-gradient(to bottom,#ebf3fc,#dce9f9);
+}
+
+.path-report-myfeedback table.grades th:first-child {
+    text-align: left;
+    padding-left:10px;
+    /*width: 80%;*/
+    /*border-right: 1px solid #e0e0e0;*/
+}
+
+.path-report-myfeedback table.grades tr {
+    text-align: left;
+    padding-left:10px;
+}
+.path-report-myfeedback table.grades td:first-child {
+    text-align: left;
+    padding-left:5px;
+    border-left: 0;
+}
+.path-report-myfeedback table.grades td, .path-report-myfeedback table.dataTable tr.odd {
+    padding:5px;
+    border-top: 1px solid #ffffff;
+    border-bottom:1px solid #e0e0e0;
+    /*border-left: 1px solid #e0e0e0;*/
+    min-width: 100px; /*changed from 80*/
+    /*background: #fafafa !important;*/
+}
+
+.path-report-myfeedback table.grades tr:last-child td {
+    border-bottom:0;
+}
+.path-report-myfeedback table.grades tr:hover td {
+    background: #f6f6f6 !important;
+}
+
+.path-report-myfeedback td.tablefooter {
+    border-top: 1px solid #e0e0e0;
+    background: #dce9f9;
+    background-image: linear-gradient(to bottom,#ebf3fc,#dce9f9);
+}
+
+.path-report-myfeedback table.grades tr.tablefooter:hover td {
+    background: #fff !important;
+}
+
+.path-report-myfeedback table.grades .tablefooter select {
+    width: 100%;/*This solves the responsive issue*/
+}
+
+.path-report-myfeedback table.grades .horizontal-bar {
+    width: 100%;
+    border: 1px solid #777;
+    background: #eee;
+}
+
+.path-report-myfeedback table.grades .grade-bar {
+    background: green;
+}
+
+.path-report-myfeedback table.grades .available-grade {
+    text-align: right;
+    width: 100%;
+}
+
+/*Setting the spacing in the feedback comments table*/
+.path-report-myfeedback table#feedbackcomments {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+
+}
+
+.path-report-myfeedback table#feedbackcomments tr {
+    background: #fff !important;
+    vertical-align: top;
+}
+
+.path-report-myfeedback table#feedbackcomments tr.tableheader {
+    background: #dce9f9 !important;
+}
+
+.path-report-myfeedback table#feedbackcomments th,
+.path-report-myfeedback table#feedbackcomments td {
+    padding: 5px 10px;
+    border: 0;
+    text-align: center;
+}
+
+/*The Feedback heading and tabs*/
+.path-report-myfeedback .heading h2 {
+    margin: 0;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    background: #619eb6;
+    color: #fff;
+}
+
+.path-report-myfeedback .nav.nav-tabs {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.path-report-myfeedback .nav-tabs>li>a:focus {
+    background-color: #0070a8;
+}
+
+.path-report-myfeedback .nav-tabs>.active>a:focus,
+.path-report-myfeedback .nav-tabs>.active>a:hover {
+    border-bottom-color: transparent;
+    background-color: #fff;
+    border-color: #ddd;
+    border-bottom-color: #fff;
+}
+
+.path-report-myfeedback .userprofilebox {
+    font-weight: bold;
+}
+
+.path-report-myfeedback .profilepicture {
+    float: left;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.path-report-myfeedback .descriptionbox {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.path-report-myfeedback .personaltutoremail {    
+    background: #619eb6;
+    float: right;
+    margin-right: 40px;
+    padding: 10px 20px;
+}
+
+.path-report-myfeedback .personaltutoremail > a {
+    color: #fff;
+}
+
+.path-report-myfeedback .personaltutoremail:focus,
+.path-report-myfeedback .personaltutoremail:hover {
+    background-color: #0070A8;
+}
+
+.path-report-myfeedback .personaltutoremail > a:focus,
+.path-report-myfeedback .personaltutoremail > a:hover {
+    text-decoration: none;
+}
+
+.path-report-myfeedback .enroltext {
+    font-style: italic;
+    font-weight: bold;
+}
+.path-report-myfeedback .enrolledon {
+    color: #619eb6;
+    font-weight: normal;
+}
+
+.path-report-myfeedback .en-course {
+    color: #444;
+    font-weight: normal;
+}
+
+.path-report-myfeedback .btn.success {
+    background: green;
+    color: #fff;
+}
+
+.path-report-myfeedback .btn.info {
+    background: lightblue;
+    color: #fff;
+}
+
+.path-report-myfeedback .btn.warning {
+    background: orange;
+    color: #fff;
+    display: block;
+    width: 15%;
+    margin-bottom: 10px;
+}
+
+.path-report-myfeedback .wordcloud {
+    float: left;
+    width: 45%;
+    height: 150px;
+    background: #E0E2FF;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.path-report-myfeedback .cloudtext {
+    float: right;
+    width: 45%;
+}
+
+/*
+* Datatables responsive css
+*
+*/
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child {
+    position: relative;
+    padding-left: 30px;
+    cursor: pointer;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    top: 8px;
+    left: 4px;
+    height: 16px;
+    width: 16px;
+    display: block;
+    position: absolute;
+    color: white;
+    border: 2px solid white;
+    border-radius: 16px;
+    text-align: center;
+    line-height: 14px;
+    box-shadow: 0 0 3px #444;
+    box-sizing: content-box;
+    content: '+';
+    background-color: #aaa;/*#31b131;*/
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child.dataTables_empty:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child.dataTables_empty:before {
+    display: none;
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
+table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
+    content: '-';
+    background-color: #aaa;/*#d33333;*/
+}
+table.dataTable.dtr-inline.collapsed > tbody > tr.child td:before {
+    display: none;
+}
+table.dataTable.dtr-inline.collapsed.compact > tbody > tr > td:first-child,
+table.dataTable.dtr-inline.collapsed.compact > tbody > tr > th:first-child {
+    padding-left: 27px;
+}
+table.dataTable.dtr-inline.collapsed.compact > tbody > tr > td:first-child:before,
+table.dataTable.dtr-inline.collapsed.compact > tbody > tr > th:first-child:before {
+    top: 5px;
+    left: 4px;
+    height: 14px;
+    width: 14px;
+    border-radius: 14px;
+    line-height: 12px;
+}
+table.dataTable.dtr-column > tbody > tr > td.control,
+table.dataTable.dtr-column > tbody > tr > th.control {
+    position: relative;
+    cursor: pointer;
+}
+table.dataTable.dtr-column > tbody > tr > td.control:before,
+table.dataTable.dtr-column > tbody > tr > th.control:before {
+    top: 50%;
+    left: 50%;
+    height: 16px;
+    width: 16px;
+    margin-top: -10px;
+    margin-left: -10px;
+    display: block;
+    position: absolute;
+    color: white;
+    border: 2px solid white;
+    border-radius: 16px;
+    text-align: center;
+    line-height: 14px;
+    box-shadow: 0 0 3px #444;
+    box-sizing: content-box;
+    content: '+';
+    background-color: #31b131;
+}
+table.dataTable.dtr-column > tbody > tr.parent td.control:before,
+table.dataTable.dtr-column > tbody > tr.parent th.control:before {
+    content: '-';
+    background-color: #d33333;
+}
+table.dataTable > tbody > tr.child {
+    padding: 0.5em 1em;
+}
+table.dataTable > tbody > tr.child:hover {
+    background: transparent !important;
+}
+table.dataTable > tbody > tr.child ul {
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+table.dataTable > tbody > tr.child ul li {
+    border-bottom: 1px solid #efefef;
+    padding: 0.5em 0;
+}
+table.dataTable > tbody > tr.child ul li:first-child {
+    padding-top: 0;
+}
+table.dataTable > tbody > tr.child ul li:last-child {
+    border-bottom: none;
+}
+table.dataTable > tbody > tr.child span.dtr-title {
+    display: inline-block;
+    min-width: 75px;
+    font-weight: bold;
+}
+/* End of DataTables responsive */
+
+/*
+ * Namespace DTCR - "DataTables ColReorder" plug-in
+ */
+
+table.DTCR_clonedTable {
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 202;
+}
+
+div.DTCR_pointer {
+    width: 1px;
+    background-color: #0259C4;
+    z-index: 201;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * ColVis styles
+ */
+div.ColVis {
+    float: right;
+    /*margin-bottom: 1em;*/
+}
+
+button.ColVis_Button,
+ul.ColVis_collection li {
+    position: relative;
+    float: left;
+    margin-right: 3px;
+    padding: 5px 8px;
+    border: 1px solid #999;
+    cursor: pointer;
+    *cursor: hand;
+    font-size: 0.88em;
+    color: black !important;
+    white-space: nowrap;
+
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+
+    -webkit-box-shadow: 1px 1px 3px #ccc;
+    -moz-box-shadow: 1px 1px 3px #ccc;
+    -ms-box-shadow: 1px 1px 3px #ccc;
+    -o-box-shadow: 1px 1px 3px #ccc;
+    box-shadow: 1px 1px 3px #ccc;
+
+    /* Generated by http://www.colorzilla.com/gradient-editor/ */
+    background: #ffffff; /* Old browsers */
+    background: -webkit-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* Chrome10+,Safari5.1+ */
+    background:    -moz-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* FF3.6+ */
+    background:     -ms-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* IE10+ */
+    background:      -o-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* Opera 11.10+ */
+    background:         linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
+}
+
+.ColVis_Button:hover,
+ul.ColVis_collection li:hover {
+    border: 1px solid #666;
+    text-decoration: none !important;
+
+    -webkit-box-shadow: 1px 1px 3px #999;
+    -moz-box-shadow: 1px 1px 3px #999;
+    -ms-box-shadow: 1px 1px 3px #999;
+    -o-box-shadow: 1px 1px 3px #999;
+    box-shadow: 1px 1px 3px #999;
+
+    background: #f3f3f3; /* Old browsers */
+    background: -webkit-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* Chrome10+,Safari5.1+ */
+    background:    -moz-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* FF3.6+ */
+    background:     -ms-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* IE10+ */
+    background:      -o-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* Opera 11.10+ */
+    background:         linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#f4f4f4',GradientType=0 ); /* IE6-9 */
+}
+
+button.ColVis_Button {
+    height: 30px;
+    padding: 3px 8px;
+}
+
+button.ColVis_Button::-moz-focus-inner { 
+    border: none !important;
+    padding: 0;
+}
+
+button.ColVis_Button:active { 
+    outline: none;
+}
+
+div.ColVis_collectionBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    z-index: 1100;
+}
+
+ul.ColVis_collection {
+    list-style: none;
+    width: 150px;
+    padding: 8px 8px 4px 8px;
+    margin: 0;
+    border: 1px solid #ccc;
+    border: 1px solid rgba( 0, 0, 0, 0.4 );
+    background-color: #f3f3f3;
+    background-color: rgba( 255, 255, 255, 0.3 );
+    overflow: hidden;
+    z-index: 2002;
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+
+    -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    -ms-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    -o-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+ul.ColVis_collection li {
+    position: relative;
+    height: auto;
+    left: 0;
+    right: 0;
+    padding: 0.5em;
+
+    display: block;
+    float: none;
+    margin-bottom: 4px;
+
+    -webkit-box-shadow: 1px 1px 3px #999;
+    -moz-box-shadow: 1px 1px 3px #999;
+    -ms-box-shadow: 1px 1px 3px #999;
+    -o-box-shadow: 1px 1px 3px #999;
+    box-shadow: 1px 1px 3px #999;
+}
+
+ul.ColVis_collection li {
+    text-align: left;
+}
+
+ul.ColVis_collection li.ColVis_Button:hover {
+    border: 1px solid #999;
+    background-color: #f0f0f0;
+}
+
+ul.ColVis_collection li span {
+    display: inline-block;
+    padding-left: 0.5em;
+    cursor: pointer;
+}
+
+ul.ColVis_collection li.ColVis_Special {
+    border-color: #555;
+    background: rgb(237,237,237); /* Old browsers */
+    background: -webkit-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* Chrome10+,Safari5.1+ */
+    background:    -moz-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(214,214,214,1) 77%, rgba(232,232,232,1) 100%); /* FF3.6+ */
+    background:     -ms-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* IE10+ */
+    background:      -o-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* Opera 11.10+ */
+    background:         linear-gradient(to bottom, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
+}
+
+ul.ColVis_collection li.ColVis_Special:hover {
+    background: #e2e2e2; /* Old browsers */
+    background: -webkit-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* Chrome10+,Safari5.1+ */
+    background:    -moz-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* FF3.6+ */
+    background:     -ms-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* IE10+ */
+    background:      -o-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* Opera 11.10+ */
+    background:         linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#e2e2e2',GradientType=0 ); /* IE6-9 */
+}
+
+ul.ColVis_collection li label {
+    overflow: hidden;
+}
+
+span.ColVis_radio {
+    display: inline-block;
+    width: 20px;
+}
+
+div.ColVis_catcher {
+    position: absolute;
+    z-index: 1101;
+}
+
+.disabled {
+    color: #999;
+}
+
+/*hiding the unix date that is used to sort the data, even when expanded
+also the blank invisible column that shows up on ColVis hide/Show list*/
+/*.path-report-myfeedback tr.child>td.child>ul>li:last-child,
+.path-report-myfeedback ul.ColVis_collection>li:last-child,*/
+.invisibly,
+.paginate_button.previous.disabled,
+.paginate_button.next.disabled {
+    display: none;
+}
+
+.path-report-myfeedback #userstable_wrapper {
+    max-width: 720px;
+}
+
+.path-report-myfeedback #userstable_filter {
+    margin-right: 0;
+}
+
+.path-report-myfeedback #userstable_wrapper input[type="search"] {
+    padding: 0 4px;
+}
+
+.path-report-myfeedback #userstable_filter input{
+    max-width: 180px;
+}
+
+.path-report-myfeedback #userstable_wrapper select {
+    height: 20px;
+    padding: 0 4px;
+    margin-bottom: 0;
+}
+
+.path-report-myfeedback .grades-bar {
+    width: 100%;
+    font-size: 14px;
+    background: -webkit-linear-gradient(left, #b9ccb7, #82c783); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #b9ccb7, #82c783); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #b9ccb7, #82c783); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, #b9ccb7, #82c783); /* Standard syntax (must be last) */
+    color: #FFF;
+    border: 1px solid #444;
+}
+
+.path-report-myfeedback .grade-bar40 {
+    display: inline-block;    
+    width: 40%;
+    text-align: center;
+    background: -webkit-linear-gradient(left, #ce9d93, #d4b5af); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(right, #ce9d93, #d4b5af); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(right, #ce9d93, #d4b5af); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to right, #ce9d93, #d4b5af); /* Standard syntax (must be last) */
+    border-right: 1px solid #444;
+}
+
+.path-report-myfeedback .grade-bar506070 {
+    display: inline-block;
+    text-align: center;
+    width: 10%;
+    border-right: 1px solid #444;
+}
+
+.path-report-myfeedback .grade-bar-100 {
+    display: inline-block;
+    text-align: center;
+    width: 15%;
+}
+
+.path-report-myfeedback .top-text {
+    width: 100%;  
+    line-height: 1; 
+}
+
+.path-report-myfeedback .btext {
+    display: inline-block;
+    line-height: 1;
+    font-size: 12px;
+    text-align: right; 
+}
+
+.path-report-myfeedback .vline {
+    display: inline-block;
+    line-height: 1;
+    font-size: 12px;
+    text-align: right; 
+}
+
+.path-report-myfeedback .grade-bar-b {
+    width: 100%;
+    line-height: 1;
+    border: 1px solid #fff;
+}
+
+.path-report-myfeedback .grade-bar-b40 {
+    display: inline-block;    
+    width: 40%;
+    border-right: 1px solid #444;
+}
+
+.path-report-myfeedback .grade-bar-b1 {
+    display: inline-block;
+    width: 10%;
+    border-right: 1px solid #444;
+}
+
+.path-report-myfeedback .btext-b40 {
+    display: inline-block;
+    width: 41%;
+    text-align:right;
+}
+
+.path-report-myfeedback .btext-b {
+    display: inline-block;
+    width: 10.3%;
+    text-align:right;
+}
+
+.path-report-myfeedback .fullhundred {
+    width: 100%;
+}
+
+.path-report-myfeedback .mymods-container {
+    width: 60%; 
+    float: left;
+    display: inline-block
+}
+
+.path-report-myfeedback .mymods-container-right {
+    width: 35%;
+    float: right;
+    display: inline-block;
+    margin: 20px;
+    text-align: center
+}
+
+.path-report-myfeedback .mymods-content {
+    width: 40%;
+    float: left;
+    color:#fff
+}
+
+.path-report-myfeedback .db {
+    display: block
+}
+
+.path-report-myfeedback #toggle-grade {
+    font-size: 12px;
+}
+
+.path-report-myfeedback .t-rel {
+    display: none;
+}
+
+.path-report-myfeedback .t-rel.off {
+    display: block;
+}
+
+.path-report-myfeedback .ellip {
+    overflow: hidden;
+    max-width: 120px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.path-report-myfeedback .student {
+    background-color: #FCFCE0;
+}
+
+.path-report-myfeedback table#feedbackcomments td.note-val-2 {
+    min-width: 200px;
+    border: 3px solid #ccc;
+    text-align: left;
+}
+
+@media print {
+    #page-header, .navbar, #page-navbar, 
+    #block-region-side-pre, #page-footer,
+    #region-main .nav.nav-tabs, #region-main .buttonswrapper, .dataTables_wrapper .tablefooter,
+    p.helplink, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_paginate, .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .bar, .dataTables_wrapper .ColVis {
+        display: none
+    }
+
+    @page { 
+        size: landscape;
+    }
+
+    #region-main {
+        float: left;
+        width: 100%;
+    }
+
+    .back-to-top {
+        display: none !important
+    }
+
+}
+
+@media only screen and (max-width: 579px) {
+    .path-report-myfeedback .dataTables_filter {
+        margin-right: 0;
+    }
+    .path-report-myfeedback #userstable_wrapper {
+        max-width: 420px;
+    }
+}
+
+@media only screen and (min-width: 580px) and (max-width: 767px) {
+    .path-report-myfeedback .dataTables_filter {
+        margin-right: 15%;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 860px) {
+    .path-report-myfeedback .dataTables_filter {
+        margin-right: 0;
+    }
+}
+
+@media only screen and (min-width: 861px) and (max-width: 1000px) {
+    .path-report-myfeedback .dataTables_filter {
+        margin-right: 5%;
+    }
+}
+
+@media only screen and (min-width: 1001px) and (max-width: 1260px) {
+    .path-report-myfeedback .dataTables_filter {
+        margin-right: 10%;
+    }
+}

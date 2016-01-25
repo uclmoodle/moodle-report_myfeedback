@@ -1,0 +1,71 @@
+/*
+ * File:        tooltip.css
+ * Author:      Osvaldas Valutis (http://osvaldas.info/)
+ * Info:        http://osvaldas.info/elegant-css-and-jquery-tooltip-responsive-mobile-friendly
+ * 
+ * Copyright Osvaldas Valutis.
+ *
+ * This source file is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the MIT license for details: http://opensource.org/licenses/MIT.
+ */
+/* Had to rename the id tooltip2 (adding a 2 on the end of tooltip) 
+as it clashed with an existing Moodle class */
+#tooltip2
+{
+    font-size: 0.9em;
+    text-align: center;
+    text-shadow: 0 1px rgba( 0, 0, 0, .5 );
+    line-height: 1.5;
+    color: #fff;
+    background: #000;
+    background: -webkit-gradient( linear, left top, left bottom, from( rgba( 0, 0, 0, .7 ) ), to( rgba( 0, 0, 0, .9 ) ) );
+    background: -webkit-linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+    background: -moz-linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+    background: -ms-radial-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+    background: -o-linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+    background: linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-top: 1px solid #fff;
+    -webkit-box-shadow: 0 3px 5px rgba( 0, 0, 0, .3 );
+    -moz-box-shadow: 0 3px 5px rgba( 0, 0, 0, .3 );
+    box-shadow: 0 3px 5px rgba( 0, 0, 0, .3 );
+    position: absolute;
+    z-index: 100;
+    padding: 15px;
+}
+#tooltip2:after
+{
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #333;
+    border-top-color: rgba( 0, 0, 0, .7 );
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -10px;
+}
+#tooltip2.top:after
+{
+    border-top-color: transparent;
+    border-bottom: 10px solid #333;
+    border-bottom-color: rgba( 0, 0, 0, .7 );
+    top: -20px;
+    bottom: auto;
+}
+#tooltip2.left:after
+{
+    left: 10px;
+    margin: 0;
+}
+#tooltip2.right:after
+{
+    right: 10px;
+    left: auto;
+    margin: 0;
+}
