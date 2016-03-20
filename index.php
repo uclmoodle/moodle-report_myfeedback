@@ -36,6 +36,7 @@ require_once($CFG->dirroot . '/grade/lib.php');
 require_once($CFG->dirroot . '/grade/querylib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
+require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 global $PAGE, $COURSE, $DB, $remotedb, $CFG;
 $url = new moodle_url('/report/myfeedback/index.php');

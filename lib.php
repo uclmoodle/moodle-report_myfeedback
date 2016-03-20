@@ -51,11 +51,22 @@ function report_myfeedback_extend_navigation_user($navigation, $user, $course) {
     }
 }
 
-function report_myreport_extend_navigation_course($navigation, $course, $context) {
+function report_myfeedback_extend_navigation_course($navigation, $course, $context) {
     if (has_capability('report/myfeedback:view', $context)) {
         $url = new moodle_url('/report/myfeedback/index.php', array('id' => $course->id));
         $navigation->add(get_string('pluginname', 'report_myfeedback'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
     }
+}
+
+function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) { 
+$url = new moodle_url('/report/myfeedback/index.php', array('userid' => $user->id));
+if (!empty($course)) {
+$url->param('course', $course->id);
+}
+$string = get_string('pluginname', 'report_myfeedback');
+$node = new core_user\output\myprofile\node('reports', 'myfeedbackreport', $string, null, $url);
+$tree->add_node($node);
+return true;
 }
 
 class report_myfeedback {

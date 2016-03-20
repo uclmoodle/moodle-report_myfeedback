@@ -5,15 +5,32 @@ A Moodle Report that shows all user feedback on one page
 
 Introduction: This report displays a searchable and sortable table with the User's grades and feedback across Moodle courses. When clicking a link from this table, the user will be redirected to that course activity information (in some cases the link will be directly to the submitted files or feedback files.
 
-Install instructions: 1. Copy the myfeedback directory to the report directory of your Moodle instance 2. Visit the site admin notifications page. 3. Verify that the plugin is listed to be upgraded and then select 'Upgrade the database'. 	4. In the settings page of My Feedback report all fields should be blank, unless you want to define an alternative database to use for the queries (e.g. a replicated database to avoid any performance issues) and then save changes.
+Install instructions: 
+1. Copy the myfeedback directory to the report directory of your Moodle instance 
+2. Visit the site admin notifications page. 
+3. Verify that the plugin is listed to be upgraded and then select 'Upgrade the database'. 	
+4. In the settings page of My Feedback report all fields should be blank, unless you want to define an alternative database to use for the queries (e.g. a replicated database to avoid any performance issues) and then save changes.
 
-Access the report: The report can be accessed via the user profile (Activity Reports > My Feedback report) Access is controlled by the user context, teacher will be able to see this user's grades for the courses that they are teacher in Users can only see their own grades Admin and manager can see all grades for all users (unless permissions prohibit this)
+Access the report: 
+The report can be accessed via the user profile (Reports > My Feedback report). 
+Access is controlled by the user context, teachers will be able to see this user's grades for the courses that they are a teacher. 
+Other users can only see their own grades. Admin and managers can see all grades for all users (unless permissions prohibit this).
+Since this report runs outside of Moodle courses, the permissions need to be set at the system or user context level. To enable all users to see the report add the 'report/myfeedback:view' permission to the authenticated user role. If you only want particular users to see the report you will need to create a new role and assign users at site wide level. Student and teacher roles only exit at course context level, so assigning these permissions here will not enable users to view the report.
+Personal tutor and programme admin permissions should be enabled by creating new Moodle roles at the system or user context level and assigning the following permissions as required:
+report/myfeedback:personaltutor
+report/myfeedback:progadmin
 
 This report is based on the work done by David Bezemer, which in turn is based on work done by Karen Holland, Mei Jin, Jiajia Chen. This plugin also uses SQL originating from Richard Havinga, but adds information from additional Moodle activities. The code for using an external database is authored by Juan Leyva. The idea for this reporting tool originated with Dr Jason Davies j.p.davies@ucl.ac.uk and Dr John Mitchell j.mitchell@ucl.ac.uk The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
 
 The report requires jQuery to be enabled, otherwise sorting and searching will not be possible.
 
 Change log:
+
+2.7.1 (Build: 2016032002)
+
+Fixes
+------
+Fixed the report not showing in a user's profile and course admin menu under Reports.
 
 2.7 (Build: 2016011900) 
 Fixes
