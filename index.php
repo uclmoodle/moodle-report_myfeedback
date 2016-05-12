@@ -172,6 +172,11 @@ echo '<div class="heading">';
 echo $OUTPUT->heading($report_heading);
 echo '</div>';
 
+if (!isset($user->profile_field_year))
+{
+    $user->profile_field_year = '';
+}
+
 //get the number of years for the user
 //If they are in year 3 then they would have year 1, 2 and 3
 $year = 1;

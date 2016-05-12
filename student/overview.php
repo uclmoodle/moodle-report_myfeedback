@@ -13,7 +13,12 @@ if ($user->lastlogin) {
 } else {
     $userlastlogin = get_string("never");
 }
- 
+
+if (!isset($user->profile_field_programmename))
+{
+    $user->profile_field_programmename = '';
+}
+
 //get the added profile fields
 $programme = '';
 if (!$programme = $user->profile_field_programmename) {
@@ -64,6 +69,9 @@ $content = $report->get_content($currenttab);
 echo $content->text;
 echo $OUTPUT->container_start('info');
 echo $OUTPUT->container_end();
+
+echo '</div>';
+
 // Enable sorting.
 echo "<script type=\"text/javascript\">
    $(document).ready(function() {
