@@ -5,21 +5,44 @@
 require('../../config.php');
 $data = $_SESSION["exp_sess"];
 $userid = $_SESSION['myfeedback_userid'];
-// Trigger a table download
-$event = \report_myfeedback\event\myfeedbackreport_download::create(array('context' => context_course::instance($COURSE->id), 'relateduserid' => $userid));
-$event->trigger();
+$username = $_SESSION['user_name'];
+$tutor = $_SESSION['tutor'];
 
-// file name for download
-$filename = "MyFeedback_report_" . date('YmdHis') . ".csv";
+$headingtext = get_string('reportfor', 'report_myfeedback').$username."\r\n";
+$event = \report_myfeedback\event\myfeedbackreport_download::create(array('context' => context_user::instance($userid), 'relateduserid' => $userid));
+$filename = get_string('filename', 'report_myfeedback') . date('YmdHis') . ".csv";// file name for download
+$excelheader = get_string('exportheader', 'report_myfeedback') . " \r\n";
+if ($tutor == 'p') {//Personal tutor dashboard
+    $headingtext = get_string('p_tutor_report', 'report_myfeedback') . " \r\n";
+    $event = \report_myfeedback\event\myfeedbackreport_downloadptutor::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+    $filename = get_string('p_tutor_filename', 'report_myfeedback') . date('YmdHis') . ".csv";
+    $excelheader = get_string('p_tutor_exportheader', 'report_myfeedback') . " \r\n";
+}
+if ($tutor == 'm') {//Module tutor dashboard
+    $headingtext = get_string('mod_tutor_report', 'report_myfeedback') . " \r\n";
+    $event = \report_myfeedback\event\myfeedbackreport_downloadmtutor::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+    $filename = get_string('mod_tutor_filename', 'report_myfeedback') . date('YmdHis') . ".csv";
+    $excelheader = get_string('mod_tutor_exportheader', 'report_myfeedback') . " \r\n";
+}
+if ($tutor == 'd') {//Departmental admin dashboard
+    $headingtext = get_string('dept_admin_report', 'report_myfeedback') . " \r\n";
+    $event = \report_myfeedback\event\myfeedbackreport_downloaddeptadmin::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+    $filename = get_string('dept_admin_filename', 'report_myfeedback') . date('YmdHis') . ".csv";
+    $excelheader = get_string('dept_admin_exportheader', 'report_myfeedback') . " \r\n";
+}
+
+// Trigger a table download
+$event->trigger();
 
 header("Content-Disposition: attachment; filename=\"$filename\"");
 header("Content-Type: text/csv; charset=UTF-8");
 $exc = '';
-$excelheader = "Module,Assessment,Type,Due date,Submission date,Grade,Available grade,General feedback,Viewed \r\n";
-foreach ($data as $key => $row) {
+
+foreach ($data as $row) {
     $row = str_replace(",", ";", $row);
     $exc.= "\r\n" . implode(",", $row);
 }
+echo $headingtext;
 echo $excelheader;
 echo strip_tags($exc);
 exit;

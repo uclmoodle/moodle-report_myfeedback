@@ -10,7 +10,7 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
 
-    if ($oldversion < 2016011300) {
+    if ($oldversion < 2016031700) {
 
         // Define table report_myfeedback to be created.
         $table = new xmldb_table('report_myfeedback');
@@ -23,22 +23,23 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
         $table->add_field('iteminstance', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
         $table->add_field('notes', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('feedback', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
 
         // Adding keys to table report_myfeedback.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
         // Conditionally launch create table for report_myfeedback.
-        if ($oldversion == 2015121700) {
-            if ($dbman->table_exists($table)) {
-                $dbman->drop_table($table);
-            }
-        }
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+        
+        if ($oldversion == 2016012100) {
+        $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $dbman->add_field($table, $field);
+        }
 
         // Myfeedback savepoint reached.
-        upgrade_plugin_savepoint(true, 2016011300, 'report', 'myfeedback');
+        upgrade_plugin_savepoint(true, 2016031700, 'report', 'myfeedback');
     }
     return true; //have to be in else get an unknown error
 }

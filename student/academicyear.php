@@ -8,41 +8,35 @@
 
 defined('MOODLE_INTERNAL') || die;
 $ac_years = $report->get_archived_dbs();
-if ($ac_years) {
-    $res = 'current';
-    $r = '';
-    if (isset($_POST['myselect'])) {
-        $res = $_POST['myselect'];
-    }
-    echo "<p>Academic year:</p><form method=\"POST\" id=\"yearform\" action=\"\"><select id=\"mySelect\" value=$res name=\"myselect\" onchange=\"myFunction()\">
-    <option value=\"Current\"";
-    if ($res == 'Current') {
+$res = 'current';
+if (isset($_SESSION['viewyear'])) {
+    $res = $_SESSION['viewyear'];
+}
+
+echo "<form method=\"POST\" id=\"yearform\" action=\"\"><select id=\"mySelect\" value=$res name=\"myselect\">";
+foreach ($ac_years as $val) {
+    echo "<option value=" . $val;
+    if ($res == $val) {
         echo ' selected';
     }
-    echo ">Current";
-    foreach ($ac_years as $k => $val) {
-        echo "<option value=" . $val;
-        if ($res == $val) {
-            echo ' selected';
-        }
+    if ($val == 'current') {
         echo ">" . $val;
+    } else {
+        echo ">" . "20" . implode('/', str_split($val, 2));
     }
-    echo "</select></form>
+}
+echo "</select></form>";
 
-<p>When you select a new car, a function is triggered which outputs the value of the selected car.</p>
+//No support before academic year 1213
+if ($res != 'current' && $res < 1213) {
+    echo get_string('noarchivesupporth1', 'report_myfeedback');
+    echo get_string('noarchivesupporth2', 'report_myfeedback');
+    $_SESSION['viewyear'] = 'current';
+    exit();
+}
 
-<p id=\"demo\">You selected " . $res . "</p>";
-
-    echo "<script>
-$('#mySelect').change(function(){
-    $('#yearform').submit();    
-});
+echo "<script>
 $('#mySelect').change(function(){
     $('#yearform').submit();    
 });
 </script>";
-//$report->setup_ExternalDB(2);
-    if ($_GET['currenttab'] == "year") {
-        
-    }
-}

@@ -1,7 +1,7 @@
 
 /*
  * Table
- */
+*/
 
 .path-report-myfeedback table.dataTable {
     margin: 0 auto;
@@ -11,15 +11,14 @@
 
 .path-report-myfeedback table.dataTable thead th {
     padding: 10px 18px 10px 10px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #aaa;
     font-weight: bold;
     cursor: pointer;
-    *cursor: hand;
 }
 
 .path-report-myfeedback table.dataTable tfoot th {
     padding: 3px 18px 3px 10px;
-    border-top: 1px solid black;
+    border-top: 1px solid #fafafa;
     font-weight: bold;
 }
 
@@ -49,7 +48,7 @@
 
 /*
  * Table wrapper
- */
+*/
 .path-report-myfeedback .dataTables_wrapper {
     position: relative;
     clear: both;
@@ -63,7 +62,7 @@
 
 /*
  * Page length menu
- */
+*/
 .path-report-myfeedback .dataTables_length {
     float: left;
 }
@@ -71,7 +70,7 @@
 
 /*
  * Filter
- */
+*/
 .path-report-myfeedback .dataTables_filter {
     float: right;
     text-align: right;
@@ -80,7 +79,7 @@
 
 /*
  * Table information
- */
+*/
 .path-report-myfeedback .dataTables_info {
     clear: both;
     float: left;
@@ -89,7 +88,7 @@
 
 /*
  * Pagination
- */
+*/
 .path-report-myfeedback .dataTables_paginate {
     float: right;
     text-align: right;
@@ -159,7 +158,6 @@
     padding: 2px 5px;
     margin: 0 3px;
     cursor: pointer;
-    *cursor: hand;
     color: #333 !important;
 }
 
@@ -179,7 +177,7 @@
 
 /*
  * Processing indicator
- */
+*/
 .path-report-myfeedback .dataTables_processing {
     position: absolute;
     top: 50%;
@@ -189,7 +187,7 @@
     margin-left: -125px;
     margin-top: -15px;
     padding: 14px 0 2px 0;
-    border: 1px solid #ddd;
+    border: 1px solid #fafafa;
     text-align: left;
     color: #999;
     font-size: 14px;
@@ -199,7 +197,7 @@
 
 /*
  * Sorting
- */
+*/
 .path-report-myfeedback .sorting { background-image:url([[pix:moodle|t/sort]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
 .path-report-myfeedback .sorting_asc { background-image:url([[pix:moodle|t/sort_asc]]) !important;background-position: center right !important; background-repeat: no-repeat !important; }
 .path-report-myfeedback .sorting_desc { background-image:url([[pix:moodle|t/sort_desc]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
@@ -212,7 +210,7 @@
 
 /*
  * Scrolling
- */
+*/
 .path-report-myfeedback .dataTables_scroll {
     clear: both;
 }
@@ -233,7 +231,7 @@
 .path-report-myfeedback table.grades th {
     padding:8px 10px 8px 10px;
     border-top:1px solid #fafafa;
-    border-bottom:1px solid #e0e0e0;
+    border-bottom:1px solid #fafafa;
     background: #dce9f9;
     background-image: linear-gradient(to bottom,#ebf3fc,#dce9f9);
 }
@@ -286,12 +284,12 @@
 
 .path-report-myfeedback table.grades .horizontal-bar {
     width: 100%;
-    border: 1px solid #777;
+    border: 1px solid #fafafa;
     background: #eee;
 }
 
 .path-report-myfeedback table.grades .grade-bar {
-    background: green;
+    background: #8bc278;
 }
 
 .path-report-myfeedback table.grades .available-grade {
@@ -311,8 +309,15 @@
     vertical-align: top;
 }
 
-.path-report-myfeedback table#feedbackcomments tr.tableheader {
+.path-report-myfeedback table#feedbackcomments tr.tableheader,
+.path-report-myfeedback table tr.tableheader {
     background: #dce9f9 !important;
+    position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -ms-sticky;
+    position: -o-sticky;
+    position: sticky;
+    top: 0;
 }
 
 .path-report-myfeedback table#feedbackcomments th,
@@ -349,7 +354,7 @@
 }
 
 .path-report-myfeedback .userprofilebox {
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .path-report-myfeedback .profilepicture {
@@ -364,19 +369,28 @@
 }
 
 .path-report-myfeedback .personaltutoremail {    
-    background: #619eb6;
+    background: #f5f5f5;
     float: right;
     margin-right: 40px;
-    padding: 10px 20px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .path-report-myfeedback .personaltutoremail > a {
-    color: #fff;
+    color: #333;
+    font-weight: normal;
+}
+
+.path-report-myfeedback .personaltutoremails { 
+    float: right;
+    margin-right: 40px;
 }
 
 .path-report-myfeedback .personaltutoremail:focus,
 .path-report-myfeedback .personaltutoremail:hover {
-    background-color: #0070A8;
+    background-color: #e6e6e6;
 }
 
 .path-report-myfeedback .personaltutoremail > a:focus,
@@ -384,10 +398,14 @@
     text-decoration: none;
 }
 
-.path-report-myfeedback .enroltext {
+/*.path-report-myfeedback .enroltext {
+    width: 98%;
     font-style: italic;
     font-weight: bold;
-}
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}*/
 .path-report-myfeedback .enrolledon {
     color: #619eb6;
     font-weight: normal;
@@ -399,7 +417,7 @@
 }
 
 .path-report-myfeedback .btn.success {
-    background: green;
+    background: #8bc278;
     color: #fff;
 }
 
@@ -533,7 +551,7 @@ table.dataTable > tbody > tr.child ul li:first-child {
     padding-top: 0;
 }
 table.dataTable > tbody > tr.child ul li:last-child {
-    border-bottom: none;
+    border-bottom: #e0e0e0;
 }
 table.dataTable > tbody > tr.child span.dtr-title {
     display: inline-block;
@@ -544,7 +562,7 @@ table.dataTable > tbody > tr.child span.dtr-title {
 
 /*
  * Namespace DTCR - "DataTables ColReorder" plug-in
- */
+*/
 
 table.DTCR_clonedTable {
     background-color: rgba(255, 255, 255, 0.7);
@@ -559,7 +577,7 @@ div.DTCR_pointer {
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * ColVis styles
- */
+*/
 div.ColVis {
     float: right;
     /*margin-bottom: 1em;*/
@@ -889,11 +907,13 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     font-size: 12px;
 }
 
-.path-report-myfeedback .t-rel {
+.path-report-myfeedback .t-rel,
+.path-report-myfeedback #t-rel {
     display: none;
 }
 
-.path-report-myfeedback .t-rel.off {
+.path-report-myfeedback .t-rel.off,
+.path-report-myfeedback #t-rel.off {
     display: block;
 }
 
@@ -914,13 +934,147 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     text-align: left;
 }
 
+.path-report-myfeedback .ac-year-right {
+    float: right;
+    margin: 0 40px;
+}
+
+.path-report-myfeedback .ac-year-left {
+    float: left;
+    margin: 0 40px;
+}
+
+
+.path-report-myfeedback #tutortable {
+    text-align: center;
+}
+
+.path-report-myfeedback .greenlight {
+    padding: 3px 6px;
+    background-color: #8bc278;
+}
+
+.path-report-myfeedback .amberlight {
+    padding: 3px 6px;
+    background-color: #d69859;
+}
+
+.path-report-myfeedback .redlight {
+    padding: 3px 6px;
+    background-color: #c05756;
+}
+
+.path-report-myfeedback .ownreport {
+    float: right;    
+    background-color: #284956;/*#d69859;*/
+    padding: 0px 10px 5px;
+    line-height: 1em;
+    margin: 5px 20px;
+    border-radius: 8px;
+}
+
+.path-report-myfeedback .ownreport:hover {
+    background-color: #227C94;/*#30ADD1; */
+}
+
+.path-report-myfeedback .ownreport a {
+    color: #fff;
+    text-decoration: none; 
+    font-size: 0.8em;
+}
+
+.path-report-myfeedback .accordion-group {
+    border: 0;
+}
+
+.path-report-myfeedback .accordion-heading .accordion-toggle {
+    padding: 0;
+}
+
+.path-report-myfeedback .tri {
+    text-align:center;
+}
+
+.path-report-myfeedback #tutortable tfoot td {
+    /*border-right: 0px; Removedel*/
+    border: 1px solid #fafafa;
+}
+
+.path-report-myfeedback #tutortable td,
+.path-report-myfeedback .modtable td,
+.path-report-myfeedback #progtable td,
+.path-report-myfeedback #ptutor td,
+.path-report-myfeedback #ptutor th {
+    padding: 5px 5px 0 5px !important;
+}
+
+.path-report-myfeedback .modtable.dataTable td {
+    vertical-align: middle;
+}
+
+.path-report-myfeedback .modCanvas {
+    width: 400px;
+    text-align: center;
+}
+
+.path-report-myfeedback .pToggle,
+.path-report-myfeedback .sToggle,
+.path-report-myfeedback .aToggle {
+    background: #f5f5f5;
+    margin: 10px 20px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.path-report-myfeedback .fullRec {
+    margin-bottom: 60px;
+}
+
+.path-report-myfeedback .stu-inner {
+    padding: 10px;
+}
+
+.path-report-myfeedback form.prog_form {
+    margin-right: 40px;
+    display: inline-block;
+}
+
+.path-report-myfeedback .assess-br,
+.path-report-myfeedback .hidetable {
+    cursor: pointer;
+}
+
+.path-report-myfeedback .overallgrade {
+    display: none;
+}
+
+.path-report-myfeedback .tutorCanvas {
+    color: #777;
+}
+
+.path-report-myfeedback table th {
+    border-bottom:1px solid #aaa !important;
+}
+
+.path-report-myfeedback aside#block-region-side-pre,
+.path-report-myfeedback aside#block-region-side-post {
+    display:none;
+}
+
+.path-report-myfeedback #region-main {
+    width: 100%;
+}
+
 @media print {
     #page-header, .navbar, #page-navbar, 
     #block-region-side-pre, #page-footer,
     #region-main .nav.nav-tabs, #region-main .buttonswrapper, .dataTables_wrapper .tablefooter,
     p.helplink, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter,
     .dataTables_wrapper .dataTables_paginate, .dataTables_wrapper .dataTables_info,
-    .dataTables_wrapper .bar, .dataTables_wrapper .ColVis {
+    .dataTables_wrapper .bar, .dataTables_wrapper .ColVis, .path-report-myfeedback .personaltutoremails,
+    .personaltutoremail, .ac-year-right #mod_form, .ac-year-right .my, .path-report-myfeedback .ownreport {
         display: none
     }
 
@@ -936,7 +1090,6 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     .back-to-top {
         display: none !important
     }
-
 }
 
 @media only screen and (max-width: 579px) {

@@ -31,4 +31,12 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
+    'report/myfeedback:modtutor' => array(
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'legacy' => array(
+            'manager' => CAP_ALLOW
+        )
+    ),
 );

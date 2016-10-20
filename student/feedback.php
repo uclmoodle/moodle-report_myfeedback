@@ -7,7 +7,10 @@
  */
  
 defined('MOODLE_INTERNAL') || die;
- 
+echo "<div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
+require_once(dirname(__FILE__) . '/academicyear.php');
+echo "</div>";
+$report->setup_ExternalDB($res);
 $content = $report->get_content($currenttab);
 echo $content->text;
 echo $OUTPUT->container_start('info');

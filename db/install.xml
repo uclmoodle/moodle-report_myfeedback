@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="report/myfeedback/db" VERSION="20151222" COMMENT="XMLDB file for Moodle report/myfeedback"
+<XMLDB PATH="report/myfeedback/db" VERSION="20160127" COMMENT="XMLDB file for Moodle report/myfeedback"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -13,6 +13,7 @@
         <FIELD NAME="iteminstance" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The instance of the turnitin item e.g. parts are same gradeitem but different instances"/>
         <FIELD NAME="notes" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="the notes"/>
         <FIELD NAME="feedback" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="the feedback"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="the modified time"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

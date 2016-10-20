@@ -7,26 +7,25 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
-
-$modid = $_REQUEST['currenttab'];
-if ($cse_id = $report->get_course_id_from_shortname($modid)) {
-    //$modid_array = array($cid->id);
-    $cid = $cse_id->id;
-    $cse_name = $cse_id->fullname;
-    echo html_writer::tag('h3', $modid . ': ' . $cse_name);
-    echo html_writer::tag('p', get_string('programme', 'report_myfeedback').'<br>'.get_string('department', 'report_myfeedback'));
-    $modcontext = context_course::instance($cid);
-    if ($all_enrolled_users = get_enrolled_users($modcontext, $cap = 'mod/assign:submit', $groupid = 0, $userfields = 'u.id', $orderby = null, $limitfrom = 0, $limitnum = 0, $onlyactive = true)) {
-
-        $uids = array();
-        foreach ($all_enrolled_users as $uid) {
-            $uids[] = $uid->id;
+$m = '';
+if (isset($_SESSION['viewmod'])) {
+    $m = $_SESSION['viewmod'];
+}
+$modheading = get_string('mymodules', 'report_myfeedback');
+$modmsg = get_string('moddescription', 'report_myfeedback');
+$modicon = '<img src="' . 'pix/info.png' . '" ' .
+        ' alt="-" title="' . $modmsg . '" rel="tooltip"/>';
+echo "<div class=\"ac-year-right\"><p class=\"my\">" . $modheading . ": " . $modicon .
+ "</p><form method=\"POST\" id=\"mod_form\" action=\"\"><select multiple=\"multiple\" id=\"modSelect\" name=\"modselect[]\">";
+foreach ($my_tutor_mods as $val1) {
+    echo "<option value=\"" . $val1->shortname."\"";
+    foreach ($m as $v2) {
+        if ($v2 == $val1->shortname) {
+            echo ' selected';
         }
     }
-    echo html_writer::tag('p', get_string('enrolledstudents', 'report_myfeedback'). count($uids)); 
-    echo html_writer::tag('h4', get_string('overallmodule', 'report_myfeedback'));
-    //$student_totals = grade_get_course_grade($userid, $modid_array);
-    if ($zscore = $report->get_z_score($cid, $uids)) {
-        echo $zscore;
-    }
+    echo ">" . $val1->shortname;
 }
+echo "</select><input type='submit' value='".get_string('analyse','report_myfeedback')."'>
+    </form></p></div>";
+

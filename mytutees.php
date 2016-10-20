@@ -9,14 +9,21 @@
 defined('MOODLE_INTERNAL') || die;
  
 echo '<p>'.get_string('studentsaccessto', 'report_myfeedback').'</p>';
-
-$tutees = $report->get_all_accessible_users();
+$check = optional_param('mytick', '', PARAM_TEXT);
+      
+echo "<form method=\"POST\" id=\"alltutees\" action=\"\"><p>". get_string('alltutees', 'report_myfeedback').
+        "<input id=\"myCheckbox\" type=\"checkbox\" name=\"mytick\" value=\"checked\" $check></form></p>";
+ 
+$tutees = $report->get_all_accessible_users($check);
 echo $tutees;
 echo "<script type=\"text/javascript\">
    $(document).ready(function() {
-    var usertable = $('#userstable').DataTable({
-    'dom': 'lfrtip',
-    'order': [[1, 'desc' ], [0, 'asc' ]]
+        var usertable = $('#userstable').DataTable({
+        'dom': 'lfrtip',
+        'order': [[1, 'desc' ], [0, 'asc' ]]
+    });
+}); 
+$('#myCheckbox').change(function(){
+    $('#alltutees').submit();     
 });
-} ); 
    </script>";
