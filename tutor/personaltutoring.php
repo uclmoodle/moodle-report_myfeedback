@@ -1,9 +1,11 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The main file for the personal tutor dashboard
+ * 
+ * @package  report_myfeedback
+ * @author    Delvon Forrester <delvon@esparanza.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -17,7 +19,7 @@ $programme = '';
 if (isset($USER->profile_field_programmename)) {
     $programme = $USER->profile_field_programmename;
 }
-
+echo "<p>" . get_string('overview_text_ptutor', 'report_myfeedback') . "</p>";
 echo '<div class="userprofilebox clearfix" style="margin-bottom: 10px;">
             <div class="profilepicture">';
 if ($userid != $USER->id && !$viewtutee) {
@@ -30,16 +32,19 @@ echo '<div class="descriptionbox">
 if ($userid != $USER->id && !$viewtutee) {
     echo '<h2 style="margin:-8px 0;">' . $USER->firstname . " " . $USER->lastname . '</h2>';
     echo ($programme ? get_string('userprogramme', 'report_myfeedback') . $programme : '');
-    echo ($USER->department ? "<br> " . get_string('parentdepartment', 'report_myfeedback') .  $USER->department : '');
+    echo ($USER->department ? "<br> " . get_string('parentdepartment', 'report_myfeedback') . $USER->department : '');
     echo '<br>' . get_string('email_address', 'report_myfeedback') .
     ' <a href="mailto:' . $USER->email . '">' . $USER->email . '</a><br>';
 }
 echo '</div></div>';
-
+//Get the late feedback days from config
+$lt = get_config('report_myfeedback');
+$a = new stdClass();
+$a->lte = isset($lt->latefeedback) ? $lt->latefeedback : 28;
 $assessmentmsg = get_string('tutortblheader_assessment_info', 'report_myfeedback');
 $assessmenticon = '<img src="' . 'pix/info.png' . '" ' .
         ' alt="-" title="' . $assessmentmsg . '" rel="tooltip"/>';
-$latefeedbackmsg = get_string('tutortblheader_latefeedback_info', 'report_myfeedback');
+$latefeedbackmsg = get_string('tutortblheader_latefeedback_info', 'report_myfeedback', $a);
 $latefeedbackicon = '<img src="' . 'pix/info.png' . '" ' .
         ' alt="-" title="' . $latefeedbackmsg . '" rel="tooltip"/>';
 $overallgrademsg = get_string('tutortblheader_overallgrade_info', 'report_myfeedback');
@@ -61,7 +66,7 @@ $gradeicon = '<img src="' . 'pix/info.png' . '" ' .
 // Setup the heading for the Personal tutor dashboard
 $tutortable = "<table id=\"tutortable\" width=\"100%\" border=\"1\">
                 <thead><tr class=\"tableheader\">
-                            <th><a class=\"btn\" id=\"mail\">" . get_string("sendmail", "report_myfeedback") . 
+                            <th><a class=\"btn\" id=\"mail\">" . get_string("sendmail", "report_myfeedback") .
         "</a><br><input title='" . get_string('selectallforemail', 'report_myfeedback') . "' rel =\"tooltip\" type=\"checkbox\" id=\"selectall\"/>" .
         get_string('selectall', 'report_myfeedback') . "</th>
                                 <th>" .
@@ -73,11 +78,11 @@ $tutortable = "<table id=\"tutortable\" width=\"100%\" border=\"1\">
                                 <th>" .
         get_string('tutortblheader_latesubmissions', 'report_myfeedback') . " " . $latesubmissionicon . "</th>
                                 <th>" .
-        get_string('tutortblheader_graded', 'report_myfeedback') . " $gradeicon</th>                                
+        get_string('tutortblheader_graded', 'report_myfeedback') . " $gradeicon</th>                                 
                                 <th>" .
         get_string('tutortblheader_lowgrades', 'report_myfeedback') . " " . $lowgradeicon . "</th>
             </tr></thead><tbody>";
-//<th>" . get_string('tutortblheader_latefeedback', 'report_myfeedback') . " " . $latefeedbackicon . "</th> 
+//<th>" . get_string('tutortblheader_latefeedback', 'report_myfeedback') . " " . $latefeedbackicon . "</th>
 $due = 0;
 $nonsub = 0;
 $latesub = 0;
@@ -89,6 +94,10 @@ $x = 0;
 $modnames = '';
 $user_email = array();
 if ($tutees = $report->get_dashboard_tutees()) {// Get all personal tutees for the user
+    echo "<div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
+    require_once(dirname(__FILE__) . '/../student/academicyear.php');
+    echo '</div>';
+    $report->setup_ExternalDB($res);
     foreach ($tutees as $uid => $tutee) {
         $name_sort = $tutee[1];
         $user_email[$tutee[3]] = $tutee[2];
@@ -119,8 +128,8 @@ if ($tutees = $report->get_dashboard_tutees()) {// Get all personal tutees for t
             }
         }
         $tutortable .= "<tr class='recordRow' valign='middle'><td><input class=\"chk1\" type=\"checkbox\" name=\"email" . $userid . "\" value=\"" . $tutee[2] . "\"></td>";
-        $tutortable .= "<td style=\"text-align:left;min-width:200px;padding-right:30px;\" data-sort=$name_sort><table class=\"tutor-inner\" height=\"\"><tr><td>" . $tutee[0] . 
-                "<div class=\"tutorCanvas\" style=\"text-align:center\"><span>" . get_string('coursebreakdown', 'report_myfeedback') . 
+        $tutortable .= "<td style=\"text-align:left;min-width:200px;padding-right:30px;\" data-sort=$name_sort><table class=\"tutor-inner\" height=\"\"><tr><td>" . $tutee[0] .
+                "<br><div class=\"tutorCanvas\" style=\"text-align:center\"><br><span style=\"white-space: nowrap\">" . get_string('coursebreakdown', 'report_myfeedback') .
                 "</span><br><span class=\"tangle\">&#9660;</span></div></td></tr></table>" . $modnames . "</td>";
         $tutortable .= $dash . "</tr>";
 
@@ -167,19 +176,30 @@ $_SESSION['myfeedback_userid'] = $userid;
 $_SESSION['tutor'] = 'p';
 $_SESSION['user_name'] = 'nil';
 
+//Log the event that the user viewed the dashboard
+$event = \report_myfeedback\event\myfeedbackreport_viewed_ptutordash::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+$event->trigger();
+
 echo '<div class="personaltutoremails"><span class="personaltutoremail ex_port"><a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></span>
-    <span class="personaltutoremail reportPrint"><a href="#">' . get_string('print_report', 'report_myfeedback') . '</a></span><p class="personaltutoremail"><a href="' . 
-        get_string("studentrecordsystemlink", "report_myfeedback") . '" target="_blank">' . get_string("studentrecordsystem", "report_myfeedback") . '</a></p></div></div>';
+    <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">' . get_string('print_report', 'report_myfeedback') . 
+        '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span><p class="personaltutoremail"><a href="' .
+ get_string("studentrecordsystemlink", "report_myfeedback") . '" target="_blank">' . get_string("studentrecordsystem", "report_myfeedback") . '</a></p></div></div>';
 echo '<form method="POST" id="emailform" action="">';
 echo $tutortable;
 echo '</form>';
 echo "<script type=\"text/javascript\">
    $(document).ready(function() {
+
+$('#wait').css({'cursor':'default','display':'none'});
+$('body').css('cursor', 'default');
+
         var ttable = $('#tutortable').DataTable({
-        'dom': 'CRlfrtip',
+        'dom': 'lfBrtip',
+        fixedHeader: true,
         'order': [1, 'asc' ],
         'columnDefs': [
         { 'orderable': false, 'targets': 0 }],
+        buttons: [ 'colvis' ],
         responsive: true
     });
  
@@ -193,8 +213,10 @@ $(\"#emailform\").click(function(){
                  mylink.push($(this).val());
                  }
                 });
+                if (mylink.length > 0) {
                 $(\"a#mail\").attr(\"href\", \"mailto:?bcc=\" + mylink.join
-(\";\")+\"&Subject=" . get_string('email_tutee_subject', 'report_myfeedback') . "\");
+        (\";\")+\"&Subject=" . get_string('email_tutee_subject', 'report_myfeedback') . "\");
+     }
 });
 
 $('.reportPrint').on( 'click', function () {

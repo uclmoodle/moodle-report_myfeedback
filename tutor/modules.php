@@ -1,9 +1,11 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The included file for for to select modules on Mod tutor dashboard
+ * 
+ * @package  report_myfeedback
+ * @author    Delvon Forrester <delvon@esparanza.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;

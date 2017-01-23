@@ -1,19 +1,23 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The main file for the Dept admin dashboard
+ * 
+ * @package  report_myfeedback
+ * @author    Delvon Forrester <delvon@esparanza.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 //echo "<div style='float:right'><div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
 //require_once(dirname(__FILE__) . '/../student/academicyear.php');
 //echo '</div>';
+echo "<p>" . get_string('overview_text_dept', 'report_myfeedback') . "</p>";
 echo '<div style="float:right">
             <p><span class="personaltutoremail">
             <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></span>  
-            <span class="personaltutoremail reportPrint"><a href="#">' . get_string('print_report', 'report_myfeedback') . '</a></span>
+            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">' . get_string('print_report', 'report_myfeedback') . 
+        '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
             <span class="personaltutoremail x_port">
             <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></span></p>
             </div>';
@@ -23,16 +27,7 @@ $admin_mods = array();
 if ($get_mods = get_user_capability_course('report/myfeedback:progadmin', $USER->id, $doanything = false, $fields = 'category,fullname,visible')) {//enrol_get_users_courses($USER->id, $onlyactive = TRUE)) {
     foreach ($get_mods as $value) {//The above function gets all courses even if they are not enrolled but in other users. Particularly for category assignments.
         if ($value->visible && $value->id) {
-            /* if ($value->category) {
-              $catcontext = context_coursecat::instance($value->category);
-              if (has_capability('report/myfeedback:progadmin', $catcontext, $USER->id, $doanything = false)) {
-              $admin_mods[] = $value;
-              }
-              } */
-            // $coursecontext = context_course::instance($value->id);
-            // if (has_capability('report/myfeedback:progadmin', $coursecontext, $USER->id, $doanything = false)) {
             $admin_mods[] = $value;
-            // }
         }
     }
 }
@@ -40,20 +35,19 @@ if ($get_mods = get_user_capability_course('report/myfeedback:progadmin', $USER-
 $padmin = $report->get_prog_admin_dept_prog($admin_mods);
 $x = 0;
 $exceltable = array();
-$cur_dept = (isset($_SESSION['curdept']) ? $_SESSION['curdept'] : 0);
+$cur_dept = 0;
+$deptview = (isset($_COOKIE['curdept']) ? $_COOKIE['curdept'] : $deptview);
 if ($padmin) {
-    echo '';
 //Start of top level category
     echo "<form method=\"POST\" id=\"prog_form_dept\" class=\"prog_form\" action=\"\">".get_string('faculty', 'report_myfeedback')."<select id=\"deptSelect\" 
             value=$deptview name=\"deptselect\"><option>".get_string('choosedots')."</option>";
     foreach ($padmin as $k => $pro) {
         foreach ($pro as $key => $t_ar) {
             if ($key == 'dept') {
-                $t_ar1 = str_replace(' ', '_', $t_ar);
+                $t_ar1 = str_replace(' ', '%20', $t_ar);
                 echo "<option value=" . $t_ar1;
                 if ($deptview == $t_ar1) {
-                    $cur_dept = $k;
-                    //$_SESSION['viewdept'] = $t_ar1;                
+                    $cur_dept = $k;                                   
                     echo " selected";
                 }
                 echo ">" . $t_ar;
@@ -67,24 +61,20 @@ if ($padmin) {
 
 //If top level category is selected
 //Start of the second level category
-$cur_prog = (isset($_SESSION['curprog']) ? $_SESSION['curprog'] : 0);
+$cur_prog = 0;
+$progview = (isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots ? $_COOKIE['curprog'] : $progview);
 if ($cur_dept) {
     echo "<form method=\"POST\" id=\"prog_form_prog\" class=\"prog_form\" action=\"\">".get_string('programme', 'report_myfeedback')."</span>
     <input type=\"hidden\" name=\"deptselect\" value=$deptview />
     <select id=\"progSelect\" value=$progview name=\"progselect\"><option>".get_string('choosedots')."</option>";
     $pg = $padmin;
-    //unset($pg[$cur_dept]['prog']['mod']);
     foreach ($pg[$cur_dept]['prog'] as $tky => $tre) {
-        $p1 = str_replace(' ', '_', $tre['name']);
+        $p1 = str_replace(' ', '%20', $tre['name']);
         echo "<option value=" . $p1;
         if ($progview == $p1) {
             $cur_prog = $tky;
-            //$_SESSION['viewprog'] = $t_ar1;
             echo " selected";
         }
-        /* if (count($pg[$cur_dept]['prog']) == 1) {
-          $cur_prog = $tky;
-          } */
         echo ">" . $tre['name'];
     }
     echo "</select></form>";
@@ -92,30 +82,29 @@ if ($cur_dept) {
 
 //If a second level category is selected
 //Start of Module
-$cur_mod = (isset($progmodview) ? $progmodview : 0);
-if ($cur_prog != 'Choose') {
+$cur_mod = 0;
+$progmodview = (isset($_COOKIE['curmodprog']) && isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots && $progview != $dots ? $_COOKIE['curmodprog'] : $progmodview);
+if ($cur_prog) {
     echo "<form method=\"POST\" id=\"prog_form_mod\" class=\"prog_form\" action=\"\">".get_string('coursecolon', 'report_myfeedback')."</span>
     <input type=\"hidden\" name=\"deptselect\" value=$deptview />
     <input type=\"hidden\" name=\"progselect\" value=$progview />
     <select id=\"progmodSelect\" value=$progmodview name=\"progmodselect\"><option>".get_string('choosedots')."</option>";
     $pg1 = $padmin;
-    //unset($pg[$cur_dept]['prog']['mod']);
     foreach ($pg1[$cur_dept]['prog'][$cur_prog]['mod'] as $cs1 => $cses) {
-        $c1 = str_replace(' ', '_', $cses);
+        $c1 = str_replace(' ', '%20', $cses);
         echo "<option value=" . $c1;
         if ($progmodview == $c1) {
             $cur_mod = $cs1;
-            //$_SESSION['viewprog'] = $t_ar1;
             echo " selected";
         }
-        /* if (count($pg[$cur_dept]['prog']) == 1) {
-          $cur_prog = $tky;
-          } */
         echo ">" . $cses;
     }
     echo "</select></form>";
 }
-
+    //Get the late feedback days from config
+    /*$lt = get_config('report_myfeedback');
+    $a = new stdClass();
+    $a->lte = isset($lt->latefeedback) ? $lt->latefeedback : 28;*/
 if ($cur_dept && $cur_prog) {
     echo "<div id='selected-prog-container'>";
     echo "<div id='selceted-prog-buttons'>";
@@ -136,7 +125,7 @@ if ($cur_dept && $cur_prog) {
             $prog_mod_context = context_course::instance($key1);
             $pgtutcontext[$key1] = $prog_mod_context->id;
             $puids = array();
-            if ($mod_enrolled_users = get_enrolled_users($prog_mod_context, $cap = 'mod/assign:submit', $groupid = 0, $userfields = 'u.id', $orderby = null, $limitfrom = 0, $limitnum = 0, $onlyactive = true)) {
+            if ($mod_enrolled_users = get_enrolled_users($prog_mod_context, $cap = 'report/myfeedback:student', $groupid = 0, $userfields = 'u.id', $orderby = null, $limitfrom = 0, $limitnum = 0, $onlyactive = true)) {
                 foreach ($mod_enrolled_users as $puid) {
                     $puids[] = $puid->id; //uids per module
                     $p_tutor_uids[] = $puid->id; //uids for the module
@@ -184,9 +173,9 @@ if ($cur_dept && $cur_prog) {
     $assessmentmsg = get_string('tutortblheader_assessment_info', 'report_myfeedback');
     $assessmenticon = '<img class="studentimgdue" src="' . 'pix/info.png' . '" ' .
             ' alt="-" title="' . $assessmentmsg . '" rel="tooltip"/>';
-    $latefeedbackmsg = get_string('tutortblheader_latefeedback_info', 'report_myfeedback');
-    $latefeedbackicon = '<img  class="studentimgfeed" src="' . 'pix/info.png' . '" ' .
-            ' alt="-" title="' . $latefeedbackmsg . '" rel="tooltip"/>';
+    //$latefeedbackmsg = get_string('tutortblheader_latefeedback_info', 'report_myfeedback',$a);
+    //$latefeedbackicon = '<img  class="studentimgfeed" src="' . 'pix/info.png' . '" ' .
+     //       ' alt="-" title="' . $latefeedbackmsg . '" rel="tooltip"/>';
     $overallgrademsg = get_string('tutortblheader_overallgrade_info', 'report_myfeedback');
     $overallgradeicon = '<img class="studentimgall" src="' . 'pix/info.png' . '" ' .
             ' alt="-" title="' . $overallgrademsg . '" rel="tooltip"/>';
@@ -216,14 +205,13 @@ if ($cur_dept && $cur_prog) {
                                 <th>" .
             get_string('tutortblheader_latesubmissions', 'report_myfeedback') . " " . $latesubmissionicon . "</th>
                                 <th>" .
-            get_string('tutortblheader_graded', 'report_myfeedback') . " $gradeicon</th>
+            get_string('tutortblheader_graded', 'report_myfeedback') . " $gradeicon</th> 
                                 <th>" .
-            get_string('tutortblheader_lowgrades', 'report_myfeedback') . " " . $lowgradeicon . "</th> 
-                           </tr></thead><tbody>";
-            //<th>" . get_string('tutortblheader_latefeedback', 'report_myfeedback') . " " . $latefeedbackicon . "</th> 
+            get_string('tutortblheader_lowgrades', 'report_myfeedback') . " " . $lowgradeicon . "</th>
+                                </tr></thead><tbody>";
                                 
     $modtut = null;
-    if (is_int($cur_mod)) {
+    if ($cur_mod) {
         $pgusers = (isset($pguserspermod[$cur_mod]) ? $pguserspermod[$cur_mod] : array()); //Get users with scores per module instead of the entire category
         $p_tutor_uids = (isset($p_tutor_mod[$cur_mod]) ? $p_tutor_mod[$cur_mod] : $p_tutor_uids); // Get user ids per module
         $modtut = (isset($p_tutor_mod[$cur_mod]) ? $pgtutcontext[$cur_mod] : 0);
@@ -346,8 +334,15 @@ if ($cur_dept && $cur_prog) {
     $_SESSION['user_name'] = 'nil';
 }
 
+$event = \report_myfeedback\event\myfeedbackreport_viewed_deptdash::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+$event->trigger();
+
 echo "<script type=\"text/javascript\">
-    
+    $(document).ready( function () {
+
+$('#wait').css({'cursor':'default','display':'none'});
+$('body').css('cursor', 'default');
+ 
 $('#deptSelect').change(function(){
     $('#prog_form_dept').submit();    
 });
@@ -454,15 +449,18 @@ $(\"#emailform1\").click(function(){
                  mylink1.push($(this).val());
                  }
                 });
+                if (mylink1.length > 0) {
                 $(\"a#mail1\").attr(\"href\", \"mailto:?bcc=\" + mylink1.join
-(\";\")+\"&Subject=" . get_string('email_dept_subject', 'report_myfeedback') . "\");
+        (\";\")+\"&Subject=" . get_string('email_dept_subject', 'report_myfeedback') . "\");
+    }
 });
 
 /*var w = $('td:first-child').innerWidth();*/
 $('td#assess-name').css({
-    'max-width': '250px',
+    'max-width': '300px',
     'white-space': 'nowrap',
     'overflow': 'hidden',
     'text-overflow': 'ellipsis'
+});
 });
 </script>";

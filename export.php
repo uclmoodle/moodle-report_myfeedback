@@ -1,7 +1,14 @@
-<?PHP
+<?php
 
-// Original PHP code by Chirp Internet: www.chirp.com.au
-// Please acknowledge use of this code by including this header.
+/*
+ * A referenced file to export data from the tabs and dashboards to excel
+ * 
+ * @package  report_myfeedback
+ * @author    Delvon Forrester <delvon@esparanza.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @credits   Original PHP code by Chirp Internet: www.chirp.com.au
+ */
+
 require('../../config.php');
 $data = $_SESSION["exp_sess"];
 $userid = $_SESSION['myfeedback_userid'];

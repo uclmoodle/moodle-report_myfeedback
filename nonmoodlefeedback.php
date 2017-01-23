@@ -43,10 +43,6 @@ if (isset($_POST['feedname']) && isset($_POST['grade_id2']) && isset($_POST['use
     }
     
     $event->trigger();
-    
-    // Add some extra hidden fields.
-    /* $mform->addElement()->setValue($displaynotes);
-      $mform->setType('notes'.$gradeitem, PARAM_TEXT);
-      $this->add_action_buttons(false, 'Save notes'); */
+
     header('Location: index.php?userid=' . $usr_id . '&currenttab=feedback');
 }

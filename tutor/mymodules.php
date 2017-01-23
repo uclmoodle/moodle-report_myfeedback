@@ -1,9 +1,11 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The main file for the Module tutor dashboard
+ * 
+ * @package  report_myfeedback
+ * @author    Delvon Forrester <delvon@esparanza.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
@@ -13,10 +15,13 @@ if ($USER->lastlogin) {
 } else {
     $userlastlogin = get_string("never");
 }
+//get the programme they are on for the user from their profile
+//This requires that the below profile field is added
 $programme = '';
 if (isset($USER->profile_field_programmename)) {
     $programme = $USER->profile_field_programmename;
 }
+echo "<p>" . get_string('overview_text_mtutor', 'report_myfeedback') . "</p>";
 echo '<div class="fullhundred clearfix">
         <div class="mymods-container">
           <div class="userprofilebox clearfix">
@@ -31,7 +36,6 @@ echo '<div class="descriptionbox">
 //if ($userid != $USER->id) {
 echo '<h2 style="margin:-8px 0;">' . $USER->firstname . " " . $USER->lastname . '</h2>';
 //}
-//TODO - After integration project - get the Programme and affiliated department
 
 echo $USER->department . "  " . $programme .
  '<br><p> </p>';
@@ -42,17 +46,16 @@ echo '</div>';
 $courselist = '';
 $num = 0;
 $my_tutor_mods = array();
+//Get all courses the logged-in user has modtutor capability in
+//Used this function as it gets courses added at category level as well - So courses they may have the capability in under other users.
 if ($tutor_mods = get_user_capability_course('report/myfeedback:modtutor', $USER->id, $doanything = false, $fields = 'visible,shortname,fullname')) {//enrol_get_users_courses($USER->id, $onlyactive = TRUE)) {
     foreach ($tutor_mods as $value) {
         if ($value->visible) {
-            //$coursecontext = context_course::instance($value->id);
-            // if (has_capability('report/myfeedback:modtutor', $coursecontext, $USER->id, $doanything = false)) {
             $my_tutor_mods[] = $value;
-            // }
         }
     }
 }
-
+//Sort the module in aplphabetic order but case-insensitive
 uasort($my_tutor_mods, function($a, $b) {
             return strcasecmp($a->shortname, $b->shortname);
         });
@@ -73,18 +76,22 @@ echo '</div></div>';
 echo '</div><div class="mymods-container-right">
             <p class="personaltutoremail">
             <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></p>  
-            <span class="personaltutoremail reportPrint"><a href="#">' . get_string('print_report', 'report_myfeedback') . '</a></span>
+            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">' . get_string('print_report', 'report_myfeedback') . 
+        '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
             <p class="personaltutoremail ex_port">
             <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></p>
             </div></div>';
-
+//Get the late feedback days from config
+/*$lt = get_config('report_myfeedback');
+$a = new stdClass();
+$a->lte = isset($lt->latefeedback) ? $lt->latefeedback : 28;*/
 // Setup the heading for the Personal tutor dashboard
 $assessmentmsg = get_string('tutortblheader_assessment_info', 'report_myfeedback');
 $assessmenticon = '<img class="studentimgdue" src="' . 'pix/info.png' . '" ' .
         ' alt="-" title="' . $assessmentmsg . '" rel="tooltip"/>';
-$latefeedbackmsg = get_string('tutortblheader_latefeedback_info', 'report_myfeedback');
-$latefeedbackicon = '<img  class="studentimgfeed" src="' . 'pix/info.png' . '" ' .
-        ' alt="-" title="' . $latefeedbackmsg . '" rel="tooltip"/>';
+//$latefeedbackmsg = get_string('tutortblheader_latefeedback_info', 'report_myfeedback',$a);
+//$latefeedbackicon = '<img  class="studentimgfeed" src="' . 'pix/info.png' . '" ' .
+  //      ' alt="-" title="' . $latefeedbackmsg . '" rel="tooltip"/>';
 $overallgrademsg = get_string('tutortblheader_overallgrade_info', 'report_myfeedback');
 $overallgradeicon = '<img class="studentimgall" src="' . 'pix/info.png' . '" ' .
         ' alt="-" title="' . $overallgrademsg . '" rel="tooltip"/>';
@@ -114,10 +121,7 @@ $my_tutor_mods = array();
 if ($archive_mods = get_user_capability_course('report/myfeedback:modtutor', $USER->id, $doanything = false, $fields = 'visible,shortname,fullname,category')) {
     foreach ($archive_mods as $value) {
         if ($value->visible && $value->id) {
-            //  $coursecontext = context_course::instance($value->id);
-            // if (has_capability('report/myfeedback:modtutor', $coursecontext, $USER->id, $doanything = false)) {
             $my_tutor_mods[] = $value;
-            // }
         }
     }
 }
@@ -126,7 +130,7 @@ uasort($my_tutor_mods, function($a, $b) {
         });
 if ($my_tutor_mods) {
     require_once(dirname(__FILE__) . '/modules.php');
-    require_once($CFG->libdir . '/coursecatlib.php');
+    require_once($CFG->libdir . '/coursecatlib.php');    
     echo '<div class="fullhundred db">';
     foreach ($my_tutor_mods as $t) {
         foreach ($m as $v) {
@@ -145,12 +149,12 @@ if ($my_tutor_mods) {
                     get_string('tutortblheader_nonsubmissions', 'report_myfeedback') . " $nonsubmissionicon</th>
                                 <th>" .
                     get_string('tutortblheader_latesubmissions', 'report_myfeedback') . " $latesubmissionicon</th>
-                                <th>" . 
+                                <th>" .
                     get_string('tutortblheader_graded', 'report_myfeedback') . "  $gradeicon</th>
                                 <th>" .
                     get_string('tutortblheader_lowgrades', 'report_myfeedback') . " $lowgradeicon</th> 
                            </tr></thead><tbody>";
-            
+
             $modscore = '';
             $modgraph = '';
             $due = $nonsub = $latesub = $graded = $lowgrades = $latefeedback = 0;
@@ -163,13 +167,13 @@ if ($my_tutor_mods) {
                     $dept = $get_cat['dept'];
                     $prog = $get_cat['prog'];
                 }
-                
+
                 $cse_name .= '<div class="fullRec">' . ($mod_name && $s_name ? '<h4 style="color: #444"><b>' . $s_name . ': ' . $mod_name . '</b></h4>' : '');
                 $cse_name .= ($dept ? get_string('faculty', 'report_myfeedback') . $dept . '<br>' : '');
                 $cse_name .= ($prog ? get_string('programme', 'report_myfeedback') . $prog . '<br>' : '');
 
                 $uids = array();
-                if ($all_enrolled_users = get_enrolled_users($mod_context, $cap = 'mod/assign:submit', $groupid = 0, $userfields = 'u.id', $orderby = null, $limitfrom = 0, $limitnum = 0, $onlyactive = true)) {
+                if ($all_enrolled_users = get_enrolled_users($mod_context, $cap = 'report/myfeedback:student', $groupid = 0, $userfields = 'u.id', $orderby = null, $limitfrom = 0, $limitnum = 0, $onlyactive = true)) {
                     foreach ($all_enrolled_users as $uid) {
                         $uids[] = $uid->id;
                     }
@@ -191,12 +195,12 @@ if ($my_tutor_mods) {
                 $modtable .= $modscore;
                 $modtable .= '</tbody></table>';
                 if (!$modscore) {
-                    $modtable = '<h2><i style="color:#5A5A5A">' . get_string('nodatatodisplay', 'report_myfeedback'). '</i></h2>';
+                    $modtable = '<h2><i style="color:#5A5A5A">' . get_string('nodatatodisplay', 'report_myfeedback') . '</i></h2>';
                 }
                 echo $cse_name;
                 if ($modscore) {
-                    echo $modgraph . '<p style = "margin: 20px 0"><span class="aToggle" style="background-color:#619eb6;color:#fff">' 
-                            . get_string('assessmentbreakdown', 'report_myfeedback'). '</span><span class="sToggle">' . get_string('studentbreakdown', 'report_myfeedback'). '</span></p>';
+                    echo $modgraph . '<p style = "margin: 20px 0"><span class="aToggle" style="background-color:#619eb6;color:#fff">'
+                    . get_string('assessmentbreakdown', 'report_myfeedback') . '</span><span class="sToggle">' . get_string('studentbreakdown', 'report_myfeedback') . '</span></p>';
                 }
                 echo $modtable . '</div>';
 
@@ -250,23 +254,46 @@ if ($my_tutor_mods) {
         }
     }
 } else {
-    echo '<h2><i style="color:#d69859">' . get_string('nomodule', 'report_myfeedback'). '</i></h2>';
+    echo '<h2><i style="color:#d69859">' . get_string('nomodule', 'report_myfeedback') . '</i></h2>';
 }
 //echo '</div>';
+//These session variables are used in the export file
 $_SESSION['exp_sess'] = $exceltable;
 $_SESSION['myfeedback_userid'] = $userid;
 $_SESSION['tutor'] = 'm';
 $_SESSION['user_name'] = 'nil';
 
+//trigger teh logging to database
+$event = \report_myfeedback\event\myfeedbackreport_viewed_mtutordash::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+$event->trigger();
+
+//Use datables to display the table, sort, etc.
 echo "<script type=\"text/javascript\">
     $(document).ready(function() {
+
+$('#wait').css({'cursor':'default','display':'none'});
+$('body').css('cursor', 'default');
+
+// Create the DataTable
+  var table = $('.modtable').DataTable( {
+    dom: '',
+    fixedHeader: true,
+    columnDefs: [
+      { targets: [ 0,1,2,3,4,5,6 ],
+        searchable: false, 
+        orderable:  false 
+      }
+    ],
+    order: [ ]
+ });
+
     $('.overallgrade').show();
-    $('span.studentsassessed').text('".get_string('dashboard_students','report_myfeedback')."');
-    $('.studentimgdue').attr('title', '".get_string('student_due_info','report_myfeedback')."');
-    $('.studentimgnon').attr('title', '".get_string('student_nonsub_info','report_myfeedback')."');
-    $('.studentimglate').attr('title', '".get_string('student_late_info','report_myfeedback')."');
-    $('.studentimggraded').attr('title', '".get_string('student_graded_info','report_myfeedback')."');y
-    $('.studentimglow').attr('title', '".get_string('student_low_info','report_myfeedback')."');
+    $('span.studentsassessed').text('" . get_string('dashboard_students', 'report_myfeedback') . "');
+    $('.studentimgdue').attr('title', '" . get_string('student_due_info', 'report_myfeedback') . "');
+    $('.studentimgnon').attr('title', '" . get_string('student_nonsub_info', 'report_myfeedback') . "');
+    $('.studentimglate').attr('title', '" . get_string('student_late_info', 'report_myfeedback') . "');
+    $('.studentimggraded').attr('title', '" . get_string('student_graded_info', 'report_myfeedback') . "');
+    $('.studentimglow').attr('title', '" . get_string('student_low_info', 'report_myfeedback') . "');
 });
 
 $('.ex_port').on( 'click', function() {
@@ -278,7 +305,7 @@ $('.reportPrint').on( 'click', function () {
 });
 /*var w = $('td:first-child').innerWidth();*/
 $('td#assess-name').css({
-    'max-width': '250px',
+    'max-width': '300px',
     'white-space': 'nowrap',
     'overflow': 'hidden',
     'text-overflow': 'ellipsis'
@@ -290,12 +317,12 @@ $('.sToggle').click(function(e){
         $('.settableheight').hide();
         $('.overallgrade').hide();
         $('.assessdue').show();
-        $('span.studentsassessed').text('".get_string('dashboard_assessments','report_myfeedback')."');
-        $('.studentimgdue').attr('title', '".get_string('tutortblheader_assessment_info','report_myfeedback')."');
-        $('.studentimgnon').attr('title', '".get_string('tutortblheader_nonsubmissions_info','report_myfeedback')."');
-        $('.studentimglate').attr('title', '".get_string('tutortblheader_latesubmissions_info','report_myfeedback')."');
-        $('.studentimggraded').attr('title', '".get_string('tutortblheader_graded_info','report_myfeedback')."');
-        $('.studentimglow').attr('title', '".get_string('tutortblheader_lowgrades_info','report_myfeedback')."');
+        $('span.studentsassessed').text('" . get_string('dashboard_assessments', 'report_myfeedback') . "');
+        $('.studentimgdue').attr('title', '" . get_string('tutortblheader_assessment_info', 'report_myfeedback') . "');
+        $('.studentimgnon').attr('title', '" . get_string('tutortblheader_nonsubmissions_info', 'report_myfeedback') . "');
+        $('.studentimglate').attr('title', '" . get_string('tutortblheader_latesubmissions_info', 'report_myfeedback') . "');
+        $('.studentimggraded').attr('title', '" . get_string('tutortblheader_graded_info', 'report_myfeedback') . "');
+        $('.studentimglow').attr('title', '" . get_string('tutortblheader_lowgrades_info', 'report_myfeedback') . "');
         $(this).closest('.fullRec').find('table.tutor-inner.stuRecM').show();
         $(this).closest('.fullRec').find('span.aToggle').css({'background-color':'#f5f5f5','color':'#444'});
         $(this).closest('.fullRec').find('span.sToggle').css({'background-color':'#619eb6','color':'#fff'});    
@@ -305,12 +332,12 @@ $('.aToggle').click(function(e){
         $(this).closest('.fullRec').find('table.tutor-inner.assRec').show();
         $('.settableheight').show();
         $('.overallgrade').show();
-        $('span.studentsassessed').text('".get_string('dashboard_students','report_myfeedback')."');
-        $('.studentimgdue').attr('title', '".get_string('student_due_info','report_myfeedback')."');
-        $('.studentimgnon').attr('title', '".get_string('student_nonsub_info','report_myfeedback')."');
-        $('.studentimglate').attr('title', '".get_string('student_late_info','report_myfeedback')."');
-        $('.studentimggraded').attr('title', '".get_string('student_graded_info','report_myfeedback')."');
-        $('.studentimglow').attr('title', '".get_string('student_low_info','report_myfeedback')."');
+        $('span.studentsassessed').text('" . get_string('dashboard_students', 'report_myfeedback') . "');
+        $('.studentimgdue').attr('title', '" . get_string('student_due_info', 'report_myfeedback') . "');
+        $('.studentimgnon').attr('title', '" . get_string('student_nonsub_info', 'report_myfeedback') . "');
+        $('.studentimglate').attr('title', '" . get_string('student_late_info', 'report_myfeedback') . "');
+        $('.studentimggraded').attr('title', '" . get_string('student_graded_info', 'report_myfeedback') . "');
+        $('.studentimglow').attr('title', '" . get_string('student_low_info', 'report_myfeedback') . "');
         $('.modtable .modangle').text('\u25bc');
         $(this).closest('.fullRec').find('span.aToggle').css({'background-color':'#619eb6','color':'#fff'});
         $(this).closest('.fullRec').find('span.sToggle').css({'background-color':'#f5f5f5','color':'#444'});    

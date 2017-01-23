@@ -30,6 +30,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $plugins = array(
-    'dataTables' => array('files' => array('jquery-1.11.1.dataTables.min.js')),
+    'dataTables' => array('files' => array('datatables.js')),
     'tooltip' => array('files' => array('tooltip.js', 'tooltip.css'))
 );

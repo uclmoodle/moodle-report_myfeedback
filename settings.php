@@ -13,7 +13,10 @@ if ($ADMIN->fulltree) {
                     get_string('dbpassinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
     
     $options = array();
-    for ($i=0; $i<=10; $i++) {
+    //If we are in Sept-Dec we subtract 2014 from the current year we are in otherwise we subtract 2015
+    //This is because we can only support up to 14/15 academic year
+    $max = date('m') > 8 ? date('Y') - 2014 : date('Y') - 2015;
+    for ($i=0; $i<=$max; $i++) {
         $options[$i] = $i;
     }    
     
@@ -31,6 +34,12 @@ if ($ADMIN->fulltree) {
                     get_string('archivedbuserinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
     $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbpassarchive', get_string('archivedbpass', 'report_myfeedback'),
                     get_string('archivedbpassinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
+    $settings->add(new admin_setting_configtext('report_myfeedback/livedomain', get_string('livedomain', 'report_myfeedback'),
+            get_string('livedomaininfo', 'report_myfeedback'), get_string('livedomaindefault', 'report_myfeedback')));
+    $settings->add(new admin_setting_configtext('report_myfeedback/academicyear', get_string('settingsacademicyear', 'report_myfeedback'),
+                    get_string('academicyearinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
+    $settings->add(new admin_setting_configcheckbox('report_myfeedback/archivedinstance', get_string('archivedinstance', 'report_myfeedback'),
+                    get_string('archivedinstanceinfo', 'report_myfeedback'), '0'));
     
     //Dept Admin dashboard Settings - 
     $settings->add(new admin_setting_heading('report_myfeedback_addheading_courselimit',get_string('courselimitheading', 'report_myfeedback'),''));
@@ -41,4 +50,9 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('report_myfeedback_addheading_overviewlimit',get_string('overviewlimitheading', 'report_myfeedback'),''));
     $settings->add(new admin_setting_configtext('report_myfeedback/overviewlimit', get_string('overviewlimit', 'report_myfeedback'),
             get_string('overviewlimitsettings', 'report_myfeedback'), 10, PARAM_INT));
+    
+        //Late feedback Settings - 
+    /*$settings->add(new admin_setting_heading('report_myfeedback_addheading_latefeedback',get_string('latefeedbackheading', 'report_myfeedback'),''));
+    $settings->add(new admin_setting_configtext('report_myfeedback/latefeedback', get_string('latefeedback', 'report_myfeedback'),
+            get_string('latefeedbacksettings', 'report_myfeedback'), 28, PARAM_INT));*/
 }

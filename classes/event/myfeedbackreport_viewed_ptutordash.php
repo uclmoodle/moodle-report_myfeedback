@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2015 onwards Delvon Forrester <delvon@live.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class myfeedbackreport_viewed extends \core\event\base {
+class myfeedbackreport_viewed_ptutordash extends \core\event\base {
 
     /**
      * Init method.
@@ -52,7 +52,7 @@ class myfeedbackreport_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventreportviewed', 'report_myfeedback');
+        return get_string('eventreportviewed_ptutor', 'report_myfeedback');
     }
 
     /**
@@ -61,7 +61,7 @@ class myfeedbackreport_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' viewed the My feedback report for the user with id '$this->relateduserid'.";
+        return "The user with id '$this->userid' viewed the My feedback Personal tutor dashboard.";
     }
 
     /**

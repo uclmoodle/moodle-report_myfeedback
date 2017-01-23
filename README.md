@@ -1,7 +1,7 @@
 moodle-report_myfeedback
 ==================
 
-A Moodle Report that shows all user feedback on one page
+A Moodle Report that shows all user feedback on one page.
 
 Introduction:
 This report displays a searchable and sortable table with the User's grades and feedback across Moodle courses.
@@ -28,6 +28,17 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.8.5 (Build: 2016100400)
+Resolved minor bugs.
+Further settings added to admin page.
+Resolved timeout on My students tab.
+Added search to My students tab.
+Changing name of 'progadmin' role no longer removes the Dept Admin tab.
+No longer shows 'no submission' on assignment where a submission exists but no grade or feedback given.
+Turnitin parts grades showing correctly - used to show one grade for all parts.
+Viewed column now showing date feedback first viewed, not last viewed.
+Workshop assessment feedback now showing, rather than just the submission feedback.
+
 2.8.4 (Build: 2016100400)
 Added strings in code to the lang file.
 New Departmental admin dashboard.
