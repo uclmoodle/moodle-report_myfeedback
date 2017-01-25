@@ -28,6 +28,12 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+
+2.8.6 (Build: 2017012500)
+Resolved bug where old (overwritten) Moodle Assignment rubric selections display in the report, alongside the latest rubric selections.
+Updated language files to highlight that the archiving features are not suitable for production Moodle instances, due to issues with checking permissions on older versions of Moodle.
+The workaround is to install the My feedback plugin on every Moodle instance independently.
+
 2.8.5 (Build: 2016100400)
 Resolved minor bugs.
 Further settings added to admin page.

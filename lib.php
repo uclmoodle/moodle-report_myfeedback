@@ -795,8 +795,8 @@ class report_myfeedback {
             ON ag.assignment=gi.iteminstance AND ag.userid=?
             JOIN {grade_grades} gg
             ON gi.id=gg.itemid AND gi.itemmodule=? 
-            AND gi.courseid=? AND gg.userid=? AND gi.iteminstance=?";
-        $params = array($userid, $itemmodule, $courseid, $userid, $iteminstance);
+            AND gi.courseid=? AND gg.userid=? AND gi.iteminstance=? AND status=?";
+        $params = array($userid, $itemmodule, $courseid, $userid, $iteminstance, 1);
         $rubrics = $remotedb->get_recordset_sql($sql, $params);
         $out = '';
         if ($rubrics) {
