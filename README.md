@@ -29,6 +29,10 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+2.8.7 (Build: 2017012700)
+Resolved bug where Moodle database table prefix (mdl) was hard coded into lib.php.
+
+
 2.8.6 (Build: 2017012500)
 Resolved bug where old (overwritten) Moodle Assignment rubric selections display in the report, alongside the latest rubric selections.
 Updated language files to highlight that the archiving features are not suitable for production Moodle instances, due to issues with checking permissions on older versions of Moodle.

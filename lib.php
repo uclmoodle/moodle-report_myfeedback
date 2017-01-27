@@ -3197,10 +3197,10 @@ class report_myfeedback {
                         JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
                         JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'assign'
                         JOIN {assign} a ON a.id=gi.iteminstance AND a.course=gi.courseid
-                        JOIN mdl_assign_plugin_config apc on a.id = apc.assignment AND apc.name='enabled' AND plugin = 'onlinetext'
+                        JOIN {assign_plugin_config} apc on a.id = apc.assignment AND apc.name='enabled' AND plugin = 'onlinetext'
                         LEFT JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=$userid ";
             if (!$archive || ($archive && $checkdb > 1314)) {//when the new assign_user_flags table came in
-                $sql .= "LEFT JOIN mdl_assign_user_flags auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
+                $sql .= "LEFT JOIN {assign_user_flags} auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
                         AND  auf.userid = $userid OR a.markingworkflow = 0 ";
             }
             if (!$archive || ($archive && $checkdb > 1112)) {//when the new grading_areas table came in
