@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+2.8.8 (Build: 2017013100)
+Resolved bug where some Turnitin Assignments were showing before the post date.
+
 2.8.7 (Build: 2017012700)
 Resolved bug where Moodle database table prefix (mdl) was hard coded into lib.php.
 

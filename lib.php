@@ -2496,7 +2496,7 @@ class report_myfeedback {
                  AND gi.itemmodule = 'turnitintooltwo'
                  LEFT JOIN {turnitintooltwo_submissions} ts ON ts.turnitintooltwoid=t.id AND ts.userid = $userid
                  LEFT JOIN {turnitintooltwo_parts} tp ON tp.id = ts.submission_part
-                 WHERE c.visible=1 AND c.showgrades = 1";
+                 WHERE c.visible=1 AND c.showgrades = 1 AND and tp.dtpost < $now";
         }
         $r = $remotedb->get_recordset_sql($sql);
         $all = array();
