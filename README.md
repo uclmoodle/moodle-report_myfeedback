@@ -20,7 +20,8 @@ Admin and manager can see all grades for all users (unless permissions prohibit 
 This report is based on the work done by David Bezemer, which in turn is based on work done by Karen Holland, Mei Jin, Jiajia Chen. 
 This plugin also uses SQL originating from Richard Havinga, but adds information from additional Moodle activities.
 The code for using an external database is authored by Juan Leyva.
-The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and Dr John Mitchell <j.mitchell@ucl.ac.uk>
+The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and Dr John Mitchell <j.mitchell@ucl.ac.uk>.
+The authors of this plugin are Jessica Gramp <j.gramp@ucl.ac.uk> and Delvon Forrester <delvon@esparanza.co.uk>.
 The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
 through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
 
@@ -28,12 +29,14 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.8.10 (Build: 2017020100)
+Resolved bug where some Turnitin Assignments (v1 and v2) were showing before the post date.
 
 2.8.9 (Build: 2017013102)
 Resolved bug in SQL.
 
 2.8.8 (Build: 2017013100)
-Resolved bug where some Turnitin Assignments were showing before the post date.
+Resolved bug where some Turnitin Assignments were showing before the post date (not fully resolved).
 
 2.8.7 (Build: 2017012700)
 Resolved bug where Moodle database table prefix (mdl) was hard coded into lib.php.
