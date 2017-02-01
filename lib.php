@@ -1203,7 +1203,9 @@ class report_myfeedback {
                     WHERE deleted = 0 AND email = ?", array($searchu));
             } else {//if not an emal address then search on first word or last word
                 $namef = explode(" ", $searchu);//make string into array if multiple words
-                $namel = array_reverse($namef);//reverse teh array to get the last word
+                $namel = array_reverse($namef);//reverse the array to get the last word
+				//suggest this checks to see how many words are entered in the search box
+				//suggest the query then CHANGE from OR to AND for 2 werd entries, as otherwise you get back a lot of innacurate results.
                 $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
                     WHERE deleted = 0 AND (firstname LIKE ('$namef[0]%') OR lastname LIKE ('$namel[0]%')) limit 10", array());
             }
@@ -2496,7 +2498,7 @@ class report_myfeedback {
                  AND gi.itemmodule = 'turnitintooltwo'
                  LEFT JOIN {turnitintooltwo_submissions} ts ON ts.turnitintooltwoid=t.id AND ts.userid = $userid
                  LEFT JOIN {turnitintooltwo_parts} tp ON tp.id = ts.submission_part
-                 WHERE c.visible=1 AND c.showgrades = 1 AND and tp.dtpost < $now";
+                 WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < $now";
         }
         $r = $remotedb->get_recordset_sql($sql);
         $all = array();

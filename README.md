@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+2.8.9 (Build: 2017013102)
+Resolved bug in SQL.
+
 2.8.8 (Build: 2017013100)
 Resolved bug where some Turnitin Assignments were showing before the post date.
 
