@@ -2481,7 +2481,7 @@ class report_myfeedback {
                  JOIN {turnitintool} t ON t.id=gi.iteminstance AND t.course=gi.courseid AND gi.courseid = $courseid
                  LEFT JOIN {turnitintool_submissions} ts ON ts.turnitintoolid=t.id AND ts.userid = $userid
                  LEFT JOIN {turnitintool_parts} tp ON tp.id = ts.submission_part 
-                 WHERE c.visible=1 AND c.showgrades = 1 ";
+                 WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < $now ";
         }
         if ($this->mod_is_available('turnitintooltwo')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, tp.id, tp.dtdue as due, ts.submission_modified as sub, gi.itemmodule as type, 
@@ -2498,7 +2498,7 @@ class report_myfeedback {
                  AND gi.itemmodule = 'turnitintooltwo'
                  LEFT JOIN {turnitintooltwo_submissions} ts ON ts.turnitintooltwoid=t.id AND ts.userid = $userid
                  LEFT JOIN {turnitintooltwo_parts} tp ON tp.id = ts.submission_part
-                 WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < $now";
+                 WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < $now ";
         }
         $r = $remotedb->get_recordset_sql($sql);
         $all = array();
@@ -3395,11 +3395,11 @@ class report_myfeedback {
                              AND (gg.hidden != 1 AND gg.hidden < ?)
                         JOIN {turnitintool} t ON t.id=gi.iteminstance AND t.course=gi.courseid
                         LEFT JOIN {turnitintool_submissions} su ON t.id = su.turnitintoolid AND su.userid = $userid
-                        LEFT JOIN {turnitintool_parts} tp ON su.submission_part = tp.id AND tp.dtpost < $now ";
+                        LEFT JOIN {turnitintool_parts} tp ON su.submission_part = tp.id ";
             if (!$archive || ($archive && $checkdb > 1112)) {//when the new grading_areas table came in
                 $sql .= "LEFT JOIN {grading_areas} ga ON con.id = ga.contextid ";
             }
-            $sql .= "WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
+            $sql .= "WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 AND tp.dtpost < $now ";
             array_push($params, $now, $userid, $now);
         }
         if ($this->mod_is_available("turnitintooltwo")) {
@@ -3455,11 +3455,11 @@ class report_myfeedback {
                              AND (gg.hidden != 1 AND gg.hidden < ?)
                         JOIN {turnitintooltwo} t ON t.id=gi.iteminstance AND t.course=gi.courseid
                         LEFT JOIN {turnitintooltwo_submissions} su ON t.id = su.turnitintooltwoid AND su.userid = $userid
-                        LEFT JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id AND tp.dtpost < $now ";
+                        LEFT JOIN {turnitintooltwo_parts} tp ON su.submission_part = tp.id ";
             if (!$archive || ($archive && $checkdb > 1112)) {//when the new grading_areas table came in
                 $sql .= "LEFT JOIN {grading_areas} ga ON con.id = ga.contextid ";
             }
-            $sql .= "WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 ";
+            $sql .= "WHERE c.visible = 1 AND c.showgrades = 1 AND cm.visible=1 AND tp.dtpost < $now ";
             array_push($params, $now, $userid, $now);
         }
         //$sql .= " ORDER BY duedate";
