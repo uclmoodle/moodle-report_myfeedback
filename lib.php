@@ -1158,7 +1158,7 @@ class report_myfeedback {
         if ($context) {
             $sql .= "AND r.contextid = $context ";
         }
-        $sql .= "AND userid = ? AND capability = ?";
+        $sql .= "AND userid = ? AND capability = ? GROUP BY c.id, r.roleid";
         $params = array($uid, $cap);
         $capy = $remotedb->get_record_sql($sql, $params);
         return $capy ? $capy->roleid : 0;
@@ -3124,10 +3124,11 @@ class report_myfeedback {
                             -1 AS tiiobjid,
                             -1 AS subid,
                             -1 AS subpart,
-                            -1 AS partname,
+                            '' AS partname,
                             -1 AS usegrademark,
                             gg.feedback AS feedbacklink,
                             gi.grademax AS highestgrade,
+                            -1 AS highestmarks,
                             -1 AS itemnumber,
                             gg.userid,
                             -1 AS groupid,
@@ -3174,10 +3175,11 @@ class report_myfeedback {
                             -1 AS tiiobjid,
                             -1 AS subid,
                             -1 AS subpart,
-                            -1 AS partname,
+                            '' AS partname,
                             -1 AS usegrademark,
                             gg.feedback AS feedbacklink,
                             gi.grademax AS highestgrade,
+							-1 AS highestmarks,
                             -1 AS itemnumber,
                             gg.userid,
                             su.groupid as groupid,
@@ -3245,10 +3247,11 @@ class report_myfeedback {
             $sql .= "-1 AS tiiobjid,
                                -1 AS subid,
                                -1 AS subpart,
-                               -1 AS partname,
+                               '' AS partname,
                                -1 AS usegrademark,
                                gg.feedback AS feedbacklink,
                                gi.grademax AS highestgrade,
+							   -1 AS highestmarks,
                                -1 AS itemnumber,
                                gg.userid,
                                -1 AS groupid,
@@ -3306,10 +3309,11 @@ class report_myfeedback {
                                -1 AS tiiobjid,
                                su.id AS subid,                                                           
                                -1 AS subpart,
-                               -1 AS partname,
+                               '' AS partname,
                                -1 AS usegrademark,
                                gg.feedback AS feedbacklink,
                                gi.grademax AS highestgrade,
+							   -1 AS highestmarks,
                                gi.itemnumber AS itemnumber,
                                gg.userid,
                                -1 AS groupid,
@@ -3373,6 +3377,7 @@ class report_myfeedback {
                                t.usegrademark,
                                gg.feedback AS feedbacklink,   
                                gi.grademax AS highestgrade,
+                               -1 AS highestmarks,
                                -1 AS itemnumber,
                                gg.userid,
                                -1 AS groupid,
@@ -3433,6 +3438,7 @@ class report_myfeedback {
                                t.usegrademark,
                                gg.feedback AS feedbacklink,
                                gi.grademax AS highestgrade,
+                               tp.maxmarks AS highestmarks,
                                -1 AS itemnumber,
                                gg.userid,
                                -1 AS groupid,
@@ -3875,6 +3881,9 @@ class report_myfeedback {
                                                 "\" target=\"_blank\">" . get_string('feedback', 'report_myfeedback') .
                                                 "</a> $newwindowicon";
                                     }
+                                }
+                                if ($record->highestmarks >= 0) {
+                                    $record->highestgrade = $record->highestmarks;
                                 }
                                 break;
                             case "workshop":

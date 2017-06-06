@@ -29,6 +29,11 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.8.12 (Build: 2017060600)
+Fixed spelling errors in en lang file.
+Fixed bug where Turnitin Assignment parts with the marks available changed from 100 show the correct total marks available.
+Fixed postgres sql errors with missing group by and mismatched types resulting in a database connection error.
+
 2.8.11 (Build: 2017020102)
 Resolved bug where some Turnitin Assignments (v1 and v2) were showing before the post date.
 

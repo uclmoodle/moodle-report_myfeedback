@@ -133,7 +133,7 @@ $string['studentrecordsystem'] = 'Launch Student Record System';
 $string['studentrecordsystemlink'] = 'https://';
 $string['provisional_grades'] = 'The marks shown here are provisional and may include marks for assessments that do not count towards your final grade. Please refer to the
     <a href="" title="Student Record System login" rel="tooltip">student record system</a> to see a formal record of your grade.';
-$string['archivedbnotexist'] = "This databse does not exist or access details incorrect. Admin must configure My feedback report settings page correctly!";
+$string['archivedbnotexist'] = "This database does not exist or access details incorrect. Admin must configure My feedback report settings page correctly!";
 $string['dbhost'] = "DB Host";
 $string['dbhostinfo'] = "Remote Database host name (on which the SQL queries will be executed - must be a duplicate of this Moodle database instance - used for avoiding load issues on primary Moodle database).<br />Leave blank to use the default Moodle database.";
 $string['archivedomain'] = 'Archived FQDN';
