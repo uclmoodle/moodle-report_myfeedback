@@ -1310,6 +1310,11 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     padding: 5px 5px 0 5px !important;
 }
 
+.path-report-myfeedback h4{
+	color: #444;
+	font-weight: bold;
+}
+
 .path-report-myfeedback .modtable.dataTable td {
     vertical-align: middle;
 }
@@ -1328,6 +1333,11 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     border-radius: 4px;
     cursor: pointer;
     border: 1px solid #ccc;
+}
+
+.path-report-myfeedback .modass {
+	background-color:#619eb6;
+	color:#fff
 }
 
 .path-report-myfeedback .fullRec {
@@ -1406,6 +1416,33 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
  a, a:visited {
      color: #005E8D;
  }
+ 
+ .path-report-myfeedback .modal {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    bottom: auto;
+    z-index: 1050;
+    width: 560px;
+    margin-left: -280px;
+    background-color: #fff;
+    border: 1px solid #999;
+    border: 1px solid rgba(0,0,0,0.3);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+    box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    outline: none;
+}
+
+.path-report-myfeedback .modal-backdrop.in {
+    opacity: .8;
+}
 
 
 @media print {

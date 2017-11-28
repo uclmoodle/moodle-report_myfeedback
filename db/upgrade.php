@@ -41,5 +41,17 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
         // Myfeedback savepoint reached.
         upgrade_plugin_savepoint(true, 2016031700, 'report', 'myfeedback');
     }
+	//optimise the log table
+	if ($oldversion < 2017112800) {
+		$table = new xmldb_table('logstore_standard_log');
+		//create index mdl_logsstanlog_usecou_ix on mdl_logstore_standard_log (userid, courseid);
+		$index = new xmldb_index('mdl_logsstanlog_usecou_ix', XMLDB_INDEX_NOTUNIQUE, array('userid', 'courseid'));
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+		
+		// Myfeedback savepoint reached.
+        upgrade_plugin_savepoint(true, 2017112800, 'report', 'myfeedback');
+	}
     return true; //have to be in else get an unknown error
 }

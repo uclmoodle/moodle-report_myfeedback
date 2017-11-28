@@ -29,6 +29,15 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.9 (Build: 2017112800)
+Included modal.js so that self-reflective notes and Turnitin feedback can be added in Moodle 3.3+, regardless of theme.
+Removed unused datatables.js files.
+Closed all the recordsets that can be closed in lib.php.
+Moved the few recordset closes already in the code out of the valid() if statement, so they close regardless of a valid result.
+Moved some of the css out of the code and into the css file (still more cleaning up of css in other areas is required though).
+Added an index on the log table to speed the queries where the date the feedback is viewed is shown.
+Changed the date format to d-m-Y so the full year is shown and isn't ambiguous - e.g. 13-5-2017, instead of 13-5-17.
+
 2.8.12 (Build: 2017060600)
 Fixed spelling errors in en lang file.
 Fixed bug where Turnitin Assignment parts with the marks available changed from 100 show the correct total marks available.

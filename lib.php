@@ -330,6 +330,7 @@ class report_myfeedback {
                         $feedback = (strip_tags($a->feedbackreviewer) ? "<b>" . get_string('tutorfeedback', 'report_myfeedback') . "</b><br/>" . strip_tags($a->feedbackreviewer) : '');
                     }
                 }
+				$assess->close(); //close the recordset
                 return $feedback;
             }
         }
@@ -671,6 +672,7 @@ class report_myfeedback {
             $out[] = $comment->peercomment;
         }
         $br = html_writer::empty_tag('br');
+		$comments->close(); //close the recordset
         return implode($br, $out);
     }
 
@@ -707,13 +709,13 @@ class report_myfeedback {
             $params = array($contextid, $assignmentid, $userid, $courseid, $gradeadded->timemodified);
             $viewreport = $remotedb->get_record_sql($sql, $params);
             if ($viewreport && $viewreport->timecreated > $gradeadded->timemodified) {
-                return date('d-m-y H:i', $viewreport->timecreated);
+                return date('d-m-Y H:i', $viewreport->timecreated);
             }
 
             $paramsone = array('gradereport_user', 'viewed', $userid, $courseid, $gradeadded->timemodified);
             $userreport = $remotedb->get_record_sql($sqlone, $paramsone);
             if ($userreport && $userreport->timecreated > $gradeadded->timemodified) {
-                return date('d-m-y H:i', $userreport->timecreated);
+                return date('d-m-Y H:i', $userreport->timecreated);
             }
         }
         return 'no';
@@ -742,7 +744,7 @@ class report_myfeedback {
         $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo);
         if ($userreport) {
             if ($gradeadded) {
-                $dateviewed = date('d-m-y', $userreport->timecreated);
+                $dateviewed = date('d-m-Y', $userreport->timecreated);
                 if ($gradeadded->timemodified < $userreport->timecreated) {
                     return $dateviewed;
                 }
@@ -806,6 +808,7 @@ class report_myfeedback {
                 }
             }
         }
+		$rubrics->close(); //close the recordset
         return $out;
     }
 
@@ -843,6 +846,7 @@ class report_myfeedback {
                 }
             }
         }
+		$guides->close(); //close the recordset
         return $out;
     }
 
@@ -2526,7 +2530,7 @@ class report_myfeedback {
             }
             $r->close();
         }
-
+		$r->close(); //close the recordset, regardless of whether it is valid or not
         $result = array(0, 0, 0, 0);
         $modresult = array();
         foreach ($all as $b) {
@@ -4098,7 +4102,7 @@ class report_myfeedback {
                                 $OUTPUT->pix_url('icon', $record->assessmenttype) . '" ' .
                                 'class="icon" alt="' . $assessmenttype . '" title="' . $assessmenttype . '"  rel="tooltip" />';
                     }
-                    //Set the sortable date before converting to d-M-y format 
+                    //Set the sortable date before converting to d-M-Y format 
                     $sub_datesort = $submissiondate;
                     $submittedtime = $submissiondate;
                     // If no feedback or grade has been received don't display anything.
@@ -4572,8 +4576,9 @@ class report_myfeedback {
                     }
                 }
             }
-            $rs->close(); // Close the recordset!
+            
         }
+		$rs->close(); // Close the recordset, regardless of whether it is valid or not
         $table .= "</tbody>                
                     </table>";
         $commentstable.="</tbody></table>";

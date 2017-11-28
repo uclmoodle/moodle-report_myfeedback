@@ -215,11 +215,11 @@ if ($cur_dept && $cur_prog) {
         $pgusers = (isset($pguserspermod[$cur_mod]) ? $pguserspermod[$cur_mod] : array()); //Get users with scores per module instead of the entire category
         $p_tutor_uids = (isset($p_tutor_mod[$cur_mod]) ? $p_tutor_mod[$cur_mod] : $p_tutor_uids); // Get user ids per module
         $modtut = (isset($p_tutor_mod[$cur_mod]) ? $pgtutcontext[$cur_mod] : 0);
-        echo (isset($pgeach1[$cur_mod]) ? '<h4 style="color: #444"><b>'.get_string('coursecolon', 'report_myfeedback') . $pgeach1[$cur_mod] . '</b></h4>' . /*
+        echo (isset($pgeach1[$cur_mod]) ? '<h4><b>'.get_string('coursecolon', 'report_myfeedback') . $pgeach1[$cur_mod] . '</b></h4>' . /*
                   $report->get_module_graph('module' . $cur_mod, $pmtot[$cur_mod], count($pmtot[$cur_mod])) . '<p style = "margin: 20px 0"> */
                 '<span class="aToggle modass" style="background-color:#619eb6;color:#fff">' . get_string('statsperassessment', 'report_myfeedback'). '</span>
                 <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback'). '</span><span class="pToggle">' . get_string('modtutorstats', 'report_myfeedback') . '</span></p></div>' :
-                '<h4 style="color: #444"><b>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$cur_dept]['prog'][$cur_prog]['name'] . '</b></h4>' . /* .
+                '<h4><b>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$cur_dept]['prog'][$cur_prog]['name'] . '</b></h4>' . /* .
                   $report->get_module_graph('prog' . $cur_prog, $pmtot[$cur_mod], count($pmtot[$cur_mod])) . '<p style = "margin: 20px 0"> */
                 '<span class="aToggle" style="background-color:#619eb6;color:#fff">' . get_string('statspercourse', 'report_myfeedback'). '</span>
                 <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback'). '</span></p></div>'); //<span class="pToggle">Personal tutor stats</span>
@@ -253,7 +253,7 @@ if ($cur_dept && $cur_prog) {
         });
         </script>";
     } else {
-        echo '<h4 style="color: #444"><b>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$cur_dept]['prog'][$cur_prog]['name'] . '</b></h4>' . /*
+        echo '<h4><b>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$cur_dept]['prog'][$cur_prog]['name'] . '</b></h4>' . /*
           $report->get_module_graph('prog' . $cur_prog, $pgtot, count($pgtot)) . */ '<p style = "margin: 20px 0">
                 <span class="aToggle" style="background-color:#619eb6;color:#fff">' . get_string('statspercourse', 'report_myfeedback'). '</span>
                 <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback'). '</span></p></div>'; //<span class="pToggle">Personal tutor stats</span>
