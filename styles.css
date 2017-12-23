@@ -1440,6 +1440,10 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
     outline: none;
 }
 
+.path-report-myfeedback .modal-backdrop {
+    z-index: 0;
+}
+
 .path-report-myfeedback .modal-backdrop.in {
     opacity: .8;
 }

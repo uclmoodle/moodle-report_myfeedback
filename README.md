@@ -29,6 +29,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.10 (Build: 2017122300)
+Fixed pop-up self-reflective notes not appearing in front of greyed out background on some themes.
+
 2.9 (Build: 2017112800)
 Included modal.js so that self-reflective notes and Turnitin feedback can be added in Moodle 3.3+, regardless of theme.
 Removed unused datatables.js files.
