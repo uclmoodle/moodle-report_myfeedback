@@ -29,7 +29,13 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
-2.10 (Build: 2017122300)
+2.11 (Build: 2018013002)
+Added usage statistics tab to the report.
+Added a usage report permission to allow particular Moodle users access to usage statistics.
+Changed H4 tags to H3 to maintain correct heading semantics.
+Removed style colours applied directly to heading tags.
+
+2.10 (Build: 2018013000)
 Fixed pop-up self-reflective notes not appearing in front of greyed out background on some themes.
 
 2.9 (Build: 2017112800)
@@ -41,6 +47,7 @@ Moved some of the css out of the code and into the css file (still more cleaning
 Added an index on the log table to speed the queries where the date the feedback is viewed is shown.
 Changed the date format to d-m-Y so the full year is shown and isn't ambiguous - e.g. 13-5-2017, instead of 13-5-17.
 
+Change log:
 2.8.12 (Build: 2017060600)
 Fixed spelling errors in en lang file.
 Fixed bug where Turnitin Assignment parts with the marks available changed from 100 show the correct total marks available.

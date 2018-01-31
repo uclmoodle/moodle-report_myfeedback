@@ -322,7 +322,7 @@ class report_myfeedback {
         AND ws.workshopid=? AND ws.example=0 AND wa.submissionid=?
         LEFT JOIN {workshop_grades} wg ON wg.assessmentid=wa.id AND wa.submissionid=?";
         $arr = array($cid, $userid, $assignid, $subid, $subid);
-
+		//TODO: fix this! If won't work here, use: if ($rs->valid()) {}
         if ($assess = $remotedb->get_recordset_sql($peer, $arr)) {
             if ($itemnumber == 1) {
                 foreach ($assess as $a) {
@@ -330,7 +330,7 @@ class report_myfeedback {
                         $feedback = (strip_tags($a->feedbackreviewer) ? "<b>" . get_string('tutorfeedback', 'report_myfeedback') . "</b><br/>" . strip_tags($a->feedbackreviewer) : '');
                     }
                 }
-				$assess->close(); //close the recordset
+				$assess->close();
                 return $feedback;
             }
         }
@@ -656,6 +656,7 @@ class report_myfeedback {
 
     /**
      * Get the peercoments for workshop
+	 *
      * @param int $userid The id of the user
      * @return str the comments made on all parts of the work
      */
@@ -672,7 +673,7 @@ class report_myfeedback {
             $out[] = $comment->peercomment;
         }
         $br = html_writer::empty_tag('br');
-		$comments->close(); //close the recordset
+		$comments->close();
         return implode($br, $out);
     }
 
@@ -724,6 +725,7 @@ class report_myfeedback {
     /**
      * Check if the grades and feedback have been viewed in the gradebook
      * since the last grade or feedback has been released but for manual items 
+	 *
      * @param int $userid The id of the user
      * @param int $courseid The id of the course
      * @param int $gradeitemid The id of the manual grade item
@@ -755,7 +757,7 @@ class report_myfeedback {
 
     /**
      * Get the overall feedback for quiz for the user based on the grade
-     * he currently has in the gradebook for his best attempt
+     * they currently have in the gradebook for their best attempt
      *
      * @param int $quizid The id of the quiz the user attempted
      * @param int $grade The grade on the quiz
@@ -808,7 +810,7 @@ class report_myfeedback {
                 }
             }
         }
-		$rubrics->close(); //close the recordset
+		$rubrics->close();
         return $out;
     }
 
@@ -846,7 +848,7 @@ class report_myfeedback {
                 }
             }
         }
-		$guides->close(); //close the recordset
+		$guides->close();
         return $out;
     }
 
@@ -881,6 +883,7 @@ class report_myfeedback {
 
     /**
      * Get the lowest scale grade for the scale
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
@@ -907,6 +910,7 @@ class report_myfeedback {
 
     /**
      * Get the highest scale grade for the scale
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
@@ -933,6 +937,7 @@ class report_myfeedback {
 
     /**
      * Get All scale grades for the scale
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
@@ -961,6 +966,7 @@ class report_myfeedback {
 
     /**
      * Get the grade letter/word for a value grade set as letter 
+	 *
      * @global stdClass $remotedb DB object
      * @param int $courseid The course id
      * @param int $grade The final grade the user got
@@ -992,6 +998,7 @@ class report_myfeedback {
 
     /**
      * Return the lowest grade letter for the context or default letters
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $courseid The course id
      * @return str The lowest letter grade available
@@ -1016,6 +1023,7 @@ class report_myfeedback {
 
     /**
      * Return the highest grade letter for the context or default letters
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $courseid The course id
      * @return str The highest letter grade available
@@ -1040,6 +1048,7 @@ class report_myfeedback {
 
     /**
      * Return All grade letters for the context or default letters
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $courseid The course id
      * @return str All grade letters
@@ -1069,6 +1078,7 @@ class report_myfeedback {
 
     /**
      * Returns fractions in the grade and available grade only if there is a fraction in the number
+	 *
      * @param float $grade The grade 
      * @param int $cid The Course id
      * @param int $decimals The number of decimals if set in grade items 
@@ -1093,6 +1103,7 @@ class report_myfeedback {
     /**
      * Returns the timezone of the user as the moodle functions caches this and this 
      * should not be dependent on moodle's cached settings
+	 *
      * @global type $USER The user object
      * @global type $remotedb The db object
      * @return mixed The GMT/UTC+-offset
@@ -1107,6 +1118,7 @@ class report_myfeedback {
 
     /**
      * Returns the text for the timezone given the numeric offset
+	 *
      * @param mixed $tz The timezone float or 99 if default or server local time
      * @return string The timezone letter
      */
@@ -1124,6 +1136,7 @@ class report_myfeedback {
 
     /**
      * Return BST or GMT for the duedate or submission date depending on when they were due or submitted
+	 *
      * @param type $date Date to check for timezone name
      * @return string Return the correct timezone
      */
@@ -1137,6 +1150,7 @@ class report_myfeedback {
 
     /**
      * Return the correct id for the personal tutor role
+	 *
      * @global stdClass $remotedb DB object
      * @return int Personal tutor role id
      */
@@ -1150,6 +1164,7 @@ class report_myfeedback {
 
     /**
      * Return whether the user has the capability in any context
+	 *
      * @global stdClass $remotedb DB object
      * @param uid The user id
      * @param cap The capability to check for
@@ -1167,9 +1182,244 @@ class report_myfeedback {
         $capy = $remotedb->get_record_sql($sql, $params);
         return $capy ? $capy->roleid : 0;
     }
+	
+	public function export_print_buttons(){
+		return "<div class=\"buttonswrapper\"><input class=\"x_port\" id=\"exportexcel\" type=\"button\" value=\"" . get_string('export_to_excel', 'report_myfeedback') . "\">
+                <input class=\"reportPrint\" id=\"reportPrint\" type=\"button\" value=\"" . get_string('print_report', 'report_myfeedback') . "\" title=\"" . $printmsg . "\" rel=\"tooltip\"></div>";
+	}
+	
+	/**
+    * Return all categories relevant to the search category name
+	*
+    * @global stdClass $remotedb The DB object.
+    * @global stdClass $CFG The global configuration instance.
+    * @param str $search The user input entered to search on.
+    * @param str $reporttype The report type where the search is being used
+    * @return string Table with the list of categories with names containing the search term.
+    */
+	public function search_all_categories($search, $reporttype){
+		global $remotedb, $CFG;
+		
+		$mycategories = array();
+				
+        //The search form
+        echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
+                            <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchcategory", "report_myfeedback") . '" />
+                            <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
+							<input type="hidden" name="categoryid" id="categoryid" value="-1" /> 
+                            </form>';
+        //We first trim the search to remove leading and trailing spaces
+        $search = trim($search);
+        //If there is a search input and it's not the text that tells the user to enter search input
+        if ($search !="" && $search != get_string("searchcategory", "report_myfeedback")) {
+            $searchu = addslashes(strip_tags($search));//we escape the quotes etc and strip all html tags
+            $result = array();
+            $result = $remotedb->get_records_sql("SELECT id, name, parent FROM {course_categories}
+                    WHERE visible = 1 AND name LIKE '%". $searchu ."%'");
+			if ($result) {
+				foreach ($result as $a) {
+					if ($a->id) {
+						$mycategories[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=" . $a->id . "\" title=\"" .
+                                                    $a->email . "\" rel=\"tooltip\">" . $a->name . "</a>";
+						if ($a->parent){
+							$categoryname = $this->get_category_name($a->parent);
+						}
+						$mycategories[$a->id][1] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=" . $a->id . "\" title=\"" .
+                                                    $a->email . "\" rel=\"tooltip\">" . $categoryname . "</a>";								
+					}
+				}
+			}
+
+		
+		$table = "<table class=\"userstable\" id=\"userstable\">
+                    <thead>
+                            <tr class=\"tableheader\">
+                                <th class=\"tblname\">" . get_string('name') .
+                "</th><th class=\"tbldepartment\">" . get_string('parent', 'report_myfeedback') . " " . get_string('category', 'report_myfeedback') . "</th></tr>
+                        </thead><tbody>";
+		//Add the records to the table here. These records were stored in the myusers array.
+        foreach ($mycategories as $result) {
+            if (isset($result[0])) {
+                $table.= "<tr>";
+                $table.="<td>" . $result[0] . "</td>";
+				$table.="<td>" . $result[1] . "</td>";
+                $table.="</tr>";
+            }
+        }
+		$table.="</tbody><tfoot><tr><td></td><td></td></tr></tfoot></table><br />";
+		}
+		//blank the search form when you click in it
+		echo "<script>$('#searchu').on('click', function() {
+          if ($(this).val() == '" . get_string('searchcategory', 'report_myfeedback') . "') {
+             $(this).val('');
+          }
+        })</script>";
+        return $table;
+	}
+	
+	/**
+    * Return all courses within a category and its subcategories
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $catid The category id.
+    * @return array of courses within that category and its subcategories
+    */
+	public function get_category_courses($catid){
+		global $remotedb;
+		$sql = "SELECT distinct c.id, c.shortname, c.fullname, c.summary, c.visible FROM {course} c, {course_categories} cat ";
+		if($catid > 0){
+			$sql .= "WHERE c.category = cat.id AND cat.path LIKE '%/".$catid."' OR cat.path LIKE '%/".$catid."/%' ";
+		}
+		$sql .= "ORDER BY cat.sortorder, c.sortorder";
+		return $remotedb->get_records_sql($sql);
+	}
+	
+	/**
+    * Return all courses relevant to the search name / email address (max 10)
+	*
+    * @global stdClass $remotedb The DB object.
+    * @global stdClass $CFG The global configuration instance.
+    * @param str $search The user input entered to search on.
+    * @param str $reporttype The report type where the search is being used
+    * @return string Table with the list of course shortnames and fullnames containing the search term.
+    */
+	public function search_all_courses($search, $reporttype){
+		global $remotedb, $CFG;
+		
+		$mycourses = array();
+						
+        //The search form
+        echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
+                            <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchcourses", "report_myfeedback") . '" />
+                            <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
+							<input type="hidden" name="courseid" id="courseid" value="0" /> 
+                            </form>';
+        //We first trim the search to remove leading and trailing spaces
+
+        $search = trim($search);
+        //If there is a search input and it's not the text that tells the user to enter search input
+        if ($search != "" && $search != get_string("searchcourses", "report_myfeedback")) {
+            $searchu = addslashes(strip_tags($search));//we escape the quotes etc and strip all html tags
+            $result = array();
+             $result = $remotedb->get_records_sql("SELECT id,shortname, fullname, category FROM {course}
+                    WHERE shortname LIKE '%". $searchu ."%' or fullname LIKE '%". $searchu ."%'");
+			if ($result) {
+				foreach ($result as $a) {
+					if ($a->id) {
+						$mycourses[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&courseid=" . $a->id . "\" title=\"" .
+                                                    $a->email . "\" rel=\"tooltip\">" . $a->fullname . " (" . $a->shortname . ")</a>";
+						if ($a->category){
+							$categoryname = $this->get_category_name($a->category);
+						}
+						$categoryreporttype = str_replace("course", "category", $reporttype);
+						$mycourses[$a->id][1] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$categoryreporttype&categoryid=" . $a->category . "\" title=\"" .
+                                                    $a->email . "\" rel=\"tooltip\">" . $categoryname . "</a>";								
+					}
+				}
+			}
+			
+			$table = "<table class=\"userstable\" id=\"userstable\">
+						<thead>
+								<tr class=\"tableheader\">
+									<th class=\"tblname\">" . get_string('name') .
+					"</th><th class=\"tbldepartment\">" . get_string('category', 'report_myfeedback') . "</th></tr>
+							</thead><tbody>";
+			//Add the records to the table here. These records were stored in the myusers array.
+			foreach ($mycourses as $result) {
+				if (isset($result[0])) {
+					$table.= "<tr>";
+					$table.="<td>" . $result[0] . "</td>";
+					$table.="<td>" . $result[1] . "</td>";
+					$table.="</tr>";
+				}
+			}
+			$table.="</tbody><tfoot><tr><td></td><td></td></tr></tfoot></table><br />";
+		}
+        echo "<script>$('#searchu').on('click', function() {
+          if ($(this).val() == '" . get_string('searchcourses', 'report_myfeedback') . "') {
+             $(this).val('');
+          }
+        })</script>";
+        return $table;
+		
+	}
+	
+	/**
+    * Return all users relevant to the search name / email address (max 10)
+	*
+    * @global stdClass $remotedb The DB object.
+    * @global stdClass $CFG The global configuration instance.
+    * @param str $search The user input entered to search on.
+    * @param str $reporttype The report type where the search is being used
+    * @return string Table with the list of users matching the search term.
+    */
+	public function search_all_users($search, $reporttype = "student"){
+		global $remotedb, $CFG;
+		
+		$myusers = array();
+						
+        //The search form
+        echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
+                            <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchusers", "report_myfeedback") . '" />
+                            <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
+							<input type="hidden" name="reportuserid" id="reportuserid" value="0" /> 
+                            </form>';
+        //We first trim the search to remove leading and trailing spaces
+
+        $search = trim($search);
+        //If there is a search input and it's not the text that tells the user to enter search input
+        if ($search != "" && $search != get_string("searchusers", "report_myfeedback")) {
+            $searchu = addslashes(strip_tags($search));//we escape the quotes etc and strip all html tags
+            $userresult = array();
+            if (strpos($searchu, '@')) {//If it is an email address search for the full input
+                $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email,department FROM {user}
+                    WHERE deleted = 0 AND email = ?", array($searchu));
+			} else {//if not an emal address then search on first word or last word
+                $namef = explode(" ", $searchu);//make string into array if multiple words
+                $namel = array_reverse($namef);//reverse the array to get the last word
+				//suggest this checks to see how many words are entered in the search box
+				//suggest the query then CHANGE from OR to AND for 2 werd entries, as otherwise you get back a lot of innacurate results.
+                $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email, department FROM {user}
+                    WHERE deleted = 0 AND (firstname LIKE ('$namef[0]%') OR lastname LIKE ('$namel[0]%')) limit 10", array());
+            }
+			if ($userresult) {
+				foreach ($userresult as $a) {
+                    if ($a->id && ($a->firstname || $a->lastname)) {
+						$myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&reportuserid=" . $a->id . "\" title=\"" .
+                                                    $a->email . "\" rel=\"tooltip\">" . $a->firstname . " " . $a->lastname . "</a>";
+						$myusers[$a->id][1] = $a->department;								
+					}
+				}
+			}
+			$usertable = "<table class=\"userstable\" id=\"userstable\">
+				<thead>
+						<tr class=\"tableheader\">
+							<th class=\"tblname\">" . get_string('name') .
+			"</th><th class=\"tbldepartment\">" . get_string('department', 'report_myfeedback') . "</th></tr>
+					</thead><tbody>";
+			//Add the records to the table here. These records were stored in the myusers array.
+			foreach ($myusers as $result) {
+				if (isset($result[0])) {
+					$usertable.= "<tr>";
+					$usertable.="<td>" . $result[0] . "</td>";
+					$usertable.="<td>" . $result[1] . "</td>";
+					$usertable.="</tr>";
+				}
+			}
+			$usertable.="</tbody><tfoot><tr><td></td><td></td></tr></tfoot></table><br />";
+		}
+        echo "<script>$('#searchu').on('click', function() {
+          if ($(this).val() == '" . get_string('searchusers', 'report_myfeedback') . "') {
+             $(this).val('');
+          }
+        })</script>";
+        return $usertable;
+		
+	}
 
     /**
      * Return all users the current user (tutor/admin) has access to
+	 *
      * @global stdClass $remotedb The DB object
      * @global stdClass $COURSE The course object
      * @global stdClass $USER The user object
@@ -1311,9 +1561,12 @@ class report_myfeedback {
         })</script>";
         return $usertable;
     }
+	
+	
 
     /**
      * Return all users for the dept admin personal tutors
+	 *
      * @global stdClass $remotedb The DB object
      * @global stdClass $CFG The global config
      * @param int $uid The user id
@@ -1357,6 +1610,7 @@ class report_myfeedback {
 
     /**
      * Return all users for the dept admin mod tutor groups
+	 *
      * @global stdClass $remotedb The DB object
      * @param int $uid The user id
      * @param int $cid The course id
@@ -1432,24 +1686,26 @@ class report_myfeedback {
     }
 
     /**
-     * This returns the id of the personal tutor role
+     * This returns the id of the personal tutor 
+	 *
      * @global stdClass $remotedb DB object
-     * @param int $p_tutor_id Personal tutor id
+     * @param int $p_tutor_roleid Personal tutor role id
      * @param int $contextid The context id
-     * @return int The id of the personal tutor role or 0 if none
+     * @return int The id of the personal tutor or 0 if none
      */
-    public function get_my_personal_tutor($p_tutor_id, $contextid) {
+    public function get_my_personal_tutor($p_tutor_roleid, $contextid) {
         global $remotedb;
         $sql = "SELECT userid FROM {role_assignments}
                 WHERE roleid = ? AND contextid = ?
                 ORDER BY timemodified DESC limit 1";
-        $params = array($p_tutor_id, $contextid);
+        $params = array($p_tutor_roleid, $contextid);
         $tutor = $remotedb->get_record_sql($sql, $params);
         return $tutor ? $tutor->userid : 0;
     }
 
     /**
      * Returns a course id given the course shortname
+	 *
      * @global stdClass $remotedb DB object
      * @param text $shortname Course shortname
      * @return int The course id
@@ -1465,6 +1721,7 @@ class report_myfeedback {
 
     /**
      * Returns all assessments in the course
+	 *
      * @global stdClass $remotedb DB object
      * @param int $cid The course id
      * @return array The assmessments id, name, type and module
@@ -1491,6 +1748,7 @@ class report_myfeedback {
 
     /**
      * Returns a canvas graph of stats
+	 *
      * @param int $cid The course id
      * @param array $grades_totals Grades totals
      * @param int $enrolled The number of students enrolled in the course
@@ -1662,6 +1920,7 @@ class report_myfeedback {
 
     /**
      * Returns a constructed link for the assessment
+	 *
      * @param str $type The type of assemssment
      * @param int $cid The course id
      * @param int $gid The grade_item id
@@ -1697,6 +1956,7 @@ class report_myfeedback {
 
     /**
      * Returns a table with the analytics for all assessments of the user
+	 *
      * @global stdClass $OUTPUT The global output object
      * @param array $assess The array with the assessments and their stats
      * @param int $uidnum The id for the table
@@ -1719,7 +1979,7 @@ class report_myfeedback {
             $scol1 = $scol2 = $scol3 = $scol4 = '';
             $a_due = $a_non = $a_graded = $a_late = $a_feed = $a_low = 0;
             $assessmenticon = $a_name = '';
-            $assess_graph = '<h4><i style="color:#5A5A5A">' . get_string('nographtodisplay', 'report_myfeedback') . '</i></h4>';
+            $assess_graph = '<i style="color:#5A5A5A">' . get_string('nographtodisplay', 'report_myfeedback') . '</i>';
             $uname = $ud = $un = $ul = $ug = $uf = $ulo = $u_vas = '';
             $assess_totals = array();
             if (array_sum($a['score']) != null) {
@@ -1785,9 +2045,11 @@ class report_myfeedback {
         $as->aname = $aname;
         return $as;
     }
+	
 
     /**
      * Returns a table with the analytics for all users in the given subset requested
+	 *
      * @global stdClass $remotedb The DB object
      * @global stdClass $CFG The global config object
      * @param array $users The array with the users and their stats
@@ -1906,6 +2168,1114 @@ class report_myfeedback {
         $us->newusers = ($fromassess ? '' : $users);
         return $us;
     }
+	
+	/**
+    * Returns the head of the table, with all the titles for each column
+	*
+    * @param array $headertitles The list of header titles as strings.
+    * @return string Table head, with titles above each column.
+    */
+	public function get_table_headers($headertitles){
+		$header = "<thead><tr class=\"\">";
+		foreach($headertitles as $title){
+			$header .= 	"<th>" . $title. "</th>";
+		} 
+		$header .= 	"</tr></thead>";
+		return $header;
+	}
+	
+	/**
+    * Returns subcategories of a parent category only 1 level deep
+	*
+    * @global stdClass $remotedb The DB object.
+    * @param int $parentcatid The parent category id
+    * @return array Subcategory objects containing their ids
+    */
+	public function get_subcategories($parentcatid){
+		global $remotedb;
+		//get 1 level of subcategories
+		return $remotedb->get_records_sql("SELECT id, visible
+                                                    FROM {course_categories}
+                                                   WHERE parent = ? ORDER BY visible desc, sortorder", array($parentcatid));
+	}
+	
+	/**
+    * Returns a selectable form menu of subcategories of a parent category only 1 level deep
+	*
+    * @param int $parentcatid The parent category id
+	* @param int $categoryid The currently selected category id
+    * @return array Form menu of subcategories of a parent category
+    */
+	public function get_subcategory_menu($parentcatid=0, $categoryid=0, $parent=true){
+		global $SITE;
+		
+		$subcategories = $this->get_subcategories($parentcatid);
+		
+		//Start of menu form
+		$menu = "<form method=\"POST\" id=\"report_category_select\" class=\"report_form\" action=\"\">".get_string('category', 'report_myfeedback').": <select id=\"categorySelect\" value=\"\" name=\"categoryid\"><option id=\"selectcat\">".get_string('choosedots')."</option>";
+		if($parent == true){
+			//add a top level category option
+			$menu .= "<option id=\"selectcat\"";
+			if($categoryid == $parentcatid){
+					$menu .= " selected";
+			}
+			$menu .= ">" . $SITE->fullname . "</option>";
+		}
+		foreach($subcategories as $subcat){
+			$menu .= "<option value=\"$subcat->id\"";
+			if($categoryid == $subcat->id){
+				$menu .= " selected";
+			}
+			$menu .= ">".$this->get_category_name($subcat->id)."</option>";
+		}
+		$menu .= "</select></form> ";
+		return $menu;
+	}
+	
+	/**
+    * Returns unique list of users within a category and its subcategories
+	*
+    * @global stdClass $remotedb The DB object.
+    * @param int $catid The parent category id
+	* @param str $capability The capability that defines the role of the returned users. E.g. student or modtutor.
+    * @return array Subcategory objects containing their ids
+    */
+	public function get_unique_category_users($catid, $capability = 'report/myfeedback:student'){
+		global $remotedb;
+				
+		//get all roles that are assigned the My Feedback capability passed to the function
+		$roleids = $this->get_roles($capability);
+		
+		//if there are no roles with a my feedback student capability then return null
+		if(sizeof($roleids) < 1){
+			return null;
+		}
+		//get all the courses in the category, then iterate through the below
+		//CONTINUE HERE - get courses in a category and iterate though each enrolled user on that course
+		//$courseids = $this->get_courses_in_category($catid);
+		//get the contextid of the category
+		$contextid = $this->get_categorycontextid($catid);
+		$params = array();
+
+		$sql = 'SELECT DISTINCT ra.userid FROM {role_assignments} ra JOIN {user} u on u.id = ra.userid JOIN {context} con ON ra.contextid = con.id AND con.contextlevel = 50 WHERE u.deleted = 0 AND u.suspended = 0';
+		if($catid > 0){
+			$params = array("%/".$contextid, "%/".$contextid."/%");
+			$sql .= ' AND (con.path LIKE ? OR con.path LIKE ? )';
+		}
+		$sql .= ' AND (roleid = ?';
+		//add all the roleid code into the where query
+		$params[] = $roleids[0];
+		$i = 1; //start at 1, because the first role is already in the query
+		while($roleids[$i] != null){
+			$sql .= '  OR roleid = ?';
+			$params[] = $roleids[$i];
+			$i++;
+		}
+		$sql .= ')';
+
+		$rs = $remotedb->get_recordset_sql($sql, $params);
+
+		// The recordset contains records.
+		if ($rs->valid()) {
+			$users = array();
+			foreach ($rs as $user) {
+				$users[] = $user->userid;
+			}
+			$rs->close();
+		}
+		return $users;
+	}
+	
+	/**
+    * Returns unique list of users within a course
+	*
+    * @global stdClass $remotedb The DB object.
+    * @param int $catid The courseid
+	* @param str $capability The capability that defines the role of the returned users. E.g. student or modtutor.
+    * @return array User objects containing their ids
+    */	
+	public function get_unique_course_users($catid, $capability = 'report/myfeedback:student'){
+		global $remotedb;
+				
+		//get all roles that are assigned the My Feedback capability passed to the function
+		$roleids = $this->get_roles($capability);
+
+		//if there are no roles with a my feedback student capability then return null
+		if(sizeof($roleids) < 1){
+			return null;
+		}
+		// get courses in a category and iterate though each enrolled user on that course
+		$courseparams = array("%/".$catid, "%/".$catid."/%");
+
+		$coursesql = "SELECT DISTINCT c.id FROM {course} c, {course_categories} cat WHERE c.category = cat.id AND cat.path LIKE ? OR cat.path LIKE ?";
+		$courses = $remotedb->get_recordset_sql($coursesql, $courseparams);
+
+		// The recordset contains records.
+		if ($courses->valid()) {
+
+			foreach ($courses as $course) {
+				//for entire Moodle get all students on courses within each faculty, then total together so you show each faculty 
+				//with total moodle stats on top
+				$sql = 'SELECT DISTINCT ra.userid FROM {role_assignments} ra JOIN {user} u on u.id = ra.userid JOIN {context} con ON ra.contextid = con.id AND con.contextlevel = 50 WHERE u.deleted = 0 AND u.suspended = 0 AND con.instanceid = ?  AND (roleid = ?';
+				$i = 1; //start at 1, because the first role is already in the query
+				//add all the roleid code into the where query
+				while($roleids[$i] != null){
+					$sql .= '  OR roleid = ?';
+					$i++;
+				}
+				$sql .= ')';
+	
+				$params = $roleids;
+				//prepend the course id to the front of the role ids already in the array
+				array_unshift($params, $course->id);
+				
+				$rs = $remotedb->get_recordset_sql($sql, $params);
+				
+				$userids = array();
+				if ($rs->valid()) {
+					// The recordset contains records.
+					foreach ($rs as $record) {
+						$userids[] = $record->userid;
+					}
+					$rs->close();
+					
+				}
+				return $userids;
+			}
+			$rs->close();
+		}
+	}
+
+	/**
+    * Returns the roles that have a particular capability
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param str $capability The capability that defines the role of the returned users. E.g. student or modtutor.
+    * @return array An array of roleids.
+    */	
+	public function get_roles($capability){
+		global $remotedb;
+		$params = array($capability); 
+		//SELECT roleid FROM mdl_role_capabilities c where capability = 'report/myfeedback:student';
+		return $remotedb->get_fieldset_select('role_capabilities', 'roleid', 'capability = ?', $params);
+	}
+	
+	/**
+    * Returns the first name and surname of a particular user
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $ui The user id
+    * @return str The firstname and lastname of the user, separated by a space.
+    */	
+	public function get_names($ui){
+		global $remotedb;
+		$params = array($ui);
+		$unames = $remotedb->get_record_sql("SELECT firstname,lastname FROM {user} where id=?", $params);
+		return $unames->firstname . " " . $unames->lastname;
+	}
+	
+	/**
+    * Returns the course fullname or shortname
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $id The course id
+	* @param bool $fullname Whether to return the fullname or the shortname.
+    * @return str The firstname and lastname of the user, separated by a space.
+    */	
+	public function get_course_name($id, $fullname = true){
+		global $remotedb;
+		
+        $coursename =  $remotedb->get_record_sql("SELECT c.fullname, c.shortname
+                                                    FROM {course} c
+                                                   WHERE c.id = ?", array($id));
+		if($fullname == true){
+			return $coursename->fullname;
+		}else{
+			return $coursename->shortname;
+		}
+	}
+		
+	/**
+    * Returns the category name
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $id The category id
+    * @return str The category name.
+    */	
+	public function get_category_name($id){
+		global $remotedb;
+		
+        $catname = $remotedb->get_record_sql("SELECT cat.name 
+                                                    FROM {course_categories} cat
+                                                   WHERE cat.id = ?", array($id));
+		return $catname->name;
+	}
+	
+	/**
+    * Returns the up a category button
+	*
+    * @global stdClass $remotedb The DB object.
+	* @global stdClass $CFG The global configuration instance.
+	* @param int $categoryid The category id
+	* @param str $url The type of report for inserting into the URL.
+    * @return str The go up a category button as html.
+    */
+	public function get_parent_category_link($categoryid, $reporttype){
+		global $remotedb, $CFG;
+        $category = $remotedb->get_record_sql("SELECT cat.parent 
+                                                    FROM {course_categories} cat
+                                                   WHERE cat.id = ?", array($categoryid));
+		if($category->parent > 0){		
+		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=".$reporttype."&categoryid=".$category->parent."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
+			$CFG->wwwroot . "/report/myfeedback/pix/return.png\" alt=\"\" /></a>";						   
+		}else{
+			return "";
+		}
+	}
+	
+	/**
+    * Returns the up to category button for the course reports
+	*
+    * @global stdClass $remotedb The DB object.
+	* @global stdClass $CFG The global configuration instance.
+	* @param int $courseid The course id.
+	* @param str $url The type of report for inserting into the URL.
+    * @return str The go up to category button as html.
+    */
+	public function get_course_category_link($courseid, $reporttype){
+		global $remotedb, $CFG;
+        $course = $remotedb->get_record_sql("SELECT c.category 
+                                                    FROM {course} c
+                                                   WHERE c.id = ?", array($courseid));
+		if($course->category > 0){		
+		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=".$reporttype."&categoryid=".$course->category."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
+			$CFG->wwwroot . "/report/myfeedback/pix/return.png\" alt=\"\" /></a>";						   
+		}else{
+			return "";
+		}
+	}
+	
+	/**
+    * Returns whether a user is suspended and deleted or not
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $id The user id
+    * @return int True if the user is active (not suspended or deleted), otherwise false.
+    */	
+	public function is_active_user($id){
+		global $remotedb;
+		
+        $user = $remotedb->get_record_sql("SELECT deleted, suspended
+                                                   FROM {user}
+                                                   WHERE id = ?", array($id));
+		if($user->suspended == 0 && $user->deleted == 0){
+			return true;
+		}
+		return false;
+		
+	}
+	
+	
+	
+	/**
+    * Returns the context id of the category
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $id The category id
+    * @return int The context id of the category.
+    */	
+	public function get_categorycontextid($id){
+		global $remotedb;
+		
+        $contextid = $remotedb->get_record_sql("SELECT id
+                                                    FROM {context}
+                                                   WHERE contextlevel = 40 AND instanceid = ?", array($id));
+		return $contextid->id;
+	}
+	
+	/**
+    * Returns the personal tutees of a personal tutor
+	*
+    * @global stdClass $remotedb The DB object.
+	* @param int $personaltutorid The user id of the personal tutor
+    * @return array The list of user objects containing the ids of personal tutees.
+    */	
+	public function get_personal_tutees($personaltutorid){
+	 	global $remotedb;
+		// get all the mentees, i.e. users you have a direct assignment to as their personal tutor
+        return $remotedb->get_records_sql("SELECT u.id 
+                                                    FROM {role_assignments} ra, {context} c, {user} u
+                                                   WHERE ra.userid = ? 
+												   		 AND u.deleted = 0 
+														 AND u.suspended = 0 
+                                                         AND ra.contextid = c.id
+                                                         AND c.instanceid = u.id
+                                                         AND c.contextlevel = " . CONTEXT_USER, array($personaltutorid));
+	}
+	
+	
+	/**
+     * Returns the usage statistics for the staff passed to the function
+	 *
+     * @global stdClass $remotedb The DB object.
+     * @param array $users The array of user ids.
+     * @return array The list of staff and their usage statistics.	 
+     */
+	public function get_overall_staff_usage_statistics($uids){
+	 	global $remotedb;
+		
+        $users = array();
+		$usertotalviews = array();
+		//the array of studentids viewed by any staff members
+			
+		foreach ($uids as $ui) {
+			$users[$ui]['userid'] = $ui;
+			$users[$ui]['name'] = $this->get_names($ui);
+			$users[$ui]['totalviews'] = 0;
+			$users[$ui]['ownreportviews'] = 0;
+			$users[$ui]['mystudentstabviews'] = 0;
+			//the array of studentids viewed by this staff member - can do a count later to get the number veiwed
+			$users[$ui]['studentsviewed'] = array(); 		
+			$users[$ui]['studentreportviews'] = 0;		
+			$users[$ui]['modtutordashboardviews'] = 0;	
+			$users[$ui]['ptutordashboardviews'] = 0;
+			$users[$ui]['deptadmindashboardviews'] = 0;
+			$users[$ui]['downloads'] = 0;
+			$users[$ui]['lastaccess'] = 0;
+			$users[$ui]['ptutees'] = sizeOf($this->get_personal_tutees($ui));
+			
+			
+			foreach($this->get_user_usage_logs($ui) as $reportevent){
+				switch($reportevent->eventname){
+					//check for ownreport views and student report views
+					case '\report_myfeedback\event\myfeedbackreport_viewed':
+						$users[$ui]['totalviews'] += 1;
+						//check if it was their own report, or a students' report they viewed
+						if($reportevent->userid == $reportevent->relateduserid){
+							$users[$ui]['ownreportviews'] += 1;
+						}else{
+							$users[$ui]['studentreportviews'] += 1;
+							$users[$ui]['studentsviewed'][$reportevent->relateduserid] += 1;
+						}	
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					
+					case '\report_myfeedback\event\myfeedbackreport_download':
+						$users[$ui]['downloads'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+						
+					case '\report_myfeedback\event\myfeedbackreport_downloadmtutor':
+						$users[$ui]['downloads'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					case '\report_myfeedback\event\myfeedbackreport_downloaddeptadmin':
+						$users[$ui]['downloads'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					case '\report_myfeedback\event\myfeedbackreport_viewed_mystudents':
+						$users[$ui]['totalviews'] += 1;
+						$users[$ui]['mystudentstabviews'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					case '\report_myfeedback\event\myfeedbackreport_viewed_ptutordash':
+						$users[$ui]['totalviews'] += 1;
+						$users[$ui]['ptutordashboardviews'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					case '\report_myfeedback\event\myfeedbackreport_viewed_mtutordash':
+						$users[$ui]['totalviews'] += 1;
+						$users[$ui]['modtutordashboardviews'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					case '\report_myfeedback\event\myfeedbackreport_viewed_deptdash':
+						$users[$ui]['totalviews'] += 1;
+						$users[$ui]['deptadmindashboardviews'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+				}
+			}
+			//Note: consider whether we want to order by total activity, rather than total views. This would also capture downloads etc then too. 
+			//If so we could increment the count each time the foreach loop is initiated instead.
+			$usertotalviews[] = $users[$ui]['totalviews'];
+			//Instead of overriding the keys (like in array_merge), the array_merge_recursive() function makes the value as an array.
+			//E.g. Array ( [12345] => 3 [67890] => Array ( [0] => 1 [1] => 6 ) [54365] => 3 ) - the second student was viewed by 2 staff 1 and 6 times.
+			
+		} //end foreach for this staff member
+		
+		//sort in descending order - use array_multisort as it's better with large arrays than usort
+		//usort($users, function ($a, $b) {  return strcmp($b['totalviews'], $a['totalviews']); });
+		array_multisort($usertotalviews, SORT_DESC, SORT_NUMERIC, $users);
+		
+		return $users; 
+	}
+	
+	/**
+     * Returns usage statistics for the students passed to the function
+	 *
+     * @global stdClass $remotedb The DB object
+     * @param array $users The array of user ids
+     * @return array The list of students and their usage statistics.	 	 
+     */
+	public function get_overall_student_usage_statistics($uids){
+	 	global $remotedb;
+		
+        $users = array();
+		$usertotalviews = array();
+		foreach ($uids as $ui) {
+			$users[$ui]['userid'] = $ui;
+			$users[$ui]['name'] = $this->get_names($ui);
+			$users[$ui]['totalviews'] = 0;
+			$users[$ui]['notes'] = 0;
+			$users[$ui]['feedback'] = 0;
+			$users[$ui]['downloads'] = 0;		
+			$users[$ui]['lastaccess'] = 0;
+			//Get the personal tutor details of the user
+			$p_tutor_roleid = $this->get_personal_tutor_id();
+			$usercontext = context_user::instance($ui);
+			$users[$ui]['personaltutor'] = "";
+			$users[$ui]['personaltutorid'] = -1;
+			if ($mytutorid = $this->get_my_personal_tutor($p_tutor_roleid, $usercontext->id)){
+				$users[$ui]['personaltutorid'] = $mytutorid;
+				$users[$ui]['personaltutor'] = $this->get_names($mytutorid);
+			}
+			
+			foreach($this->get_user_usage_logs($ui) as $reportevent){
+
+				switch($reportevent->eventname){
+
+					case '\report_myfeedback\event\myfeedbackreport_viewed':
+						$users[$ui]['totalviews'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+					
+					case '\report_myfeedback\event\myfeedbackreport_download':
+						$users[$ui]['downloads'] += 1;
+						if($reportevent->timecreated > $users[$ui]['lastaccess']){
+							$users[$ui]['lastaccess'] = $reportevent->timecreated;
+						}
+						break;
+						
+				}
+			}
+			
+			//not used in the above case, as we look directly in the notes and feedback table for these.
+			//\report_myfeedback\event\myfeedbackreport_addnotes
+			//\report_myfeedback\event\myfeedbackreport_updatenotes
+			//\report_myfeedback\event\myfeedbackreport_addfeedback
+			//\report_myfeedback\event\myfeedbackreport_updatefeedback
+			
+			foreach($this->get_notes_and_feedback($ui) as $studentinput){
+				if($studentinput->notes){
+					$users[$ui]['notes'] += 1;
+				}
+				if($studentinput->feedback){
+					$users[$ui]['feedback'] += 1;
+				}
+			}
+			$usertotalviews[] = $users[$ui]['totalviews'];
+		}
+
+		//sort in descending order - use array_multisort as it's better with large arrays than usort
+		//usort($users, function ($a, $b) {  return strcmp($b['totalviews'], $a['totalviews']); });
+		array_multisort($usertotalviews, SORT_DESC, SORT_NUMERIC, $users);
+		
+		return $users; 
+	}
+	
+	/**
+     * Returns a table with the usage statistics for the staff passed to the function
+	 *
+     * @global stdClass $CFG The global configuration instance.
+     * @param array $uids The array of staff user ids.
+	 * @param bool $showptutees Whether or not to display personal tutees.
+	 * @param bool $overview Whether or not to display just an overview with aggregated data only and no user data or closing table tags.
+	 * @param str $overviewname The name of the overview (e.g. category or course).
+	 * @param str $overviewlink The link for the overview name (so users can navigate to subcategories).
+	 * @param bool $printheader Whether to print the headers or not, so overviews can show aggregated data for subcategories in a single table.
+     * @return str Table containing the staff statistics (missing the </tbody></table> tag if an overview).
+     */
+	public function get_staff_statistics_table($uids, $showptutees=false, $overview=false, $overviewname = "", $overviewlink = "", $printheader=true){
+		global $CFG;
+		$i = 0;	
+		$exceltable = array();
+		
+		//populate the $exceltable array with the previous data, if it's not the first row of an overview
+		if($overview == true && $printheader == false){
+			$exceltable = $_SESSION["exp_sess"];
+			$i = count($exceltable);	
+		}
+				
+		if($printheader==true){
+			$usagetable = "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
+			//print the table headings
+				$headers = array(get_string('tutortblheader_name', 'report_myfeedback'));
+				if($overview == true){
+					$headers[] = ucfirst(get_string('staff', 'report_myfeedback'));
+				}
+				array_push($headers, 
+					get_string('usagetblheader_totalviews', 'report_myfeedback'),
+					get_string('usagetblheader_ownreportviews', 'report_myfeedback'),
+					get_string('usagetblheader_mystudenttabviews', 'report_myfeedback'),
+					get_string('usagetblheader_studentsviewed', 'report_myfeedback'),
+					get_string('usagetblheader_studentreportviews', 'report_myfeedback'),
+					get_string('tabs_tutor', 'report_myfeedback') . " " . get_string('views', 'report_myfeedback'),
+					get_string('tabs_mtutor', 'report_myfeedback') . " " . get_string('views', 'report_myfeedback'),
+					get_string('progadmin_dashboard', 'report_myfeedback') . " " . get_string('views', 'report_myfeedback'),
+					get_string('usagetblheader_downloads', 'report_myfeedback'),
+					get_string('usagetblheader_lastaccessed', 'report_myfeedback'));
+					
+				if($showptutees){
+					$headers[] = get_string('personaltutees', 'report_myfeedback');
+				}
+				$usagetable .= $this->get_table_headers($headers);
+				//print the table data
+				$usagetable .= "<tbody>";
+			}
+							
+			//get the table data
+			if(sizeOf($uids) > 0){
+				//get all the staff stats
+				$all_staff_stats = $this->get_overall_staff_usage_statistics($uids);	
+			
+				//print stats for each staff member
+				//TODO: make the drop down button toggle to show/hide student data for the category. Currently it shows and can't be toggled off
+				$staffusagetable = "";
+				$overallstats = array();
+				$studentsviewedbyanystaff = array();
+				$overallstats['lastaccess'] = 0;
+				
+				foreach($all_staff_stats as $one_staff_stats){
+					$staffusagetable .= "<tr>";					
+						if(sizeOf($uids) > 1){
+							$staffusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=staffmember&reportuserid=" . $one_staff_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . strtolower(get_string('usagereport', 'report_myfeedback')) . "\" rel=\"tooltip\">" . $one_staff_stats['name']."</a></td>";
+						}else{
+							$staffusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=staffmember&reportuserid=" . $one_staff_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " " .  get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_staff_stats['name']."</a></td>";
+						}
+						$staffusagetable .= "<td>" . $one_staff_stats['totalviews'] . "</td>";
+						$staffusagetable .= "<td>" . $one_staff_stats['ownreportviews'] . "</td>";
+						//$staffusagetable .= "<td>" . "&nbsp;" . "</td>"; //roles?
+						$staffusagetable .= "<td>" . $one_staff_stats['mystudentstabviews'] . "</td>";
+						$staffusagetable .= "<td>" . count($one_staff_stats['studentsviewed']) . "</td>";
+						$staffusagetable .= "<td>" . $one_staff_stats['studentreportviews'] . "</td>";
+						$staffusagetable .= "<td>" . $one_staff_stats['ptutordashboardviews'] . "</td>";
+						$staffusagetable .= "<td>" . $one_staff_stats['modtutordashboardviews'] . "</td>";
+						$staffusagetable .= "<td>" . $one_staff_stats['deptadmindashboardviews'] . "</td>";
+						$staffusagetable .= "<td>" . $one_staff_stats['downloads'] . "</td>";
+						
+						//only print the excel data if it's not an overview
+						if($overview == false){
+							//store the excel export data
+							$exceltable[$i]['name'] = $one_staff_stats['name'];
+							$exceltable[$i]['totalviews'] = $one_staff_stats['totalviews'];
+							$exceltable[$i]['ownreportviews'] = $one_staff_stats['ownreportviews'];
+							$exceltable[$i]['mystudentstabviews'] = $one_staff_stats['mystudentstabviews'];
+							$exceltable[$i]['studentsviewed'] = count($one_staff_stats['studentsviewed']);
+							$exceltable[$i]['studentreportviews'] = $one_staff_stats['studentreportviews'];
+							$exceltable[$i]['ptutordashboardviews'] = $one_staff_stats['ptutordashboardviews'];
+							$exceltable[$i]['modtutordashboardviews'] = $one_staff_stats['modtutordashboardviews'];
+							$exceltable[$i]['deptadmindashboardviews'] = $one_staff_stats['deptadmindashboardviews'];
+							$exceltable[$i]['downloads'] = $one_staff_stats['downloads'];
+						}
+						
+						//display last accessed
+						$staffusagetable .= "<td>";
+						//check if the user has ever accessed the report. If not lastaccess will be 0
+						if($one_staff_stats['lastaccess'] > 0){
+							$staffusagetable .= date('d-m-Y H:i', $one_staff_stats['lastaccess']);
+							//only print the excel data if it's not an overview
+							if($overview == false){
+								$exceltable[$i]['lastaccess'] = date('d-m-Y H:i', $one_staff_stats['lastaccess']);
+							}
+						}else{
+							$staffusagetable .= "-";
+							//only print the excel data if it's not an overview
+							if($overview == false){
+								$exceltable[$i]['lastaccess'] = "";
+							}
+						}
+						$staffusagetable .= "</td>";
+						if($showptutees){
+							if($one_staff_stats['ptutees'] > 0){
+							$staffusagetable .= "<td><a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=personaltutorstudents&reportuserid=" . $one_staff_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . strtolower(get_string('personaltutees', 'report_myfeedback')) . "\" rel=\"tooltip\">" . $one_staff_stats['ptutees'] . " " .strtolower(get_string('personaltutees', 'report_myfeedback')) . "</a></td>";
+							//only print the excel data if it's not an overview
+							if($overview == false){
+								$exceltable[$i]['ptutees'] = $one_staff_stats['ptutees'];
+							}
+							}else{
+								$staffusagetable .= "<td>&nbsp;</td>";
+							}
+						}
+					
+					$staffusagetable .= "</tr>";
+				
+					//we only need overall stats if we are looking at more than one staff member
+					if(sizeOf($uids) > 1){
+						//add the staff stats to the overall stats
+						if($one_staff_stats['totalviews'] > 0){
+							$overallstats['viewedby'] += 1;
+						}
+						$overallstats['totalviews'] += $one_staff_stats['totalviews'];
+						$overallstats['ownreportviews'] += $one_staff_stats['ownreportviews'];
+						$overallstats['mystudentstabviews'] += $one_staff_stats['mystudentstabviews'];
+						//students viewed
+						foreach($one_staff_stats['studentsviewed'] as $studentid => $numberviews){
+							$studentsviewedbyanystaff[$studentid] = $numberviews;
+						}
+						$overallstats['studentreportviews'] += $one_staff_stats['studentreportviews'];
+						
+						$overallstats['ptutordashboardviews'] += $one_staff_stats['ptutordashboardviews'];
+						$overallstats['modtutordashboardviews'] += $one_staff_stats['modtutordashboardviews'];
+						$overallstats['deptadmindashboardviews'] += $one_staff_stats['deptadmindashboardviews'];
+						$overallstats['downloads'] += $one_staff_stats['downloads'];
+						if($one_staff_stats['lastaccess'] > $overallstats['lastaccess']){
+							$overallstats['lastaccess'] = $one_staff_stats['lastaccess'];
+						}
+						$overallstats['ptutees'] += $one_staff_stats['ptutees'];
+					}
+					//only iterate i if it's not an overview - i.e. the results will be included in the export file
+					if($overview == false){
+						$i++;
+					}
+				} //end for loop
+				
+				//first print overall category stats
+				
+				//Only show overall stats if there's more than one staff member
+				if(sizeOf($uids) > 1){
+					$usagetable .= '<tr';
+					//Apply a darker sub-heading style to the overall category stats
+					if($overview == false){
+						$usagetable .= 'class="highlight"';
+					}
+					$usagetable .= '>';
+					//get the course / category name
+					$usagetable .= '<td id="long-name">';
+					//if it's not an overview, then print the count in brackets in the same column
+					if($overview == false){
+						//show an arrow if there are items underneath (staff)
+						$usagetable .= "<span class=\"assess-br modangle\">&#9660;</span>&nbsp;";
+						$usagetable .= $overviewname . " (" . sizeOf($uids) . " " . get_string('staff', 'report_myfeedback') .")";
+					}else{
+						//if it is an overview
+						//get the course/category name and display a link if it's a subcategory
+						if($overviewlink != "" && $printheader == false){
+							$usagetable .=  "<a href=\"" . $CFG->wwwroot . $overviewlink . "\">" . $overviewname .  "</a>";
+						}else{
+							if($printheader == true){
+								//show an arrow if there are items underneath (sub categories)
+								$usagetable .= "<span class=\"assess-br modangle\">&#9660;</span>&nbsp;";
+							}
+							$usagetable .=  $overviewname;
+						}
+						//else if it is an overview make a new column and print just the number there and link it if there's a link
+						$usagetable .=  "</td><td>";
+						$usagetable .=  "<a href=\"" . $CFG->wwwroot . str_replace("overview", "", $overviewlink) . "\">".sizeOf($uids)."</a>";
+						
+					}
+					$usagetable .= "</td>";
+					$usagetable .= "<td>" . $overallstats['totalviews'] . "</td>";
+					$usagetable .= "<td>" . $overallstats['ownreportviews'] . "</td>";
+					$usagetable .= "<td>" . $overallstats['mystudentstabviews'] . "</td>";
+					$usagetable .= "<td>" . count($studentsviewedbyanystaff) . "</td>";
+					$usagetable .= "<td>" . $overallstats['studentreportviews'] . "</td>";
+					
+					$usagetable .= "<td>" . $overallstats['ptutordashboardviews'] . "</td>";
+					$usagetable .= "<td>" . $overallstats['modtutordashboardviews'] . "</td>";
+					$usagetable .= "<td>" . $overallstats['deptadmindashboardviews'] . "</td>";
+					$usagetable .= "<td>" . $overallstats['downloads'] . "</td>";
+					if($overallstats['lastaccess'] > 0){
+						$usagetable .= "<td>" . date('d-m-Y H:i', $overallstats['lastaccess']) . "</td>";
+					}else{
+						$usagetable .= "<td>&nbsp;</td>";
+					}
+					$usagetable .= "<td>" . $overallstats['ptutees'] . "</td>";
+					$usagetable .= "</tr>";
+					
+						//store the excel export data
+						//indicate the parent category in the excel export (there's no arrow to show this like the on screen version)
+						if($printheader == true){
+							$exceltable[$i]['name'] = $overviewname . " (" . get_string('parent', 'report_myfeedback') . ")";
+						}else{
+							$exceltable[$i]['name'] = $overviewname;
+						}
+						if($overview == true){
+							$exceltable[$i]['staff'] = count($uids);
+						}
+						$exceltable[$i]['totalviews'] = $overallstats['totalviews'];
+						$exceltable[$i]['ownreportviews'] = $overallstats['ownreportviews'];
+						$exceltable[$i]['mystudentstabviews'] = $overallstats['mystudentstabviews'];
+						$exceltable[$i]['studentsviewed'] = count($studentsviewedbyanystaff);
+						$exceltable[$i]['studentreportviews'] = $overallstats['studentreportviews'];
+						$exceltable[$i]['ptutordashboardviews'] = $overallstats['ptutordashboardviews'];
+						$exceltable[$i]['modtutordashboardviews'] = $overallstats['modtutordashboardviews'];
+						$exceltable[$i]['deptadmindashboardviews'] = $overallstats['deptadmindashboardviews'];
+						$exceltable[$i]['downloads'] = $overallstats['downloads'];
+						if($overallstats['lastaccess'] > 0){
+							$exceltable[$i]['lastaccess'] = date('d-m-Y H:i', $overallstats['lastaccess']);
+						}else{
+							$exceltable[$i]['lastaccess'] = "";
+						}
+						$exceltable[$i]['ptutees'] = $overallstats['ptutees'];
+				}
+				//then print the staff usage stats, if it's not an overview
+				if($overview == false){
+					//swap the tds for trs and remove the end thead tag, as the first row is a summary
+					$usagetable = str_replace("</thead>", "", $usagetable);
+					$usagetable = str_replace("<tbody>", "", $usagetable);
+					$usagetable = str_replace("<td", "<th", $usagetable);
+					$usagetable = str_replace("</td>", "</th>", $usagetable);
+					$usagetable .= '</thead></tbody>';
+					$usagetable .= $staffusagetable;
+					$usagetable .= '</tbody></table>'; 
+				}else{
+					if($printheader == true){
+						//swap the tds for trs and remove the end thead tag, as the first row is a summary
+						$usagetable = str_replace("</thead>", "", $usagetable);
+						$usagetable = str_replace("<tbody>", "", $usagetable);
+						$usagetable = str_replace("<td", "<th", $usagetable);
+						$usagetable = str_replace("</td>", "</th>", $usagetable);
+						$usagetable .= '</thead></tbody>';
+					}
+				}
+			}elseif(sizeOf($uids) == 0){
+			//if there are no users in the category show the category name and that there are 0 staff
+				if($overview == false){
+					$usagetable .= "<tr><td>".$overviewname." (0 ".lcfirst (get_string('staff', 'report_myfeedback')).")</td>";
+				}else{
+					$usagetable .= "<tr><td>".$overviewname."</td><td>0</td>";
+					$exceltable[$i]['name'] = $overviewname;
+					$exceltable[$i]['staff'] = 0;
+				}
+				$headercount = 10;
+				if($showptutees == true){
+					$headercount++;
+				}
+				for($i=0;$i<$headercount;$i++){
+					$usagetable .= "<td>&nbsp;</td>";
+				}
+				$usagetable .= "</tr>";
+			}
+			//set the excel table export data
+			$_SESSION['exp_sess'] = $exceltable;
+			return $usagetable;
+	}
+
+	/**
+     * Returns a table with the usage statistics for the students passed to the function
+	 *
+     * @global stdClass $CFG The global configuration instance.
+     * @param array $uids The array of students user ids.
+	 * @param bool $overview Whether or not to display just an overview with aggregated data only and no user data or closing table tags.
+	 * @param str $overviewname The name of the overview (e.g. category or course).
+	 * @param str $overviewlink The link for the overview name (so users can navigate to subcategories).
+	 * @param bool $printheader Whether to print the headers or not, so overviews can show aggregated data for subcategories in a single table.
+     * @return str Table containing the student statistics (missing the </tbody></table> tag if an overview).
+     */
+    public function get_student_statistics_table($uids, $reporttype, $overview=false, $overviewname = "", $overviewlink = "", $printheader=true){
+		global $CFG;
+		$i = 0;	
+		$exceltable = array();
+		
+		//populate the $exceltable array with the previous data, if it's not the first row of an overview
+		if($overview == true && $printheader == false){
+			$exceltable = $_SESSION["exp_sess"];
+			$i = count($exceltable);
+		}
+		if($printheader==true){
+			$usagetable = "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
+			//print the table headings
+			$headers = array(get_string('tutortblheader_name', 'report_myfeedback'));
+			if($overview == true){
+				$headers[] = ucfirst(get_string('dashboard_students', 'report_myfeedback'));
+			}
+			array_push($headers, 
+				get_string('usagetblheader_viewed', 'report_myfeedback'),
+				get_string('usagetblheader_totalviews', 'report_myfeedback'),
+				get_string('usagetblheader_notes', 'report_myfeedback'),
+				get_string('usagetblheader_tiifeedback', 'report_myfeedback'),
+				get_string('usagetblheader_downloads', 'report_myfeedback'),
+				get_string('tabs_ptutor', 'report_myfeedback'),
+				get_string('usagetblheader_lastaccessed', 'report_myfeedback'));
+			$usagetable .= $this->get_table_headers($headers);
+			//print the table data
+			$usagetable .= "<tbody>";
+		}	
+		//get the table data
+		if(sizeOf($uids) > 0){
+			//get all the student stats
+			$all_students_stats = $this->get_overall_student_usage_statistics($uids);
+
+			//print stats for each student
+			//TODO: make the drop down button toggle to show/hide student data for the category. Currently it shows and can't be toggled off
+			$studentusagetable = "";
+			$overallstats = array();
+			$overallstats['lastaccess'] = 0;
+			$overallstats['viewedby'] = 0;
+			$personaltutors = array();
+			
+			foreach($all_students_stats as $one_student_stats){
+				$studentusagetable .= "<tr>";
+				if(sizeOf($uids) > 1){					
+					$studentusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=student&reportuserid=" . $one_student_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " .  $one_student_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " " .  get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_student_stats['name']."</a></td>";
+				}else{
+					$studentusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $one_student_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " .  $one_student_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " " . get_string('dashboard', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_student_stats['name']."</a></td>";
+				}
+					//TODO: get the number of staff who have viewed the report for that student and display it under viewed by followed by " staff"
+					$studentusagetable .= "<td>";
+					$studentusagetable .= ($one_student_stats['totalviews'] > 0) ? "yes" : "&nbsp;";
+					$studentusagetable .= "</td>";
+					$studentusagetable .= "<td>" . $one_student_stats['totalviews'] . "</td>";
+					$studentusagetable .= "<td>" . $one_student_stats['notes'] . "</td>";
+					$studentusagetable .= "<td>" . $one_student_stats['feedback'] . "</td>";
+					$studentusagetable .= "<td>" . $one_student_stats['downloads'] . "</td>";
+					$studentusagetable .= "<td>";
+					
+					//only print the excel data if it's not an overview
+					if($overview == false){
+						//store the excel export data
+						$exceltable[$i]['name'] = $one_student_stats['name'];
+						$exceltable[$i]['viewed'] = ($one_student_stats['totalviews'] > 0) ? "yes" : "";
+						$exceltable[$i]['views'] = $one_student_stats['totalviews'];
+						$exceltable[$i]['notes'] = $one_student_stats['notes'];
+						$exceltable[$i]['feedback'] = $one_student_stats['feedback'];
+						$exceltable[$i]['downloads'] = $one_student_stats['downloads'];
+					}
+				
+					//link to the personal tutor usage report
+					if($one_student_stats['personaltutorid'] > 0){
+						$studentusagetable .= "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?reportuserid=" . $one_student_stats['personaltutorid'] . "&currenttab=usage&reporttype=staffmember\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " .  trim($one_student_stats['personaltutor']) . get_string('apostrophe_s', 'report_myfeedback') . " " . get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_student_stats['personaltutor'] . "</a>";
+						//only print the excel data if it's not an overview
+						if($overview == false){
+							$exceltable[$i]['personaltutor'] = $one_student_stats['personaltutor'];
+						}
+						$personaltutors[$one_student_stats['personaltutorid']] = $one_student_stats['personaltutor'];
+					}else{
+						$studentusagetable .= "&nbsp;";
+						//only print the excel data if it's not an overview
+						if($overview == false){
+							$exceltable[$i]['personaltutor'] = "";
+						}
+					}
+					$studentusagetable .= "</td>";
+					$studentusagetable .= "<td>";
+					//check if the user has ever accessed the report. If not lastaccess will be 0
+					if($one_student_stats['lastaccess'] > 0){
+						$studentusagetable .= date('d-m-Y H:i', $one_student_stats['lastaccess']);
+						//only print the excel data if it's not an overview
+						if($overview == false){
+							$exceltable[$i]['lastaccess'] = date('d-m-Y H:i', $one_student_stats['lastaccess']);
+						}
+					}else{
+						$studentusagetable .= "-";
+						//only print the excel data if it's not an overview
+						if($overview == false){
+							$exceltable[$i]['lastaccess'] = "";
+						}
+					}
+					$studentusagetable .= "</td>";
+				
+				$studentusagetable .= "</tr>";
+				
+				//add this students stats to the overall stats
+				if($one_student_stats['totalviews'] > 0){
+					$overallstats['viewedby'] += 1;
+				}
+				$overallstats['totalviews'] += $one_student_stats['totalviews'];
+				$overallstats['notes'] += $one_student_stats['notes'];
+				$overallstats['feedback'] += $one_student_stats['feedback'];
+				$overallstats['downloads'] += $one_student_stats['downloads'];
+				if($one_student_stats['lastaccess'] > $overallstats['lastaccess']){
+					$overallstats['lastaccess'] = $one_student_stats['lastaccess'];
+				}
+				//only iterate i if it's not an overview - i.e. the results will be included in the export file
+				if($overview == false){
+					$i++;
+				}
+			} //end for loop
+			
+			//first print overall category stats
+			if(sizeOf($uids) > 1){
+				$usagetable .= '<tr';
+					//Apply a darker sub-heading style to the overall category stats
+					if($overview == false){
+						$usagetable .= 'class="highlight"';
+					}
+					$usagetable .= '>';
+				//get the course / category name
+				$usagetable .= '<td id="long-name">';
+				//if it's not an overview, then print the count in brackets in the same column
+				if($overview == false){
+					//show an arrow if there are items underneath (students)
+					$usagetable .= "<span class=\"assess-br modangle\">&#9660;</span>&nbsp;";
+					if($reporttype == "personaltutorstudents"){
+						$usagetable .= $overviewname . " (" . sizeOf($uids) . " " . strtolower(get_string('personaltutees', 'report_myfeedback')) .")";
+					}else{
+						$usagetable .= $overviewname . " (" . sizeOf($uids) . " " . lcfirst(get_string('dashboard_students', 'report_myfeedback')) .")";
+					}
+				}else{
+					//get the course/category name and display a link if it's a subcategory
+					if($overviewlink != "" && $printheader == false){
+						$usagetable .=  "<a href=\"" . $CFG->wwwroot . $overviewlink . "\">" . $overviewname .  "</a>";
+					}else{
+						//show an arrow if there are items underneath (sub categories)
+						if($printheader == true){
+							//show an arrow if there are items underneath (sub categories)
+							$usagetable .= "<span class=\"assess-br modangle\">&#9660;</span>&nbsp;";
+						}
+						$usagetable .=  $overviewname;
+					}
+					//else if it is an overview make a new column and print just the number there and link it if there's a link
+					$usagetable .=  "</td><td>";
+					$usagetable .=  "<a href=\"" . $CFG->wwwroot . str_replace("overview", "", $overviewlink) . "\">".sizeOf($uids)."</a>";
+				}
+				$usagetable .= "</td>";
+				$usagetable .= "<td>";
+				$usagetable .= (sizeOf($uids) > 1) ? $overallstats['viewedby'] : "&nbsp;";
+				$usagetable .= "</td>";
+				$usagetable .= "<td>" . $overallstats['totalviews'] . "</td>";
+				$usagetable .= "<td>" . $overallstats['notes'] . "</td>";
+				$usagetable .= "<td>" . $overallstats['feedback'] . "</td>";
+				$usagetable .= "<td>" . $overallstats['downloads'] . "</td>";
+				$usagetable .= "<td>".sizeof($personaltutors)."</td>";
+				if($overallstats['lastaccess'] > 0){
+					$usagetable .= "<td>".date('d-m-Y H:i', $overallstats['lastaccess'])."</td>";
+				}else{
+					$usagetable .= "<td>&nbsp;</td>";
+				}
+				$usagetable .= "</tr>";
+
+				//store the overview excel export data
+				//indicate the parent category in the excel export (there's no arrow to show this like the on screen version)
+				if($printheader == true){
+					if($reporttype == "personaltutorstudents"){
+						$exceltable[$i]['name'] = $overviewname . " (" . get_string('tabs_ptutor', 'report_myfeedback') . ")";
+					}else{
+						$exceltable[$i]['name'] = $overviewname . " (" . get_string('parent', 'report_myfeedback') . ")";
+					}
+				}else{
+					$exceltable[$i]['name'] = $overviewname;
+				}
+				if($overview == true){
+					$exceltable[$i]['students'] = count($uids);
+				}
+				$exceltable[$i]['viewed'] = (sizeof($uids) > 1) ? $overallstats['viewedby'] : "";
+				$exceltable[$i]['views'] = $overallstats['totalviews'];
+				$exceltable[$i]['notes'] = $overallstats['notes'];
+				$exceltable[$i]['feedback'] = $overallstats['feedback'];
+				$exceltable[$i]['downloads'] = $overallstats['downloads'];
+				$exceltable[$i]['personaltutors'] = sizeof($personaltutors);
+				if($overallstats['lastaccess'] > 0){
+					$exceltable[$i]['lastaccess'] = date('d-m-Y H:i', $overallstats['lastaccess']);
+				}else{
+					$exceltable[$i]['lastaccess'] = "";
+				}
+			}
+			//then print the student usage stats, if it's not an overview
+			if($overview == false){
+				//swap the tds for trs and remove the end thead tag, as the first row is a summary
+				$usagetable = str_replace("</thead>", "", $usagetable);
+				$usagetable = str_replace("<tbody>", "", $usagetable);
+				$usagetable = str_replace("<td", "<th", $usagetable);
+				$usagetable = str_replace("</td>", "</th>", $usagetable);
+				$usagetable .= '</thead></tbody>';
+				$usagetable .= $studentusagetable;
+				$usagetable .= '</tbody></table>'; 
+			}else{
+				if($printheader == true){
+					//swap the tds for trs and remove the end thead tag, as the first row is a summary
+					$usagetable = str_replace("</thead>", "", $usagetable);
+					$usagetable = str_replace("<tbody>", "", $usagetable);
+					$usagetable = str_replace("<td", "<th", $usagetable);
+					$usagetable = str_replace("</td>", "</th>", $usagetable);
+					$usagetable .= '</thead></tbody>';
+				}
+			}	
+			
+		}elseif(sizeOf($uids) == 0){
+		//if there are no users in the category show the category name and that there are 0 students
+			if($overview == false){
+				$usagetable .= "<tr><td>".$overviewname." (0 ".lcfirst(get_string('dashboard_students', 'report_myfeedback')).")</td>";
+			}else{
+				$usagetable .= "<tr><td>".$overviewname."</td><td>0</td>";
+				$exceltable[$i]['name'] = $overviewname;
+				$exceltable[$i]['students'] = 0;
+			}
+			$headercount = 7;
+			for($i=0;$i<$headercount;$i++){
+				$usagetable .= "<td>&nbsp;</td>";
+			}
+			$usagetable .= "</tr>";
+		}
+		//set the excel table export data
+		$_SESSION['exp_sess'] = $exceltable;
+		return $usagetable;
+	}
+
+
+	
+	/**
+     * Return the array of My feedback usage logs
+	 *
+	 * @global stdClass $remotedb DB object
+     * @param array $dept_prog Arry with users dept courses user has progadmin capability in
+     * @return bool $frommod Whether the call is from Mod tutor dashboard
+    */ 
+	public function get_user_usage_logs($userid){
+		global $remotedb;
+		/*$sql = "select 
+    			l.eventname,
+    			l.contextlevel,
+				l.component,
+				l.action,
+				l.userid,
+				l.relateduserid,
+				l.timecreated
+			from
+				{logstore_standard_log} l
+			where
+				l.component = 'report_myfeedback' and l.userid = ?";*/
+		$params = array($userid);
+		$usagelogs = $remotedb->get_records('logstore_standard_log', array('component'=>'report_myfeedback','userid'=>$userid));
+		//the below doesn't return all of the results. Perhaps because they have to be unique values when you define which fields to return.
+        //$usagelogs = $remotedb->get_records('logstore_standard_log', array('component'=>'report_myfeedback','userid'=>$userid), null, 'eventname, contextlevel, component, action, userid, relateduserid, timecreated');
+		return $usagelogs;
+	}
+	
+	/**
+     * Return the array of My feedback usage logs
+	 *
+	 * @global stdClass $remotedb DB object
+     * @param array $dept_prog Arry with users dept courses user has progadmin capability in
+     * @return bool $frommod Whether the call is from Mod tutor dashboard
+    */
+	public function get_notes_and_feedback($userid){
+		global $remotedb;
+		/*$sql = " select * from {report_myfeedback} where userid = ?";*/
+		$params = array($userid);
+		$usagelogs = $remotedb->get_records('report_myfeedback', array('userid'=>$userid));
+		//i'm not confident the below will return all the results, so I'm going to return all fields (above) instead
+        //$usagelogs = $remotedb->get_records('report_myfeedback', array('userid'=>$userid), null, 'notes, feedback');
+		return $usagelogs;
+	}
 
     /**
      * Returns the graph with the z-score with the lowest, highest and median grade
@@ -2097,6 +3467,7 @@ class report_myfeedback {
 
     /**
      * Return the position the user's grade falls into for the bar graph
+	 *
      * @global obj $remotedb The DB object
      * @param int $itemid Grade item id
      * @param int $grade The grade
@@ -2219,6 +3590,7 @@ class report_myfeedback {
     /**
      * Get the mount of archived years set in the report settings and return the 
      * years (1415) as an array including the current year ('current')
+	 *
      * @return array mixed The archived years
      */
     public function get_archived_dbs() {
@@ -2244,6 +3616,7 @@ class report_myfeedback {
      * Return the course limit on Dept admin dashboard so that if the second level category they are trying
      * to view has more than this amount of courses it asks the user to select individual courses instead as there would be
      * too many courses on that evel to run the stats. This is set in settings or default to 200
+	 *
      * @return int The The limit for the number of courses
      */
     public function get_course_limit() {
@@ -2253,6 +3626,7 @@ class report_myfeedback {
 
     /**
      * Return the academic years based on the current month 
+	 *
      * @param int $ac_year How many years from today's date
      * @return string The academic year in the form of 1415, 1314
      */
@@ -2268,14 +3642,18 @@ class report_myfeedback {
 
     /**
      * Return the personal tutees and their stats 
+	 *
      * @global stdClass $remotedb The current DB object
      * @global stdClass $CFG The global config settings
      * @global stdClass $USER The logged in user global properties
      * @global stdClass $OUTPUT The global output properties
      * @return string Return th ename and other details of the personal tutees
      */
-    public function get_dashboard_tutees() {
+    public function get_dashboard_tutees($personaltutorid = 0) {
         global $remotedb, $CFG, $USER, $OUTPUT;
+		if($personaltutorid == 0){
+			$personaltutorid = $USER->id;
+		}
         $myusers = array();
         // get all the mentees, i.e. users you have a direct assignment to as their personal tutor
         if ($usercontexts = $remotedb->get_records_sql("SELECT c.instanceid, c.instanceid, u.id as id, firstname, lastname, email, department
@@ -2283,7 +3661,7 @@ class report_myfeedback {
                                                    WHERE ra.userid = ?
                                                          AND ra.contextid = c.id
                                                          AND c.instanceid = u.id
-                                                         AND c.contextlevel = " . CONTEXT_USER, array($USER->id))) {
+                                                         AND c.contextlevel = " . CONTEXT_USER, array($personaltutorid))) {
             foreach ($usercontexts as $u) {
                 $user = $remotedb->get_record('user', array('id' => $u->id, 'deleted' => 0));
                 $year = null;
@@ -2307,6 +3685,7 @@ class report_myfeedback {
 
     /**
      * Get the number of graded assessments and low grades of the tutees
+	 *
      * @global stdClass $remotedb The current DB object
      * @param int $userid The id of the user who's details are being retrieved
      * @param int $courseid The id of the course 
@@ -2395,6 +3774,7 @@ class report_myfeedback {
     /**
      * Get all the due assessments, non-submissions and late submission
      * from the assign mod type, quiz, workshop and turnitin v1 and v2
+	 *
      * @global stdClass $remotedb The current DB object
      * @param int $userid The id of the user you getting the details for
      * @param int $courseid The id of the course 
@@ -2528,9 +3908,8 @@ class report_myfeedback {
                     $all[$rec->tid] = $rec;
                 }
             }
-            $r->close();
         }
-		$r->close(); //close the recordset, regardless of whether it is valid or not
+		$r->close();
         $result = array(0, 0, 0, 0);
         $modresult = array();
         foreach ($all as $b) {
@@ -2596,6 +3975,7 @@ class report_myfeedback {
 
     /**
      * Here we calculate the zscore of the tutee and also the module breakdown
+	 *
      * @global stdClass $remotedb The current DB object
      * @param int $userid The id of the tutees whos graph you are returning
      * @param array $tutor stats from mod tutor tab 
@@ -2984,9 +4364,11 @@ class report_myfeedback {
 
         return $cses;
     }
+	
 
 	/**
      * Return the arry of dept admin categories and courses 
+	 *
      * @param array $dept_prog Arry with users dept courses user has progadmin capability in
      * @return bool $frommod Whether the call is from Mod tutor dashboard
      */
@@ -3053,6 +4435,7 @@ class report_myfeedback {
 
     /**
      * Return the oerridden grade if it is overriden else false 
+	 *
      * @param int $itemid The grade_item id
      * @param int $userid The userid
      * @return mixed The overridden grade or false
@@ -3072,6 +4455,7 @@ class report_myfeedback {
     
     /**
      * Return the display type for the course grade
+	 *
      * @param int $cid The course id
      * @return int The display type numeric value for letter, percentage, number etc.
      */
@@ -3087,6 +4471,7 @@ class report_myfeedback {
 
     /**
      * Get data from database to populate the overview and feedback table 
+	 *
      * @param bool $archive Whether it's an archive year
      * @param int $checkdb The academic year value eg. 1415
      * @return str The DB/remotedb results of submission and feedback for the user referred to in the url after
@@ -3218,6 +4603,8 @@ class report_myfeedback {
                         WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
             array_push($params, $now, $userid, $now);
         }
+		if ($this->mod_is_available("coursework")) {
+		}
         if ($this->mod_is_available("quiz")) {
             $sql .= "UNION SELECT DISTINCT c.id AS courseid,
                                c.shortname, 
@@ -3480,6 +4867,7 @@ class report_myfeedback {
 
     /**
      * Return the overview and feedback comments tab tables with user information
+	 *
      * @global stdClass $CFG The global config object 
      * @global stdClass $OUTPUT The global OUTPUT object
      * @global stdClass $USER The logged-in user object
@@ -3642,6 +5030,7 @@ class report_myfeedback {
                                                 <tbody>";
 
         $rs = $this->get_data($archive, $checkdb);
+		
         if ($rs->valid()) {
             // The recordset contains records.
             foreach ($rs as $record) {
@@ -4102,7 +5491,7 @@ class report_myfeedback {
                                 $OUTPUT->pix_url('icon', $record->assessmenttype) . '" ' .
                                 'class="icon" alt="' . $assessmenttype . '" title="' . $assessmenttype . '"  rel="tooltip" />';
                     }
-                    //Set the sortable date before converting to d-M-Y format 
+                    //Set the sortable date before converting to d-M-y format 
                     $sub_datesort = $submissiondate;
                     $submittedtime = $submissiondate;
                     // If no feedback or grade has been received don't display anything.
@@ -4576,9 +5965,8 @@ class report_myfeedback {
                     }
                 }
             }
-            
         }
-		$rs->close(); // Close the recordset, regardless of whether it is valid or not
+		$rs->close(); // Close the recordset!
         $table .= "</tbody>                
                     </table>";
         $commentstable.="</tbody></table>";

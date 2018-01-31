@@ -168,7 +168,7 @@ if ($my_tutor_mods) {
                     $prog = $get_cat['prog'];
                 }
 
-                $cse_name .= '<div class="fullRec">' . ($mod_name && $s_name ? '<h4><b>' . $s_name . ': ' . $mod_name . '</b></h4>' : '');
+                $cse_name .= '<div class="fullRec">' . ($mod_name && $s_name ? '<h3 style="color: #444"><b>' . $s_name . ': ' . $mod_name . '</b></h3>' : '');
                 $cse_name .= ($dept ? get_string('faculty', 'report_myfeedback') . $dept . '<br>' : '');
                 $cse_name .= ($prog ? get_string('programme', 'report_myfeedback') . $prog . '<br>' : '');
 
@@ -181,7 +181,7 @@ if ($my_tutor_mods) {
 
                 if (count($uids) > 0) {
                     if ($zscore = $report->get_module_z_score($t->id, $uids, true)) {
-                        $modgraph = ''; //'<h4><b>Overall Module</b></h4>' . $zscore->modgraph;
+                        $modgraph = ''; //'<h3 style="color: #444"><b>Overall Module</b></h3>' . $zscore->modgraph;
                         $modscore = $zscore->graph;
                         $due = $zscore->due;
                         $nonsub = $zscore->nonsub;

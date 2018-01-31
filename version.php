@@ -19,7 +19,7 @@
  * My Feedback Report.
  *
  * @package   report_myfeedback
- * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
+ * @author    Jessica Gramp <j.gramp@ucl.ac.uk> or <jgramp@gmail.com>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
  * 			  block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
@@ -32,8 +32,8 @@
  *            http://bit.ly/IoEAssessmentCareersProject
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2017122300;
+$plugin->version = 2018013002;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2013111810;
-$plugin->release = '2.10 (Build: 2017122300)';
+$plugin->release = '2.11 (Build: 2018013002)';
 $plugin->maturity = MATURITY_STABLE;

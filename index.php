@@ -1,4 +1,4 @@
-<?php
+                                                                                                              <?php
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -63,6 +63,8 @@ $deptview = (isset($_POST['deptselect']) ? $_POST['deptselect'] : $dots); // For
 $progview = (isset($_POST['progselect']) ? $_POST['progselect'] : $dots); // For second level category on Dept admin dashboard
 $progmodview = (isset($_POST['progmodselect']) ? $_POST['progmodselect'] : $dots); // For the course on the Dept admin dashboard
 $searchuser = (isset($_POST['searchuser']) ? $_POST['searchuser'] : ''); // For the user search input on My students tab
+$searchusage = (isset($_POST['searchusage']) ? $_POST['searchusage'] : ''); // For the search input on Usage dashboard
+
 $_SESSION['viewmod'] = $modview;
 if ($yearview) {//keep the academic year for the loggen-in session
     $_SESSION['viewyear'] = $yearview;
@@ -124,9 +126,11 @@ if (empty($user->username)) {
 //moodle/user:viewalldetails for personal tutor
 //report/myfeedback:progadmin for dept admin
 //report/myfeedback:student for students
+//report/myfeedback:usage to see usage reports
 $module_tutor = false;
 $personal_tutor = false;
 $progadmin = false;
+$usage = false;
 $prog = false;
 $is_student = false;
 $ownreport = '';
@@ -158,10 +162,17 @@ if ($prog_admin_id = $report->get_dashboard_capability($USER->id, 'report/myfeed
             $user->lastname . get_string('progadminview', 'report_myfeedback') . $ownreport;
 }
 
+//Added this here because the usage report is not accessing a student so there is no course to get the context 
+//so the report_heading does not have the dept admin view
+if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
+	$usage = true;
+}
+
 if ($student = $report->get_dashboard_capability($USER->id, 'report/myfeedback:student')) {
     $is_student = true;
 }
 
+//TODO - should we only do this if we are wanting to look at a student's report though? It would be redunant if we're just veiwing our own report, or the usage dashboard.
 //This capability is something that everyone who has been enrolled on a course has on that course.
 //Here we want to check the courses and see if the logged in user has modtutor or prog admin capability for the user they are trying to look at so they can see their report.
 if ($mods = get_user_capability_course('moodle/course:viewparticipants', $userid, $doanything = false, $fields = 'shortname,visible')) {
@@ -187,7 +198,7 @@ if ($mods = get_user_capability_course('moodle/course:viewparticipants', $userid
     }
 }
 
-//If user don't have the moodle capability to see the specific user they can't access it
+//If user doesn't have the moodle capability to see the specific user they can't access it
 if ($progadmin || $module_tutor || $userid == $USER->id || has_capability('moodle/user:viewdetails', $usercontext)) {
 //Has access to the user
 } else {
@@ -212,6 +223,9 @@ if ($thistab == 'mymodules') {
 if ($thistab == 'progadmin') {
     $report_heading = get_string('progadmin_dashboard', 'report_myfeedback') . $ownreport;
 }
+if ($thistab == 'usage') {
+    $report_heading = get_string('usage_dashboard', 'report_myfeedback') . $ownreport;
+}
 
 echo '<div class="heading">';
 echo $OUTPUT->heading($report_heading);
@@ -233,6 +247,7 @@ $tabs = array();
 if ($prog && !$viewtutee) {
     $tabs[] = new tabobject('progadmin', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'progadmin')), get_string('progadmin_dashboard', 'report_myfeedback'));
 }
+
 //If tutor and not viewing a tutee's report
 if ($module_tutor && !$viewtutee) {
     $tabs[] = new tabobject('mymodules', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'mymodules')), get_string('tabs_mtutor', 'report_myfeedback'));
@@ -251,6 +266,9 @@ if ($module_tutor && !$viewtutee) {
 if ($prog && !$viewtutee) {
     $currenttab = optional_param('currenttab', 'progadmin', PARAM_TEXT);    
 }
+if ($usage && !$viewtutee) {
+    $currenttab = optional_param('currenttab', 'usage', PARAM_TEXT);    
+}
 
 if ($showstudentstab) {
     if ($prog || $module_tutor || $personal_tutor) {
@@ -258,13 +276,18 @@ if ($showstudentstab) {
     }
 }
 
-if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && !$personal_tutor)) {
+if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && !$personal_tutor && !usage)) {
     $tabs[] = new tabobject('overview', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'overview')), get_string('tabs_overview', 'report_myfeedback'));
     $tabs[] = new tabobject('feedback', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'feedback')), get_string('tabs_feedback', 'report_myfeedback'));
     if ($mytutorid && !$personal_tutor) {
         $tabs[] = new tabobject('ptutor', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'ptutor')), get_string('tabs_ptutor', 'report_myfeedback'));
     }
     $currenttab = optional_param('currenttab', 'overview', PARAM_TEXT);
+}
+
+//If usage and not viewing a tutee's report
+if ($usage && !$viewtutee) {
+    $tabs[] = new tabobject('usage', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'usage')), get_string('usage_dashboard', 'report_myfeedback'));
 }
 
 echo $OUTPUT->tabtree($tabs, $currenttab);
@@ -293,6 +316,9 @@ switch ($currenttab) {
         break;
     case 'progadmin':
         require_once('programmeadmin/index.php');
+        break;
+	case 'usage':
+        require_once('usage/index.php');
         break;
     default:
         break;

@@ -1,3 +1,50 @@
+/*
+ * Usage
+*/
+
+.path-report-myfeedback .usagereport h3, .path-report-myfeedback .userstable{
+	clear:left;
+}
+
+.path-report-myfeedback .report_form{
+	float: left;
+}
+
+.path-report-myfeedback .searchusage, .path-report-myfeedback #report_category_select{
+	margin-left: 20px;
+}
+
+.path-report-myfeedback .buttonswrapper{
+	float:right;
+}
+
+.path-report-myfeedback .uparrow{
+      margin-bottom: 12px;
+	  margin-left: 7px;
+	  /*background: #fcfcfc;
+	  background-image: -webkit-linear-gradient(top, #fcfcfc, #ececec);
+	  background-image: -moz-linear-gradient(top, #fcfcfc, #ececec);
+	  background-image: -ms-linear-gradient(top, #fcfcfc, #ececec);
+	  background-image: -o-linear-gradient(top, #fcfcfc, #ececec);
+	  background-image: linear-gradient(to bottom, #fcfcfc, #ececec);
+	  -webkit-border-radius: 7;
+	  -moz-border-radius: 7;
+	  border-radius: 7px;
+	  padding: 2px;*/
+}
+
+.path-report-myfeedback .uparrow:hover{
+	  /*box-shadow: 0 12px 16px 0 rgba(0,0,0,0.15), 0 17px 50px 0 rgba(0,0,0,0.09);
+	  -webkit-border-radius: 7;
+	  -moz-border-radius: 7;
+	  border-radius: 7px;
+	  background: #fcfce7;
+	  background-image: -webkit-linear-gradient(top, #f9f9f9, #e1e1e1);
+	  background-image: -moz-linear-gradient(top, #f9f9f9, #e1e1e1);
+	  background-image: -ms-linear-gradient(top, #f9f9f9, #e1e1e1);
+	  background-image: -o-linear-gradient(top, #f9f9f9, #e1e1e1);
+	  background-image: linear-gradient(to bottom, #f9f9f9, #e1e1e1);*/
+}
 
 /*
  * Table
@@ -1417,7 +1464,7 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
      color: #005E8D;
  }
  
- .path-report-myfeedback .modal {
+.path-report-myfeedback .modal {
     position: fixed;
     top: 10%;
     left: 50%;
@@ -1447,7 +1494,6 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
 .path-report-myfeedback .modal-backdrop.in {
     opacity: .8;
 }
-
 
 @media print {
   .path-report-myfeedback table.fixedHeader-floating {

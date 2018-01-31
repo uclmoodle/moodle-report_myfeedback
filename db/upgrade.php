@@ -34,8 +34,8 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
         }
         
         if ($oldversion == 2016012100) {
-        $field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $dbman->add_field($table, $field);
+        	$field = new xmldb_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+       		$dbman->add_field($table, $field);
         }
 
         // Myfeedback savepoint reached.
@@ -52,6 +52,6 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
 		
 		// Myfeedback savepoint reached.
         upgrade_plugin_savepoint(true, 2017112800, 'report', 'myfeedback');
-	}
+    }
     return true; //have to be in else get an unknown error
 }
