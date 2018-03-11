@@ -29,6 +29,11 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+
+2.12 (Build: 2018031100)
+The log table optimisation code incorrectly included the prefix mdl_. This has now been removed.
+A further optimisation to the SQL code was implemented by placing brackets around '(auf.userid = $userid OR a.markingworkflow = 0)'
+
 2.11 (Build: 2018013002)
 Added usage statistics tab to the report.
 Added a usage report permission to allow particular Moodle users access to usage statistics.

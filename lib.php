@@ -4594,7 +4594,7 @@ class report_myfeedback {
                         LEFT JOIN {assign_grades} ag ON a.id = ag.assignment AND ag.userid=$userid ";
             if (!$archive || ($archive && $checkdb > 1314)) {//when the new assign_user_flags table came in
                 $sql .= "LEFT JOIN {assign_user_flags} auf ON a.id = auf.assignment AND auf.workflowstate = 'released'
-                        AND  auf.userid = $userid OR a.markingworkflow = 0 ";
+                        AND  (auf.userid = $userid OR a.markingworkflow = 0) ";
             }
             if (!$archive || ($archive && $checkdb > 1112)) {//when the new grading_areas table came in
                 $sql .= "LEFT JOIN {grading_areas} ga ON con.id = ga.contextid ";
