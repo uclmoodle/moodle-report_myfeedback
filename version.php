@@ -26,14 +26,14 @@
  * 			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  * 			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
  *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
- *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
+ *            Prof John Mitchell <j.mitchell@ucl.ac.uk>
  *            The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
- *            through assessment' directed by Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
+ *            through assessment' directed by Dr Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
  *            http://bit.ly/IoEAssessmentCareersProject
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2018031100;
+$plugin->version = 2018041400;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2013111810;
-$plugin->release = '2.12 (Build: 2018031100)';
+$plugin->release = '2.13 (Build: 2018041400)';
 $plugin->maturity = MATURITY_STABLE;

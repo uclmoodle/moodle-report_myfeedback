@@ -7,11 +7,15 @@
 }
 
 .path-report-myfeedback .report_form{
-	float: left;
+	display: inline;
 }
 
 .path-report-myfeedback .searchusage, .path-report-myfeedback #report_category_select{
 	margin-left: 20px;
+}
+
+.path-report-myfeedback .report_info{
+	padding-bottom: 20px;
 }
 
 .path-report-myfeedback .buttonswrapper{

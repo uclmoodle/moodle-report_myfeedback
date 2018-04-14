@@ -29,6 +29,13 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.13 (Build: 2018041400)
+Added a description of each usage report at the top of each report type page.
+Resolved missing variable notices in the usage reports.
+CONTRIB-7253: Added help icons and text to explain each column in the usage reports.
+CONTRIB-6846: Added help icons and text to explain the search heading table columns on the My Students tab.
+CONTRIB-7249: Changed assignment string to assessment so it makes sense for all types, including quizzes.
+CONTRIB-6831: Changed 'Numerrors:' label for workshops of this type to say 'Number of errors:' instead.
 
 2.12 (Build: 2018031100)
 The log table optimisation code incorrectly included the prefix mdl_. This has now been removed.

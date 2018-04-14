@@ -170,6 +170,9 @@ if ($cur_dept && $cur_prog) {
         echo get_string('courselimitinfo', 'report_myfeedback');
     }
     //Table for the modules
+	$namemsg = get_string('usagetblheader_name_info', 'report_myfeedback');
+    $nameicon = '<img class="studentimgdue" src="' . 'pix/info.png' . '" ' .
+            ' alt="-" title="' . $namemsg . '" rel="tooltip"/>';
     $assessmentmsg = get_string('tutortblheader_assessment_info', 'report_myfeedback');
     $assessmenticon = '<img class="studentimgdue" src="' . 'pix/info.png' . '" ' .
             ' alt="-" title="' . $assessmentmsg . '" rel="tooltip"/>';

@@ -26,7 +26,7 @@
  *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
  *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
- *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
+ *            Prof John Mitchell <j.mitchell@ucl.ac.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
@@ -1183,7 +1183,13 @@ class report_myfeedback {
         return $capy ? $capy->roleid : 0;
     }
 	
+    /**
+     * Return the export to excel and print buttons
+	 *
+     * @return the HTML to display the export to excel and print buttons
+     */	
 	public function export_print_buttons(){
+		$printmsg = get_string('print_msg', 'report_myfeedback');
 		return "<div class=\"buttonswrapper\"><input class=\"x_port\" id=\"exportexcel\" type=\"button\" value=\"" . get_string('export_to_excel', 'report_myfeedback') . "\">
                 <input class=\"reportPrint\" id=\"reportPrint\" type=\"button\" value=\"" . get_string('print_report', 'report_myfeedback') . "\" title=\"" . $printmsg . "\" rel=\"tooltip\"></div>";
 	}
@@ -1197,13 +1203,16 @@ class report_myfeedback {
     * @param str $reporttype The report type where the search is being used
     * @return string Table with the list of categories with names containing the search term.
     */
-	public function search_all_categories($search, $reporttype){
+	public function search_all_categories($search, $reporttype, $hideor = false){
 		global $remotedb, $CFG;
 		
 		$mycategories = array();
-				
+		$table = "";		
         //The search form
-        echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
+		if($hideor == false){
+        	echo '<span class="searchusage"> ' . get_string("or", "report_myfeedback");
+		}
+		echo' </span><form method="POST" id="reportsearchform" class="report_form" action="">
                             <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchcategory", "report_myfeedback") . '" />
                             <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
 							<input type="hidden" name="categoryid" id="categoryid" value="-1" /> 
@@ -1230,12 +1239,15 @@ class report_myfeedback {
 				}
 			}
 
-		
+		$help_icon_cat = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('usagesrchheader_catname_info', 'report_myfeedback') . '" rel="tooltip"/>';
+		$help_icon_pcat = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('usagesrchheader_pcatname_info', 'report_myfeedback') . '" rel="tooltip"/>';
 		$table = "<table class=\"userstable\" id=\"userstable\">
                     <thead>
                             <tr class=\"tableheader\">
-                                <th class=\"tblname\">" . get_string('name') .
-                "</th><th class=\"tbldepartment\">" . get_string('parent', 'report_myfeedback') . " " . get_string('category', 'report_myfeedback') . "</th></tr>
+                                <th class=\"tblname\">" . get_string('name') .  $help_icon_cat .
+                "</th><th class=\"tbldepartment\">" . get_string('parent', 'report_myfeedback') . " " . get_string('category', 'report_myfeedback') .  $help_icon_pcat . "</th></tr>
                         </thead><tbody>";
 		//Add the records to the table here. These records were stored in the myusers array.
         foreach ($mycategories as $result) {
@@ -1317,12 +1329,15 @@ class report_myfeedback {
 					}
 				}
 			}
-			
+			$help_icon_course = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('usagesrchheader_coursename_info', 'report_myfeedback') . '" rel="tooltip"/>';
+			$help_icon_coursecat = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('usagesrchheader_coursecatname_info', 'report_myfeedback') . '" rel="tooltip"/>';
 			$table = "<table class=\"userstable\" id=\"userstable\">
 						<thead>
 								<tr class=\"tableheader\">
-									<th class=\"tblname\">" . get_string('name') .
-					"</th><th class=\"tbldepartment\">" . get_string('category', 'report_myfeedback') . "</th></tr>
+									<th class=\"tblname\">" . get_string('name') . $help_icon_course .
+					"</th><th class=\"tbldepartment\">" . get_string('category', 'report_myfeedback') . $help_icon_coursecat . "</th></tr>
 							</thead><tbody>";
 			//Add the records to the table here. These records were stored in the myusers array.
 			foreach ($mycourses as $result) {
@@ -1391,11 +1406,16 @@ class report_myfeedback {
 					}
 				}
 			}
+			$help_icon_username = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('usagesrchheader_username_info', 'report_myfeedback') . '" rel="tooltip"/>';
+			$help_icon_userdept = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('usagesrchheader_userdept_info', 'report_myfeedback') . '" rel="tooltip"/>';
+			
 			$usertable = "<table class=\"userstable\" id=\"userstable\">
 				<thead>
 						<tr class=\"tableheader\">
-							<th class=\"tblname\">" . get_string('name') .
-			"</th><th class=\"tbldepartment\">" . get_string('department', 'report_myfeedback') . "</th></tr>
+							<th class=\"tblname\">" . get_string('name') . $help_icon_username .
+			"</th><th class=\"tbldepartment\">" . get_string('department', 'report_myfeedback')  . $help_icon_userdept . "</th></tr>
 					</thead><tbody>";
 			//Add the records to the table here. These records were stored in the myusers array.
 			foreach ($myusers as $result) {
@@ -1431,11 +1451,17 @@ class report_myfeedback {
      */
     public function get_all_accessible_users($ptutor, $search = null, $modt, $proga) {
         global $remotedb, $USER, $CFG;
+		
+		$help_icon_username = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('mystudentssrch_username_info', 'report_myfeedback') . '" rel="tooltip"/>';
+		$help_icon_relationship = ' <img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . get_string('mystudentssrch_relationship_info', 'report_myfeedback') . '" rel="tooltip"/>';
+				
         $usertable = "<table style=\"float:left;\" class=\"userstable\" id=\"userstable\">
                     <thead>
                             <tr class=\"tableheader\">
-                                <th class=\"tblname\">" . get_string('name') .
-                "</th><th class=\"tblrelationship\">" . get_string('relationship', 'report_myfeedback') . "</th>
+                                <th class=\"tblname\">" . get_string('name') . $help_icon_username .
+                "</th><th class=\"tblrelationship\">" . get_string('relationship', 'report_myfeedback') . $help_icon_relationship . "</th>
                             </tr>
                         </thead><tbody>";
 
@@ -2175,10 +2201,12 @@ class report_myfeedback {
     * @param array $headertitles The list of header titles as strings.
     * @return string Table head, with titles above each column.
     */
-	public function get_table_headers($headertitles){
-		$header = "<thead><tr class=\"\">";
-		foreach($headertitles as $title){
-			$header .= 	"<th>" . $title. "</th>";
+	public function get_table_headers($headertitles, $headerhelptext){
+		$header = "<thead><tr class=\"usagetableheader\">";
+		for($i = 0; $i < sizeOf($headertitles); $i++){
+        	$help_icon = '<img src="' . 'pix/info.png' . '" ' .
+                ' alt="-" title="' . $headerhelptext[$i] . '" rel="tooltip"/>';
+			$header .= 	"<th>" . $headertitles[$i] . " " . $help_icon . "</th>";
 		} 
 		$header .= 	"</tr></thead>";
 		return $header;
@@ -2198,6 +2226,7 @@ class report_myfeedback {
                                                     FROM {course_categories}
                                                    WHERE parent = ? ORDER BY visible desc, sortorder", array($parentcatid));
 	}
+	
 	
 	/**
     * Returns a selectable form menu of subcategories of a parent category only 1 level deep
@@ -2728,8 +2757,11 @@ class report_myfeedback {
 			$usagetable = "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
 			//print the table headings
 				$headers = array(get_string('tutortblheader_name', 'report_myfeedback'));
+				$headerhelptext = array(get_string('usagetblheader_name_info', 'report_myfeedback'));
+				
 				if($overview == true){
 					$headers[] = ucfirst(get_string('staff', 'report_myfeedback'));
+					$headerhelptext[] = get_string('usagetblheader_staff_info', 'report_myfeedback');
 				}
 				array_push($headers, 
 					get_string('usagetblheader_totalviews', 'report_myfeedback'),
@@ -2743,10 +2775,23 @@ class report_myfeedback {
 					get_string('usagetblheader_downloads', 'report_myfeedback'),
 					get_string('usagetblheader_lastaccessed', 'report_myfeedback'));
 					
+				array_push($headerhelptext, 
+					get_string('usagetblheader_totalviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_ownreportviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_mystudenttabviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_studentsviewed_info', 'report_myfeedback'),
+					get_string('usagetblheader_studentreportviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_personaltutorviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_modtutorviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_progadminviews_info', 'report_myfeedback'),
+					get_string('usagetblheader_downloads_info', 'report_myfeedback'),
+					get_string('usagetblheader_lastaccessed_info', 'report_myfeedback'));
+					
 				if($showptutees){
 					$headers[] = get_string('personaltutees', 'report_myfeedback');
+					$headerhelptext[] = get_string('usagetblheader_personaltutees_info', 'report_myfeedback');
 				}
-				$usagetable .= $this->get_table_headers($headers);
+				$usagetable .= $this->get_table_headers($headers, $headerhelptext);
 				//print the table data
 				$usagetable .= "<tbody>";
 			}
@@ -2759,8 +2804,17 @@ class report_myfeedback {
 				//print stats for each staff member
 				//TODO: make the drop down button toggle to show/hide student data for the category. Currently it shows and can't be toggled off
 				$staffusagetable = "";
-				$overallstats = array();
 				$studentsviewedbyanystaff = array();
+				
+				$overallstats = array();
+				$overallstats['totalviews'] = 0;				
+				$overallstats['ownreportviews'] = 0;				
+				$overallstats['mystudentstabviews'] = 0;							
+				$overallstats['studentreportviews'] = 0;				
+				$overallstats['ptutordashboardviews'] = 0;				
+				$overallstats['modtutordashboardviews'] = 0;				
+				$overallstats['deptadmindashboardviews'] = 0;				
+				$overallstats['downloads'] = 0;
 				$overallstats['lastaccess'] = 0;
 				
 				foreach($all_staff_stats as $one_staff_stats){
@@ -3004,8 +3058,11 @@ class report_myfeedback {
 			$usagetable = "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
 			//print the table headings
 			$headers = array(get_string('tutortblheader_name', 'report_myfeedback'));
+			$headerhelptext = array(get_string('usagetblheader_name_info', 'report_myfeedback'));
+			
 			if($overview == true){
 				$headers[] = ucfirst(get_string('dashboard_students', 'report_myfeedback'));
+				$headerhelptext[] = get_string('usagetblheader_students_info', 'report_myfeedback');
 			}
 			array_push($headers, 
 				get_string('usagetblheader_viewed', 'report_myfeedback'),
@@ -3015,7 +3072,18 @@ class report_myfeedback {
 				get_string('usagetblheader_downloads', 'report_myfeedback'),
 				get_string('tabs_ptutor', 'report_myfeedback'),
 				get_string('usagetblheader_lastaccessed', 'report_myfeedback'));
-			$usagetable .= $this->get_table_headers($headers);
+			
+			
+			array_push($headerhelptext, 
+				get_string('usagetblheader_viewed_info', 'report_myfeedback'),
+				get_string('usagetblheader_totalviews_info', 'report_myfeedback'),
+				get_string('usagetblheader_notes_info', 'report_myfeedback'),
+				get_string('usagetblheader_tiifeedback_info', 'report_myfeedback'),
+				get_string('usagetblheader_downloads_info', 'report_myfeedback'),
+				get_string('usagetblheader_personaltutor_info', 'report_myfeedback'),
+				get_string('usagetblheader_lastaccessed_info', 'report_myfeedback'));
+				
+			$usagetable .= $this->get_table_headers($headers, $headerhelptext);
 			//print the table data
 			$usagetable .= "<tbody>";
 		}	
@@ -3028,6 +3096,10 @@ class report_myfeedback {
 			//TODO: make the drop down button toggle to show/hide student data for the category. Currently it shows and can't be toggled off
 			$studentusagetable = "";
 			$overallstats = array();
+			$overallstats['totalviews'] = 0;
+			$overallstats['notes'] = 0;
+			$overallstats['feedback'] = 0;
+			$overallstats['downloads'] = 0;
 			$overallstats['lastaccess'] = 0;
 			$overallstats['viewedby'] = 0;
 			$personaltutors = array();
