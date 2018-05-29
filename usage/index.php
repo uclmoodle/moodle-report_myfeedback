@@ -13,13 +13,15 @@
 error_reporting(E_ALL & E_NOTICE);
 
 defined('MOODLE_INTERNAL') || die;
-echo "<div class=\"usagereport\"><p>" . get_string('overview_text_usage', 'report_myfeedback') . "</p>";
+
 $report->setup_ExternalDB();
 
 //check permission to view usage reports - must have a role with this permission
 //TODO: Make the permission site wide only (if possible).
 if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
-
+	//display the description for those who have permission
+	echo "<div class=\"usagereport\"><p>" . get_string('overview_text_usage', 'report_myfeedback') . "</p>";
+	
 	//get the report type from the URL
 	$report_type = optional_param('reporttype', '', PARAM_TEXT);  
 	$categoryid = optional_param('categoryid', -1, PARAM_INT);

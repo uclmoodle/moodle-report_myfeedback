@@ -29,6 +29,11 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+2.14 (Build: 2018052900)
+Moved description of report so it only shows to those who have permission to view the tab. 
+See in report/myfeedback/usage/index.php //display the description for those who have permission
+Removed the white space at the top of index.php
+
 2.13 (Build: 2018041400)
 Added a description of each usage report at the top of each report type page.
 Resolved missing variable notices in the usage reports.
