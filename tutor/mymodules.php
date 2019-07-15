@@ -130,7 +130,13 @@ uasort($my_tutor_mods, function($a, $b) {
         });
 if ($my_tutor_mods) {
     require_once(dirname(__FILE__) . '/modules.php');
-    require_once($CFG->libdir . '/coursecatlib.php');    
+    // Segun Babalola 2019-07-15.
+    // Commenting out the "require_once" line below because it is causing a warning in the UI:
+    // "Class coursecat is now alias to autoloaded class core_course_category, "
+    // "course_in_list is an alias to core_course_list_element. "
+    // "Class coursecat_sortable_records is deprecated without replacement. Do not include coursecatlib.php"
+    // Looks like the implementation of class autoloading means the require_once statement is no longer needed.
+    // require_once($CFG->libdir . '/coursecatlib.php');
     echo '<div class="fullhundred db">';
     foreach ($my_tutor_mods as $t) {
         foreach ($m as $v) {

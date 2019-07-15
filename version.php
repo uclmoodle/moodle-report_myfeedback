@@ -32,8 +32,8 @@
  *            http://bit.ly/IoEAssessmentCareersProject
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$plugin->version = 2018052900;
+$plugin->version = 2019062400;
 $plugin->component = 'report_myfeedback';
-$plugin->requires = 2013111810;
-$plugin->release = '2.14 (Build: 2018052900)';
+$plugin->requires = 2017051500;
+$plugin->release = '2.15 (Build: 2019062400)';
 $plugin->maturity = MATURITY_STABLE;

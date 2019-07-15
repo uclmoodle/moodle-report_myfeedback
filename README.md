@@ -29,6 +29,13 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 
 ---
 Change log:
+
+2.15 (Build: 2019062400)
+Resolutions for:
+CONTRIB-7191: Replacing use of deprecated pix_url
+CONTRIB-7258: Implementing privacy provider to make plugin GDPR compliant
+CONTRIB-7254: Added behat tests to aid regression testing. Note, currently added tests do not provide full coverage
+
 2.14 (Build: 2018052900)
 Moved description of report so it only shows to those who have permission to view the tab. 
 See in report/myfeedback/usage/index.php //display the description for those who have permission
