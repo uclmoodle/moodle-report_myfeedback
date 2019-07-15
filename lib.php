@@ -2019,12 +2019,12 @@ class report_myfeedback {
             $item = $a['icon'];
             if ($item && $item != 'manual') {
                 $assessmenticon = '<img src="' .
-                        $OUTPUT->pix_url('icon', $item) . '" ' .
+                        $OUTPUT->image_url('icon', $item) . '" ' .
                         'class="icon" alt="' . $item . '" title="' . $item . '" rel="tooltip">';
             }
             if ($item && $item == 'manual') {
                 $assessmenticon = '<img src="' .
-                        $OUTPUT->pix_url('i/manual_item') . '" ' .
+                        $OUTPUT->image_url('i/manual_item') . '" ' .
                         'class="icon" alt="' . $item . '" title="' . $item . '" rel="tooltip">';
             }
 
@@ -4952,6 +4952,7 @@ class report_myfeedback {
      */
     public function get_content($tab = NULL, $ptutor = NULL, $padmin = NULL, $arch = NULL) {
         global $CFG, $OUTPUT, $USER;
+
         $userid = optional_param('userid', 0, PARAM_INT); // User id.
         if (empty($userid)) {
             $userid = $USER->id;
@@ -5251,7 +5252,7 @@ class report_myfeedback {
                                     if ($onlinepdffeedback) {
                                         $feedbackfile = get_string('hasfeedbackfile', 'report_myfeedback');
                                         $feedbackfileicon = ' <img src="' .
-                                                $OUTPUT->pix_url('i/report') . '" ' .
+                                                $OUTPUT->image_url('i/report') . '" ' .
                                                 'class="icon" alt="' . $feedbackfile . '" title="' . $feedbackfile . '" rel="tooltip">';
                                     }
                                 }
@@ -5367,7 +5368,7 @@ class report_myfeedback {
                                 if ($workshopfeedbackfile) {
                                     $feedbackfile = get_string('hasfeedbackfile', 'report_myfeedback');
                                     $feedbackfileicon = ' <img src="' .
-                                            $OUTPUT->pix_url('i/report') . '" ' .
+                                            $OUTPUT->image_url('i/report') . '" ' .
                                             'class="icon" alt="' . $feedbackfile . '" title="' . $feedbackfile . '" rel="tooltip">';
                                 }
 
@@ -5524,7 +5525,7 @@ class report_myfeedback {
                         if ($itemtype === "manual") {
                             $assessmenttype = get_string('manual_gradeitem', 'report_myfeedback');
                             $assessmenticon = '<img src="' .
-                                    $OUTPUT->pix_url('i/manual_item') . '" ' .
+                                    $OUTPUT->image_url('i/manual_item') . '" ' .
                                     'class="icon" alt="' . $itemtype . '" title="' . $itemtype . '" rel="tooltip">';
                             // Bring the student to their user report in the gradebook.
                             $assignmentname = "<a href=\"" . $CFG->wwwroot . "/grade/report/user/index.php?id=" . $record->courseid .
@@ -5560,7 +5561,7 @@ class report_myfeedback {
                     //Add the assessment icon.
                     if ($assessmenticon == "") {
                         $assessmenticon = '<img src="' .
-                                $OUTPUT->pix_url('icon', $record->assessmenttype) . '" ' .
+                                $OUTPUT->image_url('icon', $record->assessmenttype) . '" ' .
                                 'class="icon" alt="' . $assessmenttype . '" title="' . $assessmenttype . '"  rel="tooltip" />';
                     }
                     //Set the sortable date before converting to d-M-y format 
@@ -5594,10 +5595,10 @@ class report_myfeedback {
                                     $a->late = format_time($submittedtime - $record->duedate);
                                     $submissionmsg .= get_string('waslate', 'report_myfeedback', $a);
                                     if ($record->assessmenttype == "assign") {
-                                        $alerticon = ($record->status == 'submitted' ? '<img class="smallicon" src="' . $OUTPUT->pix_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
+                                        $alerticon = ($record->status == 'submitted' ? '<img class="smallicon" src="' . $OUTPUT->image_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
                                                         $submissionmsg . '" rel="tooltip"/>' : '');
                                     } else {
-                                        $alerticon = '<img class="smallicon" src="' . $OUTPUT->pix_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
+                                        $alerticon = '<img class="smallicon" src="' . $OUTPUT->image_url('i/warning', 'core') . '" ' . 'class="icon" alt="-" title="' .
                                                 $submissionmsg . '" rel="tooltip"/>';
                                     }
                                 }
@@ -5915,7 +5916,7 @@ class report_myfeedback {
                             $exceltable[$x]['Viewed'] = $viewexport;
                             ++$x;
 
-                            $fileicon = ' <img src="' . $OUTPUT->pix_url('i/edit', 'core') . '" ' . 'class="icon" alt="edit">';
+                            $fileicon = ' <img src="' . $OUTPUT->image_url('i/edit', 'core') . '" ' . 'class="icon" alt="edit">';
                             //The reflective notes and turnitin feedback
                             $tdid = $record->gradeitemid;
                             if (!$instn = $record->subpart) {

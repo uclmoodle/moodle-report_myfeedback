@@ -276,7 +276,7 @@ if ($showstudentstab) {
     }
 }
 
-if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && !$personal_tutor && !usage)) {
+if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && !$personal_tutor && !$usage)) {
     $tabs[] = new tabobject('overview', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'overview')), get_string('tabs_overview', 'report_myfeedback'));
     $tabs[] = new tabobject('feedback', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'feedback')), get_string('tabs_feedback', 'report_myfeedback'));
     if ($mytutorid && !$personal_tutor) {
