@@ -37,6 +37,8 @@ defined('MOODLE_INTERNAL') || die;
  * @param global_navigation $navigation The navigation node to extend
  */
 function report_myfeedback_extend_navigation(global_navigation $navigation) {
+    // TODO: Segun Babalola. Where does $course come from?
+    // TODO: Check that pix_icon is not deprecated.
     $url = new moodle_url('/report/myfeedback/index.php', array('course' => $course->id));
     $navigation->add(get_string('pluginname', 'report_myfeedback'), $url, null, null, null, new pix_icon('i/report', ''));
 }
@@ -3738,7 +3740,10 @@ class report_myfeedback {
                 $user = $remotedb->get_record('user', array('id' => $u->id, 'deleted' => 0));
                 $year = null;
                 profile_load_data($user);
-                if (!$year = $user->profile_field_courseyear) {
+                // Segun Babalola, July 11, 2019
+                // Adding check for field existence to avoid errors being thrown in UI.
+                // The body of the if statement is empty, so not sure whst the purpose is, but leaving in place.
+                if (isset($user->profile_field_courseyear) && !$year = $user->profile_field_courseyear) {
                     
                 }
                 $myusers[$u->id][0] = "<div><div style=\"float:left;margin-right:5px;\">" .
@@ -4446,14 +4451,18 @@ class report_myfeedback {
      */
     public function get_prog_admin_dept_prog($dept_prog, $frommod = null) {
         global $CFG;
-        require_once($CFG->libdir . '/coursecatlib.php');
+        // Segun Babalola, July 10, 2019.
+        // Commenting out require statement for coursecatlib.php, to avoid deprecation messages.
+        // require_once($CFG->libdir . '/coursecatlib.php');
         $cat = array();
         $prog = array();
         $tomod = array('dept' => '', 'prog' => '');
         foreach ($dept_prog as $dp) {
             $catid = ($dp->category ? $dp->category : 0);
             if ($catid) {
-                $cat = coursecat::get($catid, $strictness = MUST_EXIST, $alwaysreturnhidden = true); //Use strictness so even hidden category names are shown without error
+                // Segun Babalola, July 10, 2019.
+                // Replacing coursecat::get with core_course_category::get to avoid deprecation messages.
+                $cat = core_course_category::get($catid, $strictness = MUST_EXIST, $alwaysreturnhidden = true); //Use strictness so even hidden category names are shown without error
                 if ($cat) {
                     $path = explode("/", $cat->path);
                     $parent = ($cat->parent ? coursecat::get($cat->parent, $strictness = MUST_EXIST, $alwaysreturnhidden = true) : $cat);

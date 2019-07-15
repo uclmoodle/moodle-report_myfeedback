@@ -401,3 +401,11 @@ $string['categorystaff'] = 'Category staff';
 $string['coursestaff'] = 'Course staff';
 $string['personaltutorstudents'] = 'Personal tutor\'s students';
 $string['or'] = 'or';
+
+$string['privacy:metadata:report_myfeedback'] = 'Self-reflective notes and Turnitin feedback manually entered by users.';
+$string['privacy:metadata:report_myfeedback:userid'] = 'The Moodle databse ID of the user for whom notes and feedback is stored.';
+$string['privacy:metadata:report_myfeedback:notes'] = 'Self-reflective notes entered by user';
+$string['privacy:metadata:report_myfeedback:feedback'] = 'Turnitin feedback manually entered by user';
+$string['privacy:metadata:report_myfeedback:coursefullname'] = 'Course that stored notes/feedback relate to';
+$string['privacy:metadata:report_myfeedback:timemodified'] = 'Last modified timestamp of notes/feedback';
+$string['privacy:metadata:report_myfeedback:gradeitemname'] = 'Grade item that stored notes/feedback relate to';
