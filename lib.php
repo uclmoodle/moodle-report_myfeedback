@@ -354,7 +354,7 @@ class report_myfeedback {
                 }
                 if ($pfeed) {
                     $feedback .= strip_tags($feedback) ? '<br/>' : '';
-                    $feedback .= '<b>' . get_string('peerfeedback', 'report_myfeedback') . '</b>';
+                    $feedback .= '<strong>' . get_string('peerfeedback', 'report_myfeedback') . '</strong>';
                 }
                 foreach ($asse as $as) {
                     if ($as->feedbackauthor && $as->reviewerid != $userid) {
@@ -368,7 +368,7 @@ class report_myfeedback {
                 }
                 if ($self) {
                     $feedback .= strip_tags($feedback) ? '<br/>' : '';
-                    $feedback .= '<b>' . get_string('selfassessment', 'report_myfeedback') . '</b>';
+                    $feedback .= '<strong>' . get_string('selfassessment', 'report_myfeedback') . '</strong>';
                 }
                 foreach ($asse as $as1) {
                     if ($as1->feedbackauthor && $as1->reviewerid == $userid) {
@@ -396,11 +396,11 @@ class report_myfeedback {
             }
             if ($c) {
                 $feedback .= strip_tags($feedback) ? '<br/>' : '';
-                $feedback .= "<br/><b>" . get_string('comments', 'report_myfeedback') . "</b>";
+                $feedback .= "<br/><strong>" . get_string('comments', 'report_myfeedback') . "</strong>";
             }
             foreach ($commentscheck as $ts) {
                 $feedback .= strip_tags($ts->description) ? "<br/><b>" . $ts->description : '';
-                $feedback .= strip_tags($ts->description) ? "<br/><b>" . get_string('comment', 'report_myfeedback') . "</b>: " . strip_tags($ts->peercomment) . "<br/>" : '';
+                $feedback .= strip_tags($ts->description) ? "<br/><strong>" . get_string('comment', 'report_myfeedback') . "</strong>: " . strip_tags($ts->peercomment) . "<br/>" : '';
             }
         }
 
@@ -2297,7 +2297,13 @@ class report_myfeedback {
 		//add all the roleid code into the where query
 		$params[] = $roleids[0];
 		$i = 1; //start at 1, because the first role is already in the query
-		while($roleids[$i] != null){
+
+        // Segun Babalola, 2019-07-18.
+        // The following line of code is causing warnings in the UI because $i exceeds array size.
+        // This is unrelated to the issue I'm trying to fix (i.e. https://tracker.moodle.org/browse/CONTRIB-6841),
+        // however I will guard execution with an existence check for now. Hopefully the root cause of
+        // the issue will be addressed in future.
+		while(isset($roleids[$i]) && $roleids[$i] != null){
 			$sql .= '  OR roleid = ?';
 			$params[] = $roleids[$i];
 			$i++;

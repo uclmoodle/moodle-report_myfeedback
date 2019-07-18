@@ -155,8 +155,17 @@ if ($cur_dept && $cur_prog) {
                                 if (!isset($pguserspermod[$key1][$pf1][$key3])) {
                                     $pguserspermod[$key1][$pf1][$key3] = 0;
                                 }
-                                $pgusers[$pf1][$key3] += $val3;
-                                $pguserspermod[$key1][$pf1][$key3] += $val3;
+
+                                // Segun Babalola, 2019-07-18.
+                                // The following two lines of code are causes warnings in the UI because
+                                // the value of $val3 is sometimes non-numeric. This is unrelated to the issue I'm
+                                // trying to fix (i.e. https://tracker.moodle.org/browse/CONTRIB-6841), however I will
+                                // guard execution of these statements with a check for now. Hopefully the root cause of
+                                // the issue will be addressed in future.
+                                if (is_numeric($val3)) {
+                                    $pgusers[$pf1][$key3] += $val3;
+                                    $pguserspermod[$key1][$pf1][$key3] += $val3;
+                                }
                             }
                         }
                     }
