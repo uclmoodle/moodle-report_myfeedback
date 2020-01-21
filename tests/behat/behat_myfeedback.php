@@ -42,7 +42,7 @@ class behat_myfeedback extends behat_base {
      * @Given /^I have a Moodle account with the following details:$/
      */
     public function i_have_a_moodle_account_with_the_following_details(TableNode $table) {
-        $this->execute("behat_data_generators::the_following_exist", ['users', $table]);
+        $this->execute("behat_data_generators::the_following_entities_exist", ['users', $table]);
     }
 
     /**
@@ -112,12 +112,12 @@ class behat_myfeedback extends behat_base {
         $adminroledata[] = ['shortname', 'name', 'archetype'];
         $adminroledata[] = ['departmental_admin', 'Departmental Admin', 'manager'];
 
-        $this->execute("behat_data_generators::the_following_exist", ['roles', new TableNode($adminroledata)]);
+        $this->execute("behat_data_generators::the_following_entities_exist", ['roles', new TableNode($adminroledata)]);
 
         // Assign departmental admin role to the username.
         $roleassigndata[] = ['role', 'contextlevel', 'user', 'reference'];
         $roleassigndata[] = ['departmental_admin', 'System', $username, ''];
-        $this->execute("behat_data_generators::the_following_exist", ['role assigns',
+        $this->execute("behat_data_generators::the_following_entities_exist", ['role assigns',
             new TableNode($roleassigndata)
         ]);
 
@@ -138,7 +138,7 @@ class behat_myfeedback extends behat_base {
                 ];
             }
 
-            $this->execute("behat_data_generators::the_following_exist",['permission overrides',
+            $this->execute("behat_data_generators::the_following_entities_exist",['permission overrides',
                 new TableNode($coursepermissions)
             ]);
         }
@@ -156,7 +156,7 @@ class behat_myfeedback extends behat_base {
         $coursepermissions[] = ['capability', 'permission', 'role', 'contextlevel', 'reference'];
         $coursepermissions[] = ['report/myfeedback:personaltutor', 'Allow', 'personal_tutor', 'System', ''];
 
-        $this->execute("behat_data_generators::the_following_exist",['permission overrides',
+        $this->execute("behat_data_generators::the_following_entities_exist",['permission overrides',
             new TableNode($coursepermissions)
         ]);
 
@@ -165,7 +165,7 @@ class behat_myfeedback extends behat_base {
         foreach ($table as $relationship) {
             $data[] = ['personal_tutor', 'User', $relationship['tutor'], $relationship['tutee']];
         }
-        $this->execute("behat_data_generators::the_following_exist", ['role assigns', new TableNode($data)]);
+        $this->execute("behat_data_generators::the_following_entities_exist", ['role assigns', new TableNode($data)]);
     }
 
     /**
