@@ -1464,9 +1464,9 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
      text-decoration: none;
  }
 
- a, a:visited {
+/*  a, a:visited {
      color: #005E8D;
- }
+ } */
  
 .path-report-myfeedback .modal {
     position: fixed;
