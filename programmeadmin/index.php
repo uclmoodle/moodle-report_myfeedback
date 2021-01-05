@@ -13,14 +13,16 @@ defined('MOODLE_INTERNAL') || die;
 //require_once(dirname(__FILE__) . '/../student/academicyear.php');
 //echo '</div>';
 echo "<p>" . get_string('overview_text_dept', 'report_myfeedback') . "</p>";
+
+// CATALYST CUSTOM (339111): Remove "Launch Student Record System" link.
 echo '<div style="float:right">
-            <p><span class="personaltutoremail">
-            <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></span>  
-            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">' . get_string('print_report', 'report_myfeedback') . 
+            <p><span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">' . get_string('print_report', 'report_myfeedback') .
         '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
             <span class="personaltutoremail x_port">
             <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></span></p>
             </div>';
+// END CATALYST CUSTOM.
+
 //</div>';
 $report->setup_ExternalDB();
 $admin_mods = array();

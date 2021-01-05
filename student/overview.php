@@ -22,7 +22,13 @@ if (isset($user->profile_field_programmename)) {
     $programme = $user->profile_field_programmename;
 }
 
-echo '<div class="userprofilebox clearfix">';
+// CATALYST CUSTOM (339111):
+// Academic year dropdown needs to be removed from this tab but the include cannot simply be removed
+// as the included PHP file sets some variables dynamically. We can't remove the dropdown include as it
+// is used on other pages, so we are going to add a class to the containing element here and hide
+// the dropdown using CSS.
+echo '<div class="overviewtab userprofilebox clearfix">';
+// END CATALYST CUSTOM.
 
 if ($userid != $USER->id) {
     echo '<div class="profilepicture">';

@@ -73,14 +73,16 @@ if ($my_tutor_mods) {
 echo '</div></div>';
 /* echo '<p class="enroltext">' . get_string('modulesteach', 'report_myfeedback') .
   ' <span class="enrolledon">' . $courselist . '</span></p> */
+
+// CATALYST CUSTOM (339111): Remove "Launch Student Record System" link.
 echo '</div><div class="mymods-container-right">
-            <p class="personaltutoremail">
-            <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></p>  
             <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">' . get_string('print_report', 'report_myfeedback') . 
         '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
             <p class="personaltutoremail ex_port">
             <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></p>
             </div></div>';
+// END CATALYST CUSTOM.
+
 //Get the late feedback days from config
 /*$lt = get_config('report_myfeedback');
 $a = new stdClass();
