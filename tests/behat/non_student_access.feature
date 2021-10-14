@@ -14,7 +14,7 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
       | tutor1   | Module    | Tutor1     | tutor1@example.com   |
       | tutor2   | Module    | Tutor2     | tutor2@example.com   |
       | tutor3   | Module    | Tutor3     | tutor3@example.com   |
-      | deptAdmin| Department| Admin      | admin@example.com    |
+      | deptadmin| Department| Admin      | admin@example.com    |
     And the following "categories" exist:
       | name                     | category | idnumber          |
       | Course admins Category   | 0        | report_myfeedback |
@@ -39,7 +39,7 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
       | tutor  | tutee     |
       | tutor3 | student1  |
       | tutor3 | student3  |
-    And the user, "deptAdmin", is granted departmental admin rights for the courses:
+    And the user, "deptadmin", is granted departmental admin rights for the courses:
       | coursename |
       | C1         |
       | C3         |
@@ -88,6 +88,6 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
   @javascript
   Scenario: A Departmental Admin wishes to log-in and check student performance across a cohort so that they can identify
   any potential students struggling (and subsequently raise these instances of concerning performance with module Tutors.)
-    When I log in as "deptAdmin"
+    When I log in as "deptadmin"
     And I navigate to the My feedback plugin page
     Then I should see a tab named "Departmental admin dashboard"

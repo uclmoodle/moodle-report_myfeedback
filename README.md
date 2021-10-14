@@ -30,6 +30,10 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 ---
 Change log:
 
+Unreleased
+
+ * Fix Behat 'The username must be in lower case' error.
+
 2.15 (Build: 2019062400)
 Resolutions for:
 CONTRIB-7191: Replacing use of deprecated pix_url
