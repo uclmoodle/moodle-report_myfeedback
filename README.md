@@ -32,6 +32,7 @@ Change log:
 
 Unreleased
 Fix Behat 'The username must be in lower case' error.
+Replace $_POST with optional_param().
 
 2.15 (Build: 2019062400)
 Resolutions for:

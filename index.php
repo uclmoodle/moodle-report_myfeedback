@@ -57,13 +57,14 @@ $dots = get_string('choosedots');
 
 $userid = optional_param('userid', 0, PARAM_INT); // User id.
 $yearview = optional_param('myselect', 0, PARAM_ALPHANUMEXT); // academic year for archive
-$modview = optional_param_array('modselect', array(), PARAM_TEXT); // The selected course for Mod tutor Dashboard
+$modview = optional_param_array('modselect', array(), PARAM_NOTAGS); // The selected course for Mod tutor Dashboard
 
-$deptview = (isset($_POST['deptselect']) ? $_POST['deptselect'] : $dots); // For top level category on Dept admin dashboard
-$progview = (isset($_POST['progselect']) ? $_POST['progselect'] : $dots); // For second level category on Dept admin dashboard
-$progmodview = (isset($_POST['progmodselect']) ? $_POST['progmodselect'] : $dots); // For the course on the Dept admin dashboard
-$searchuser = (isset($_POST['searchuser']) ? $_POST['searchuser'] : ''); // For the user search input on My students tab
-$searchusage = (isset($_POST['searchusage']) ? $_POST['searchusage'] : ''); // For the search input on Usage dashboard
+$deptview = optional_param('deptselect', $dots, PARAM_NOTAGS); // For top level category on Dept admin dashboard.
+$progview = optional_param('progselect', $dots, PARAM_NOTAGS); // For second level category on Dept admin dashboard.
+$progmodview = optional_param('deptprogmodselectselect', $dots, PARAM_NOTAGS); // For the course on the Dept admin dashboard.
+$searchuser = optional_param('searchuser', '', PARAM_NOTAGS); // For the user search input on My students tab.
+$searchusage = optional_param('searchusage', '', PARAM_NOTAGS); // For the search input on Usage dashboard.
+
 
 $_SESSION['viewmod'] = $modview;
 if ($yearview) {//keep the academic year for the loggen-in session
@@ -73,9 +74,22 @@ $yrr = get_config('report_myfeedback');//For the archive
 $livedomain = isset($yrr->livedomain) ?  $yrr->livedomain : get_string('livedomaindefault', 'report_myfeedback');
 $archivedomain = isset($yrr->archivedomain) ?  $yrr->archivedomain : get_string('archivedomaindefault', 'report_myfeedback');
 
-if (isset($_POST['deptselect'])) { setcookie('curdept',$_POST['deptselect']); $_COOKIE['curdept'] = $_POST['deptselect']; }//Save the top level category for life of cookie
-if (isset($_POST['progselect'])) { setcookie('curprog',$_POST['progselect']); $_COOKIE['curprog'] = $_POST['progselect']; }//Second level category on dept admin dashbard
-if (isset($_POST['progmodselect'])) { setcookie('curmodprog',$_POST['progmodselect']); $_COOKIE['curmodprog'] = $_POST['progmodselect']; }//Course level
+// Save filter selection to cookies so they are available to the JS form sort on future page loads.
+if ($deptview != $dots) {
+    // Save the top level category for life of cookie.
+    setcookie('curdept', $deptview);
+    $_COOKIE['curdept'] = $deptview;
+}
+if ($progview != $dots) {
+    // Second level category on dept admin dashbard.
+    setcookie('curprog', $progview);
+    $_COOKIE['curprog'] = $progview;
+}
+if ($progmodview != $dots) {
+    // Course level.
+    setcookie('curmodprog', $progmodview);
+    $_COOKIE['curmodprog'] = $progmodview;
+}
 
 echo $OUTPUT->header();
 

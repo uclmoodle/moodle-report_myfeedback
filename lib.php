@@ -6002,7 +6002,7 @@ class report_myfeedback {
                             <div class="modal-body">
                             <form  method="POST"  id="notesform" action="reflectivenotes.php" >
                             <textarea id="notename" class="autoexpand" name="notename" wrap="hard" rows="4" data-min-rows="4" cols="60" value=""></textarea>
-                            <input type="hidden" name="grade_id" id="grade_id" value="" />                            
+                            <input type="hidden" name="gradeid" id="gradeid" value="" />
                             <input type="hidden" name="instance1" id="instance1" value="" />
                             <input type="hidden" name="userid" id="user_id" value="" /> 
                             <input type="submit" id="submitnotes" value="' . get_string("savenotes", "report_myfeedback") . '" />
@@ -6022,7 +6022,7 @@ class report_myfeedback {
                             <div class="modal-body">
                             <form  method="POST"  id="feedform" action="nonmoodlefeedback.php" >
                             <textarea id="feedname" class="autoexpand" name="feedname" wrap="hard" rows="4" data-min-rows="4" cols="60" value=""></textarea>
-                            <input type="hidden" name="grade_id2" id="grade_id2" value="" />
+                            <input type="hidden" name="gradeid2" id="gradeid2" value="" />
                             <input type="hidden" name="instance" id="instance" value="" />
                             <input type="hidden" name="userid2" id="user_id2" value="" /> 
                             <input type="submit" id="submitfeed" value="' . get_string("savefeedback", "report_myfeedback") . '" />

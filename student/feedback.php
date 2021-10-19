@@ -128,7 +128,7 @@ $('#reportPrint').on( 'click', function () {
 $('#feedbackcomments').on('click', '.addnote', function () {
    var gradeid = $(this).data('gid');
    var instn = $(this).data('inst');
-   $('#grade_id').val(gradeid);
+   $('#gradeid').val(gradeid);
    $('#instance1').val(instn);
    $('#user_id').val($(this).data('uid'));
    $('#notename').val($('#note-val'+gradeid+instn).text());
@@ -138,7 +138,7 @@ $('#feedbackcomments').on('click', '.addnote', function () {
 $('#feedbackcomments').on('click', '.addfeedback', function () {
    var gradeid2 = $(this).data('gid');
    var instn = $(this).data('inst');
-   $('#grade_id2').val(gradeid2);
+   $('#gradeid2').val(gradeid2);
    $('#instance').val(instn);
    $('#user_id2').val($(this).data('uid'));
    $('#feedname').val($('#feed-val'+gradeid2+instn).text());
