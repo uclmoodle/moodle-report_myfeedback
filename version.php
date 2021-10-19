@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,17 +20,22 @@
  * @package   report_myfeedback
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk> or <jgramp@gmail.com>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
- * 			  block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
- * 			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
- * 			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
- *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
+ * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which
+ *            in turn is based on block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen.
+ *            Also uses SQL originating from Richard Havinga <richard.havinga@ulcc.ac.uk>.
+ *            The code for using an external database is taken from Juan leyva's
+ *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
+ *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and
  *            Prof John Mitchell <j.mitchell@ucl.ac.uk>
- *            The tool is also based on outputs from a Jisc project on 'Assessment Careers: enhancing learning pathways 
- *            through assessment' directed by Dr Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
+ *            The tool is also based on outputs from a Jisc project on
+ *            'Assessment Careers: enhancing learning pathways through assessment'
+ *            directed by Dr Gwyneth Hughes with input from Tim Neumann who collaborated with UCL for this plugin.
  *            http://bit.ly/IoEAssessmentCareersProject
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+ defined('MOODLE_INTERNAL') || die();
+
 $plugin->version = 2019062400;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2017051500;

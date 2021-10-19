@@ -6,6 +6,8 @@
  * @return bool
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 function xmldb_report_myfeedback_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
