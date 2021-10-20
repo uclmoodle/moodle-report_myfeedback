@@ -1280,7 +1280,8 @@ class report_myfeedback {
     */
 	public function get_category_courses($catid){
 		global $remotedb;
-		$sql = "SELECT distinct c.id, c.shortname, c.fullname, c.summary, c.visible FROM {course} c, {course_categories} cat ";
+		$sql = "SELECT DISTINCT c.id, c.shortname, c.fullname, c.summary, c.visible, c.sortorder, cat.sortorder
+                  FROM {course} c, {course_categories} cat ";
 		if($catid > 0){
 			$sql .= "WHERE c.category = cat.id AND cat.path LIKE '%/".$catid."' OR cat.path LIKE '%/".$catid."/%' ";
 		}
