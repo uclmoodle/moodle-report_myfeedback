@@ -1280,7 +1280,8 @@ class report_myfeedback {
     */
 	public function get_category_courses($catid){
 		global $remotedb;
-		$sql = "SELECT distinct c.id, c.shortname, c.fullname, c.summary, c.visible FROM {course} c, {course_categories} cat ";
+		$sql = "SELECT DISTINCT c.id, c.shortname, c.fullname, c.summary, c.visible, c.sortorder, cat.sortorder
+                  FROM {course} c, {course_categories} cat ";
 		if($catid > 0){
 			$sql .= "WHERE c.category = cat.id AND cat.path LIKE '%/".$catid."' OR cat.path LIKE '%/".$catid."/%' ";
 		}
@@ -1763,9 +1764,9 @@ class report_myfeedback {
                 unset($items[$key]);
             }
         }
-        $items = '"' . implode('","', $items) . '"';
+        $items = "'" . implode("','", $items) . "'";
         $sql = "SELECT id, itemname, itemtype, itemmodule
-                FROM {grade_items} gi 
+                FROM {grade_items} gi
                 WHERE (hidden != 1 AND hidden < ?) AND courseid = ?
                 AND (itemmodule IN ($items) OR (itemtype = 'manual'))";
         $params = array($now, $cid);
@@ -3791,7 +3792,7 @@ class report_myfeedback {
                 unset($items[$key]);
             }
         }
-        $items = '"' . implode('","', $items) . '"';
+        $items = "'" . implode("','", $items) . "'";
         $sql = "SELECT DISTINCT c.id AS cid, gg.id as tid, finalgrade, gg.timemodified as feed_date, gi.id as gid, grademax, cm.id AS cmid
                 FROM {course} c
                 JOIN {grade_items} gi ON c.id=gi.courseid AND (gi.hidden != 1 AND gi.hidden < $now)
@@ -3875,7 +3876,7 @@ class report_myfeedback {
         }
         $now = time();
         $sql = "SELECT DISTINCT c.id AS cid, gi.id as tid, gg.id, gg.timemodified as due, gg.timemodified as sub, gi.itemtype as type, 
-                    -1 AS status, -1 AS nosubmissions, -1 AS cmid, gg.timemodified as feed_date
+                    CAST(-1 AS varchar) AS status, -1 AS nosubmissions, -1 AS cmid, gg.timemodified as feed_date
                  FROM {course} c
                  JOIN {grade_items} gi ON c.id=gi.courseid AND gi.itemtype = 'manual' AND (gi.hidden != 1 AND gi.hidden < $now)
                  JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = $userid AND gi.courseid = $courseid AND (gg.hidden != 1 AND gg.hidden < $now)
@@ -3897,7 +3898,7 @@ class report_myfeedback {
         }
         if ($this->mod_is_available('quiz')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, q.id, q.timeclose as due, gg.timecreated as sub, gi.itemmodule as type,
-                    -1 AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
+                    CAST(-1 AS varchar) AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
                  FROM {course} c
                  JOIN {grade_items} gi ON c.id=gi.courseid
                  AND itemtype='mod' AND gi.itemmodule='quiz' AND (gi.hidden != 1 AND gi.hidden < $now)
@@ -3917,7 +3918,7 @@ class report_myfeedback {
                 $sql .= "ws.timecreated AS sub, ";
             }
             $sql .= "gi.itemmodule as type, 
-                    -1 AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
+                    CAST(-1 AS varchar) AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
                  FROM {course} c
                  JOIN {grade_items} gi ON c.id=gi.courseid
                  AND itemtype='mod' AND gi.itemmodule='workshop' AND (gi.hidden != 1 AND gi.hidden < $now)
@@ -3936,7 +3937,7 @@ class report_myfeedback {
         }
         if ($this->mod_is_available('turnitintool')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, tp.id, tp.dtdue as due, ts.submission_modified as sub, gi.itemmodule as type, 
-                    -1 AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
+                    CAST(-1 AS varchar) AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
                  FROM {course} c
                  JOIN {grade_items} gi ON c.id=gi.courseid
                  AND itemtype='mod' AND gi.itemmodule='turnitintool' AND (gi.hidden != 1 AND gi.hidden < $now)
@@ -3952,7 +3953,7 @@ class report_myfeedback {
         }
         if ($this->mod_is_available('turnitintooltwo')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, tp.id, tp.dtdue as due, ts.submission_modified as sub, gi.itemmodule as type, 
-                    -1 AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
+                    CAST(-1 AS varchar) AS status, -1 AS nosubmissions, cm.id AS cmid, gg.timemodified as feed_date
                  FROM {course} c
                  JOIN {grade_items} gi ON c.id=gi.courseid
                  AND itemtype='mod' AND gi.itemmodule='turnitintooltwo' AND (gi.hidden != 1 AND gi.hidden < $now)
