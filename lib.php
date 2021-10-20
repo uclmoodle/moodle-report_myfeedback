@@ -1316,6 +1316,7 @@ class report_myfeedback {
         //We first trim the search to remove leading and trailing spaces
 
         $search = trim($search);
+        $table = '';
         //If there is a search input and it's not the text that tells the user to enter search input
         if ($search != "" && $search != get_string("searchcourses", "report_myfeedback")) {
             $searchu = addslashes(strip_tags($search));//we escape the quotes etc and strip all html tags
@@ -1387,6 +1388,7 @@ class report_myfeedback {
 		global $remotedb, $CFG;
 		
 		$myusers = array();
+        $usertable = '';
 						
         //The search form
         echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
@@ -3075,6 +3077,7 @@ class report_myfeedback {
 			$exceltable = $_SESSION["exp_sess"];
 			$i = count($exceltable);
 		}
+        $usagetable = '';
 		if($printheader==true){
 			$usagetable = "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
 			//print the table headings

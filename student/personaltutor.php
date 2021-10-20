@@ -14,9 +14,6 @@ $programme = '';
 if ($mytutorid) {
     $mytutorobj = $remotedb->get_record('user', array('id' => $mytutorid));
     profile_load_data($mytutorobj);
-    if (!$programme = $mytutorobj->profile_field_programmename) {
-        //
-    }
     echo "<p>" . get_string('overview_text_ptutor_tab', 'report_myfeedback') . "</p>";
     echo '<div class="userprofilebox clearfix">';
     echo '<div class="profilepicture">';
