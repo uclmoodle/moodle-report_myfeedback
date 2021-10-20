@@ -10,6 +10,7 @@
  */
 
 require('../../config.php');
+require_login();
 
 //Because we are using sessions to store the information, if a user opens multiple tabs and tries to export, 
 //they will just get the data from the last tab they opened.

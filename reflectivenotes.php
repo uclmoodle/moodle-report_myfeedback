@@ -9,6 +9,8 @@
  */
 
 require('../../config.php');
+require_login();
+
 global $CFG, $remotedb;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
