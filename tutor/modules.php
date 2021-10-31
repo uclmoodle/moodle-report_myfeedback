@@ -22,8 +22,10 @@ $modheading = get_string('mymodules', 'report_myfeedback');
 $modmsg = get_string('moddescription', 'report_myfeedback');
 $modicon = '<img src="' . 'pix/info.png' . '" ' .
         ' alt="-" title="' . $modmsg . '" rel="tooltip"/>';
-echo "<div class=\"ac-year-right\"><p class=\"my\">" . $modheading . ": " . $modicon .
- "</p><form method=\"POST\" id=\"mod_form\" action=\"\"><select multiple=\"multiple\" id=\"modSelect\" name=\"modselect[]\">";
+echo "<div class=\"ac-year-right\"><p class=\"my\">" . $modheading . ": " . $modicon . '</p>'
+        . '<form method="POST" id="mod_form" action="">'
+        . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+        . '<select multiple="multiple" id="modSelect" name="modselect[]">';
 foreach ($my_tutor_mods as $val1) {
     echo "<option value=\"" . $val1->shortname."\"";
     foreach ($m as $v2) {

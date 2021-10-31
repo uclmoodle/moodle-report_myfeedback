@@ -65,6 +65,10 @@ $progmodview = optional_param('deptprogmodselectselect', $dots, PARAM_NOTAGS); /
 $searchuser = optional_param('searchuser', '', PARAM_NOTAGS); // For the user search input on My students tab.
 $searchusage = optional_param('searchusage', '', PARAM_NOTAGS); // For the search input on Usage dashboard.
 
+if ($userid || $modview) {
+    require_sesskey();
+}
+$sesskeyqs = '&sesskey=' . sesskey();
 
 $_SESSION['viewmod'] = $modview;
 if ($yearview) {//keep the academic year for the loggen-in session
@@ -150,7 +154,8 @@ $is_student = false;
 $ownreport = '';
 $showstudentstab = true;
 if ($userid != $USER->id) {
-    $ownreport = '<span class="ownreport"><a href=' . $CFG->wwwroot . '/report/myfeedback/index.php?userid=' . $USER->id . '>' .
+    $ownreport = '<span class="ownreport"><a href=' . $CFG->wwwroot . '/report/myfeedback/index.php?userid='
+            . $USER->id . $sesskeyqs . '>' .
             get_string('ownreport', 'report_myfeedback') . '</a></span>';
     $showstudentstab = false;
 }
@@ -261,16 +266,36 @@ $tabs = array();
 
 //If departmental admin and not viewing a tutee's report
 if ($prog && !$viewtutee) {
-    $tabs[] = new tabobject('progadmin', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'progadmin')), get_string('progadmin_dashboard', 'report_myfeedback'));
+    $tabs[] = new tabobject('progadmin',
+            new moodle_url($thispageurl, array(
+                    'userid' => $userid,
+                    'currenttab' => 'progadmin',
+                    'sesskey' => sesskey()
+            )),
+            get_string('progadmin_dashboard', 'report_myfeedback')
+    );
 }
 
 //If tutor and not viewing a tutee's report
 if ($module_tutor && !$viewtutee) {
-    $tabs[] = new tabobject('mymodules', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'mymodules')), get_string('tabs_mtutor', 'report_myfeedback'));
+    $tabs[] = new tabobject('mymodules',
+            new moodle_url($thispageurl, array(
+                    'userid' => $userid,
+                    'currenttab' => 'mymodules',
+                    'sesskey' => sesskey()
+            )),
+            get_string('tabs_mtutor', 'report_myfeedback'));
 }
 //If personal tutor and not viewing a tutee's report
 if ($personal_tutor && !$viewtutee) {
-    $tabs[] = new tabobject('tutor', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'tutor')), get_string('tabs_tutor', 'report_myfeedback'));
+    $tabs[] = new tabobject('tutor',
+            new moodle_url($thispageurl, array(
+                    'userid' => $userid,
+                    'currenttab' => 'tutor',
+                    'sesskey' => sesskey()
+            )),
+            get_string('tabs_tutor', 'report_myfeedback')
+    );
 }
 
 if ($personal_tutor && !$viewtutee) {
@@ -288,22 +313,56 @@ if ($usage && !$viewtutee) {
 
 if ($showstudentstab) {
     if ($prog || $module_tutor || $personal_tutor) {
-        $tabs[] = new tabobject('mytutees', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'mytutees')), get_string('tabs_mytutees', 'report_myfeedback'));
+        $tabs[] = new tabobject('mytutees',
+                new moodle_url($thispageurl, array(
+                        'userid' => $userid,
+                        'currenttab' => 'mytutees',
+                        'sesskey' => sesskey()
+                )),
+                get_string('tabs_mytutees', 'report_myfeedback')
+        );
     }
 }
 
 if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && !$personal_tutor && !$usage)) {
-    $tabs[] = new tabobject('overview', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'overview')), get_string('tabs_overview', 'report_myfeedback'));
-    $tabs[] = new tabobject('feedback', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'feedback')), get_string('tabs_feedback', 'report_myfeedback'));
+    $tabs[] = new tabobject('overview',
+            new moodle_url($thispageurl, array(
+                    'userid' => $userid,
+                    'currenttab' => 'overview',
+                    'sesskey' => sesskey()
+            )),
+            get_string('tabs_overview', 'report_myfeedback')
+    );
+    $tabs[] = new tabobject('feedback',
+            new moodle_url($thispageurl, array(
+                    'userid' => $userid,
+                    'currenttab' => 'feedback',
+                    'sesskey' => sesskey()
+            )),
+            get_string('tabs_feedback', 'report_myfeedback')
+    );
     if ($mytutorid && !$personal_tutor) {
-        $tabs[] = new tabobject('ptutor', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'ptutor')), get_string('tabs_ptutor', 'report_myfeedback'));
+        $tabs[] = new tabobject('ptutor',
+                new moodle_url($thispageurl, array(
+                        'userid' => $userid,
+                        'currenttab' => 'ptutor',
+                        'sesskey' => sesskey()
+                )),
+                get_string('tabs_ptutor', 'report_myfeedback'));
     }
     $currenttab = optional_param('currenttab', 'overview', PARAM_TEXT);
 }
 
 //If usage and not viewing a tutee's report
 if ($usage && !$viewtutee) {
-    $tabs[] = new tabobject('usage', new moodle_url($thispageurl, array('userid' => $userid, 'currenttab' => 'usage')), get_string('usage_dashboard', 'report_myfeedback'));
+    $tabs[] = new tabobject('usage',
+            new moodle_url($thispageurl, array(
+                    'userid' => $userid,
+                    'currenttab' => 'usage',
+                    'sesskey' => sesskey()
+            )),
+            get_string('usage_dashboard', 'report_myfeedback')
+    );
 }
 
 echo $OUTPUT->tabtree($tabs, $currenttab);

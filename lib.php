@@ -93,7 +93,10 @@ function report_myfeedback_extend_navigation_course($navigation, $course, $conte
  * @param stdClass $course The course object
  */
 function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {//for comaptibility with v2.9 and later   
-    $url = new moodle_url('/report/myfeedback/index.php', array('userid' => $user->id));
+    $url = new moodle_url('/report/myfeedback/index.php',array(
+            'userid' => $user->id,
+            'sesskey' => sesskey()
+    ));
     if (!empty($course)) {
         $url->param('course', $course->id);
     }
@@ -1208,6 +1211,7 @@ class report_myfeedback {
     */
 	public function search_all_categories($search, $reporttype, $hideor = false){
 		global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
 		
 		$mycategories = array();
 		$table = "";		
@@ -1216,6 +1220,7 @@ class report_myfeedback {
         	echo '<span class="searchusage"> ' . get_string("or", "report_myfeedback");
 		}
 		echo' </span><form method="POST" id="reportsearchform" class="report_form" action="">
+                <input type="hidden" name="sesskey" value="' . sesskey() . '" />
                             <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchcategory", "report_myfeedback") . '" />
                             <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
 							<input type="hidden" name="categoryid" id="categoryid" value="-1" /> 
@@ -1234,13 +1239,18 @@ class report_myfeedback {
 			if ($result) {
 				foreach ($result as $a) {
 					if ($a->id) {
-						$mycategories[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=" . $a->id . "\" title=\"" .
-                                                    $a->email . "\" rel=\"tooltip\">" . $a->name . "</a>";
+						$mycategories[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage"
+                                . "&reporttype=$reporttype"
+                                . '&categoryid=' . $a->id
+                                . $sesskeyqs . '" title="'
+                                . $a->email . "\" rel=\"tooltip\">" . $a->name . "</a>";
 						if ($a->parent){
 							$categoryname = $this->get_category_name($a->parent);
 						}
-						$mycategories[$a->id][1] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=" . $a->id . "\" title=\"" .
-                                                    $a->email . "\" rel=\"tooltip\">" . $categoryname . "</a>";								
+						$mycategories[$a->id][1] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage"
+                                . "&reporttype=$reporttype&categoryid=" . $a->id
+                                . $sesskeyqs . '" title="'
+                                . $a->email . "\" rel=\"tooltip\">" . $categoryname . "</a>";
 					}
 				}
 			}
@@ -1304,11 +1314,13 @@ class report_myfeedback {
     */
 	public function search_all_courses($search, $reporttype){
 		global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
 		
 		$mycourses = array();
 						
         //The search form
         echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
+                <input type="hidden" name="sesskey" value="' . sesskey() . '" />
                             <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchcourses", "report_myfeedback") . '" />
                             <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
 							<input type="hidden" name="courseid" id="courseid" value="0" /> 
@@ -1334,14 +1346,20 @@ class report_myfeedback {
 			if ($result) {
 				foreach ($result as $a) {
 					if ($a->id) {
-						$mycourses[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&courseid=" . $a->id . "\" title=\"" .
-                                                    $a->email . "\" rel=\"tooltip\">" . $a->fullname . " (" . $a->shortname . ")</a>";
+						$mycourses[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype"
+                                .'&courseid=' . $a->id
+                                . $sesskeyqs
+                                . '" title="'
+                                . $a->email . "\" rel=\"tooltip\">" . $a->fullname . " (" . $a->shortname . ")</a>";
 						if ($a->category){
 							$categoryname = $this->get_category_name($a->category);
 						}
 						$categoryreporttype = str_replace("course", "category", $reporttype);
-						$mycourses[$a->id][1] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$categoryreporttype&categoryid=" . $a->category . "\" title=\"" .
-                                                    $a->email . "\" rel=\"tooltip\">" . $categoryname . "</a>";								
+						$mycourses[$a->id][1] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$categoryreporttype"
+                                .'&categoryid=' . $a->category
+                                . $sesskeyqs
+                                . '" title="'
+                                . $a->email . "\" rel=\"tooltip\">" . $categoryname . "</a>";
 					}
 				}
 			}
@@ -1386,12 +1404,14 @@ class report_myfeedback {
     */
 	public function search_all_users($search, $reporttype = "student"){
 		global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
 		
 		$myusers = array();
         $usertable = '';
 						
         //The search form
         echo ' <form method="POST" id="reportsearchform" class="report_form" action="">
+                <input type="hidden" name="sesskey" value="' . sesskey() . '" />
                             <input type="text" id="searchu" name="searchusage" class="searchusage" value="' . get_string("searchusers", "report_myfeedback") . '" />
                             <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
 							<input type="hidden" name="reportuserid" id="reportuserid" value="0" /> 
@@ -1417,7 +1437,9 @@ class report_myfeedback {
 			if ($userresult) {
 				foreach ($userresult as $a) {
                     if ($a->id && ($a->firstname || $a->lastname)) {
-						$myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&reportuserid=" . $a->id . "\" title=\"" .
+						$myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot . '/report/myfeedback/index.php?currenttab=usage'
+                                . $sesskeyqs
+                                . "&reporttype=$reporttype&reportuserid=" . $a->id . "\" title=\"" .
                                                     $a->email . "\" rel=\"tooltip\">" . $a->firstname . " " . $a->lastname . "</a>";
 						$myusers[$a->id][1] = $a->department;								
 					}
@@ -1468,6 +1490,7 @@ class report_myfeedback {
      */
     public function get_all_accessible_users($ptutor, $search = null, $modt, $proga) {
         global $remotedb, $USER, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
 		
 		$help_icon_username = ' <img src="' . 'pix/info.png' . '" ' .
                 ' alt="-" title="' . get_string('mystudentssrch_username_info', 'report_myfeedback') . '" rel="tooltip"/>';
@@ -1485,6 +1508,7 @@ class report_myfeedback {
         $myusers = array();
         //The search form
         echo '<form  method="POST"  id="searchform" action="" >
+                <input type="hidden" name="sesskey" value="' . sesskey() . '" />
                             <input type="text" id="searchu" name="searchuser" value="' . get_string("searchusers", "report_myfeedback") . '" />
                             <input type="hidden" name="mytick" value="checked"/>
                             <input type="submit" id="submitsearch" value="' . get_string("search", "report_myfeedback") . '" />
@@ -1532,7 +1556,10 @@ class report_myfeedback {
                                 if ($mod->visible && $mod->id && $mod->shortname) {//courses should be active and have shortname
                                     foreach ($progs as $dept) {//Iterate through the user an dept admin courses and if they match then add that record to be added to table
                                         if ($dept->id == $mod->id) {
-                                            $myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $a->id . "\" title=\"" .
+                                            $myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot
+                                                    . "/report/myfeedback/index.php?userid=" . $a->id
+                                                    . $sesskeyqs
+                                                    . "\" title=\"" .
                                                     $a->email . "\" rel=\"tooltip\">" . $a->firstname . " " . $a->lastname . "</a>";
                                             $myusers[$a->id][1] = ''; //get_string('othertutee', 'report_myfeedback');
                                             $myusers[$a->id][2] = 1;
@@ -1541,7 +1568,10 @@ class report_myfeedback {
                                     }
                                     foreach ($my_mods as $tutmod) {//Now iterate through the module tutor courses and if they match the student the add that record to be added to table
                                         if ($tutmod->id == $mod->id) {
-                                            $myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $a->id . "\" title=\"" .
+                                            $myusers[$a->id][0] = "<a href=\"" . $CFG->wwwroot
+                                                    . "/report/myfeedback/index.php?userid=" . $a->id
+                                                    . $sesskeyqs
+                                                    . "\" title=\"" .
                                                     $a->email . "\" rel=\"tooltip\">" . $a->firstname . " " . $a->lastname . "</a>";
                                             $myusers[$a->id][1] = ''; //get_string('othertutee', 'report_myfeedback');
                                             $myusers[$a->id][2] = 2;
@@ -1576,7 +1606,9 @@ class report_myfeedback {
                                                          AND c.contextlevel = " . CONTEXT_USER, array($USER->id))) {
                 foreach ($usercontexts as $u) {
                     if ($u->id && ($u->firstname || $u->lastname)) {
-                        $myusers[$u->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id . "\" title=\"" .
+                        $myusers[$u->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id
+                                . $sesskeyqs
+                                . "\" title=\"" .
                                 $u->email . "\" rel=\"tooltip\">" . $u->firstname . " " . $u->lastname . "</a>";
                         $myusers[$u->id][1] = get_string('personaltutee', 'report_myfeedback');
                         $myusers[$u->id][2] = 3;
@@ -1617,6 +1649,8 @@ class report_myfeedback {
      */
     public function get_tutees_for_prog_ptutors($uid) {
         global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
         $myusers = array();
         // get all the mentees, i.e. users you have a direct assignment to
         if ($usercontexts = $remotedb->get_records_sql("SELECT u.id as id, firstname, lastname, email
@@ -1631,7 +1665,9 @@ class report_myfeedback {
                 profile_load_data($u);
                 $myusers[$u->id]['name'] = $u->firstname . " " . $u->lastname;
                 $myusers[$u->id]['click'] = $u->email;
-                $myusers[$u->id]['here'] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id . "\">Click here</a>";
+                $myusers[$u->id]['here'] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id
+                        . $sesskeyqs
+                        . "\">Click here</a>";
                 if (isset($u->profile_field_courseyear)) {
                     $myusers[$u->id]['year'] = $u->profile_field_courseyear;
                 }
@@ -2106,6 +2142,8 @@ class report_myfeedback {
      */
     public function get_user_analytics($users, $cid, $display = null, $style = null, $breakdodwn = null, $fromassess = null, $tutgroup = false) {
         global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
         $userassess = array();
         $assessuser = array(); //if adding user for each assessment
 
@@ -2135,7 +2173,9 @@ class report_myfeedback {
                 if (!isset($usr['name']) || !$usr['name']) {
                     $getname = $remotedb->get_record('user', array('id' => $usid), $list = 'firstname,lastname,email');
                     if ($getname) {
-                        $u_name = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $usid . "\" title=\"" .
+                        $u_name = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $usid
+                                . $sesskeyqs
+                                . "\" title=\"" .
                                 $getname->email . "\" rel=\"tooltip\">" . $getname->firstname . " " . $getname->lastname . "</a>";
                         $fname = $getname->firstname;
                         $lname = $getname->lastname;
@@ -2258,7 +2298,11 @@ class report_myfeedback {
 		$subcategories = $this->get_subcategories($parentcatid);
 		
 		//Start of menu form
-		$menu = "<form method=\"POST\" id=\"report_category_select\" class=\"report_form\" action=\"\">".get_string('category', 'report_myfeedback').": <select id=\"categorySelect\" value=\"\" name=\"categoryid\"><option id=\"selectcat\">".get_string('choosedots')."</option>";
+		$menu = "<form method=\"POST\" id=\"report_category_select\" class=\"report_form\" action=\"\">"
+                . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+                . get_string('category', 'report_myfeedback')
+                . ": <select id=\"categorySelect\" value=\"\" name=\"categoryid\"><option id=\"selectcat\">"
+                . get_string('choosedots')."</option>";
 		if($parent == true){
 			//add a top level category option
 			$menu .= "<option id=\"selectcat\"";
@@ -2474,11 +2518,15 @@ class report_myfeedback {
     */
 	public function get_parent_category_link($categoryid, $reporttype){
 		global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
         $category = $remotedb->get_record_sql("SELECT cat.parent 
                                                     FROM {course_categories} cat
                                                    WHERE cat.id = ?", array($categoryid));
 		if($category->parent > 0){		
-		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=".$reporttype."&categoryid=".$category->parent."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
+		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=" . $reporttype
+                . $sesskeyqs
+                . "&categoryid=".$category->parent."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
 			$CFG->wwwroot . "/report/myfeedback/pix/return.png\" alt=\"\" /></a>";						   
 		}else{
 			return "";
@@ -2496,11 +2544,15 @@ class report_myfeedback {
     */
 	public function get_course_category_link($courseid, $reporttype){
 		global $remotedb, $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
         $course = $remotedb->get_record_sql("SELECT c.category 
                                                     FROM {course} c
                                                    WHERE c.id = ?", array($courseid));
 		if($course->category > 0){		
-		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=".$reporttype."&categoryid=".$course->category."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
+		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=" . $reporttype
+                . $sesskeyqs
+                . "&categoryid=".$course->category."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
 			$CFG->wwwroot . "/report/myfeedback/pix/return.png\" alt=\"\" /></a>";						   
 		}else{
 			return "";
@@ -2767,6 +2819,8 @@ class report_myfeedback {
      */
 	public function get_staff_statistics_table($uids, $showptutees=false, $overview=false, $overviewname = "", $overviewlink = "", $printheader=true){
 		global $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
 		$i = 0;	
 		$exceltable = array();
 		
@@ -2843,9 +2897,21 @@ class report_myfeedback {
 				foreach($all_staff_stats as $one_staff_stats){
 					$staffusagetable .= "<tr>";					
 						if(sizeOf($uids) > 1){
-							$staffusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=staffmember&reportuserid=" . $one_staff_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . strtolower(get_string('usagereport', 'report_myfeedback')) . "\" rel=\"tooltip\">" . $one_staff_stats['name']."</a></td>";
+							$staffusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage"
+                                    . $sesskeyqs
+                                    . "&reporttype=staffmember&reportuserid=" . $one_staff_stats['userid']
+                                    . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " "
+                                    . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback')
+                                    . strtolower(get_string('usagereport', 'report_myfeedback'))
+                                    . "\" rel=\"tooltip\">" . $one_staff_stats['name']."</a></td>";
 						}else{
-							$staffusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=staffmember&reportuserid=" . $one_staff_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " " .  get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_staff_stats['name']."</a></td>";
+							$staffusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage"
+                                    . $sesskeyqs
+                                    . "&reporttype=staffmember&reportuserid=" . $one_staff_stats['userid']
+                                    . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " "
+                                    . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " "
+                                    .  get_string('usagereport', 'report_myfeedback')
+                                    . "\" rel=\"tooltip\">" . $one_staff_stats['name']."</a></td>";
 						}
 						$staffusagetable .= "<td>" . $one_staff_stats['totalviews'] . "</td>";
 						$staffusagetable .= "<td>" . $one_staff_stats['ownreportviews'] . "</td>";
@@ -2892,7 +2958,15 @@ class report_myfeedback {
 						$staffusagetable .= "</td>";
 						if($showptutees){
 							if($one_staff_stats['ptutees'] > 0){
-							$staffusagetable .= "<td><a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=personaltutorstudents&reportuserid=" . $one_staff_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . strtolower(get_string('personaltutees', 'report_myfeedback')) . "\" rel=\"tooltip\">" . $one_staff_stats['ptutees'] . " " .strtolower(get_string('personaltutees', 'report_myfeedback')) . "</a></td>";
+							$staffusagetable .= "<td><a href=\"" . $CFG->wwwroot
+                                    . "/report/myfeedback/index.php?currenttab=usage"
+                                    . $sesskeyqs
+                                    . "&reporttype=personaltutorstudents&reportuserid=" . $one_staff_stats['userid']
+                                    . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " "
+                                    . $one_staff_stats['name'] . get_string('apostrophe_s', 'report_myfeedback')
+                                    . strtolower(get_string('personaltutees', 'report_myfeedback')) .
+                                    "\" rel=\"tooltip\">" . $one_staff_stats['ptutees'] . " "
+                                    . strtolower(get_string('personaltutees', 'report_myfeedback')) . "</a></td>";
 							//only print the excel data if it's not an overview
 							if($overview == false){
 								$exceltable[$i]['ptutees'] = $one_staff_stats['ptutees'];
@@ -3069,6 +3143,8 @@ class report_myfeedback {
      */
     public function get_student_statistics_table($uids, $reporttype, $overview=false, $overviewname = "", $overviewlink = "", $printheader=true){
 		global $CFG;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
 		$i = 0;	
 		$exceltable = array();
 		
@@ -3131,9 +3207,22 @@ class report_myfeedback {
 			foreach($all_students_stats as $one_student_stats){
 				$studentusagetable .= "<tr>";
 				if(sizeOf($uids) > 1){					
-					$studentusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?currenttab=usage&reporttype=student&reportuserid=" . $one_student_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " .  $one_student_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " " .  get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_student_stats['name']."</a></td>";
+					$studentusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot
+                    . "/report/myfeedback/index.php?currenttab=usage&reporttype=student&reportuserid="
+                    . $one_student_stats['userid']
+                    . $sesskeyqs
+                    . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " "
+                    . $one_student_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " "
+                    .  get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">"
+                    . $one_student_stats['name']."</a></td>";
 				}else{
-					$studentusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $one_student_stats['userid'] . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " .  $one_student_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " " . get_string('dashboard', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_student_stats['name']."</a></td>";
+					$studentusagetable .= "<td>" . "<a href=\"" . $CFG->wwwroot
+                    . "/report/myfeedback/index.php?userid=" . $one_student_stats['userid']
+                    . $sesskeyqs
+                    . "\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " "
+                    .  $one_student_stats['name'] . get_string('apostrophe_s', 'report_myfeedback') . " "
+                    . get_string('dashboard', 'report_myfeedback') . "\" rel=\"tooltip\">"
+                    . $one_student_stats['name']."</a></td>";
 				}
 					//TODO: get the number of staff who have viewed the report for that student and display it under viewed by followed by " staff"
 					$studentusagetable .= "<td>";
@@ -3158,7 +3247,15 @@ class report_myfeedback {
 				
 					//link to the personal tutor usage report
 					if($one_student_stats['personaltutorid'] > 0){
-						$studentusagetable .= "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?reportuserid=" . $one_student_stats['personaltutorid'] . "&currenttab=usage&reporttype=staffmember\" title=\"" . ucfirst(get_string('view', 'report_myfeedback')) . " " .  trim($one_student_stats['personaltutor']) . get_string('apostrophe_s', 'report_myfeedback') . " " . get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">" . $one_student_stats['personaltutor'] . "</a>";
+						$studentusagetable .= "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php"
+                                . "?reportuserid=" . $one_student_stats['personaltutorid']
+                                . $sesskeyqs
+                                . "&currenttab=usage&reporttype=staffmember\" title=\""
+                                . ucfirst(get_string('view', 'report_myfeedback')) . " "
+                                . trim($one_student_stats['personaltutor'])
+                                . get_string('apostrophe_s', 'report_myfeedback') . " "
+                                . get_string('usagereport', 'report_myfeedback') . "\" rel=\"tooltip\">"
+                                . $one_student_stats['personaltutor'] . "</a>";
 						//only print the excel data if it's not an overview
 						if($overview == false){
 							$exceltable[$i]['personaltutor'] = $one_student_stats['personaltutor'];
@@ -3545,7 +3642,10 @@ class report_myfeedback {
                         '</th><th></a><input title="' . get_string('selectallforemail', 'report_myfeedback') . '" rel ="tooltip" type="checkbox" id="selectall1"/>' . get_string('selectall', 'report_myfeedback') .
                         ' <a class="btn" id="mail1"> ' . get_string('sendmail', 'report_myfeedback') . '</th>' : '<th>' . get_string('personaltutors', 'report_myfeedback') . '</th>
                             <th colspan="4">' . get_string('tutees_plus_minus', 'report_myfeedback') . '</th>');
-        $usertable = '<form method="POST" id="emailform1" action=""><table id="ptutor" class="ptutor" width="100%" style="display:none" border="1"><thead><tr class="tableheader">' . $tutor . '</tr></thead><tbody>';
+        $usertable = '<form method="POST" id="emailform1" action="">'
+                . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+                . '<table id="ptutor" class="ptutor" width="100%" style="display:none" border="1"><thead><tr class="tableheader">'
+                . $tutor . '</tr></thead><tbody>';
 
         foreach ($myusers as $result) {
             $usertable.= "<tr>";
@@ -3747,6 +3847,8 @@ class report_myfeedback {
      */
     public function get_dashboard_tutees($personaltutorid = 0) {
         global $remotedb, $CFG, $USER, $OUTPUT;
+        $sesskeyqs = '&sesskey=' . sesskey();
+
 		if($personaltutorid == 0){
 			$personaltutorid = $USER->id;
 		}
@@ -3769,8 +3871,10 @@ class report_myfeedback {
                     
                 }
                 $myusers[$u->id][0] = "<div><div style=\"float:left;margin-right:5px;\">" .
-                        $OUTPUT->user_picture($user, array('size' => 40)) . "</div><div style=\"float:left;\"><a href=\"" .
-                        $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id . "\">" . $u->firstname . " " . $u->lastname . "</a><br>" .
+                        $OUTPUT->user_picture($user, array('size' => 40)) . "</div><div style=\"float:left;\"><a href=\""
+                                . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id
+                                . $sesskeyqs
+                                . "\">" . $u->firstname . " " . $u->lastname . "</a><br>" .
                         ($year ? ' ' . get_string('year', 'report_myfeedback') . $year . ', ' : '') . $u->department . "</div></div>";
                 $myusers[$u->id][1] = $u->firstname . '+' . $u->lastname; //what we want to sort by (without spaces)
                 $myusers[$u->id][2] = $u->email;
@@ -6025,6 +6129,7 @@ class report_myfeedback {
                             </div>
                             <div class="modal-body">
                             <form  method="POST"  id="notesform" action="reflectivenotes.php" >
+                            <input type="hidden" name="sesskey" value="' . sesskey() . '" />
                             <textarea id="notename" class="autoexpand" name="notename" wrap="hard" rows="4" data-min-rows="4" cols="60" value=""></textarea>
                             <input type="hidden" name="gradeid" id="gradeid" value="" />
                             <input type="hidden" name="instance1" id="instance1" value="" />
@@ -6045,6 +6150,7 @@ class report_myfeedback {
                             </div>
                             <div class="modal-body">
                             <form  method="POST"  id="feedform" action="nonmoodlefeedback.php" >
+                            <input type="hidden" name="sesskey" value="' . sesskey() . '" />
                             <textarea id="feedname" class="autoexpand" name="feedname" wrap="hard" rows="4" data-min-rows="4" cols="60" value=""></textarea>
                             <input type="hidden" name="gradeid2" id="gradeid2" value="" />
                             <input type="hidden" name="instance" id="instance" value="" />

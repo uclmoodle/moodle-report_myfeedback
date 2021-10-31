@@ -38,6 +38,7 @@ Fix PostgreSQL incompatibility.
 Parameterize SQL queries.
 Initialise missing variables.
 Improve authentication/capability checks.
+Add sesskey checks.
 
 2.15 (Build: 2019062400)
 Resolutions for:

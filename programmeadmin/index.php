@@ -47,8 +47,12 @@ $cur_dept = 0;
 $deptview = (isset($_COOKIE['curdept']) ? $_COOKIE['curdept'] : $deptview);
 if ($padmin) {
 //Start of top level category
-    echo "<form method=\"POST\" id=\"prog_form_dept\" class=\"prog_form\" action=\"\">".get_string('faculty', 'report_myfeedback')."<select id=\"deptSelect\" 
-            value=$deptview name=\"deptselect\"><option>".get_string('choosedots')."</option>";
+    echo "<form method=\"POST\" id=\"prog_form_dept\" class=\"prog_form\" action=\"\">"
+            . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+            . get_string('faculty', 'report_myfeedback')
+            . "<select id=\"deptSelect\" value=$deptview name=\"deptselect\"><option>"
+            . get_string('choosedots')
+            . '</option>';
     foreach ($padmin as $k => $pro) {
         foreach ($pro as $key => $t_ar) {
             if ($key == 'dept') {
@@ -72,7 +76,10 @@ if ($padmin) {
 $cur_prog = 0;
 $progview = (isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots ? $_COOKIE['curprog'] : $progview);
 if ($cur_dept) {
-    echo "<form method=\"POST\" id=\"prog_form_prog\" class=\"prog_form\" action=\"\">".get_string('programme', 'report_myfeedback')."</span>
+    echo "<form method=\"POST\" id=\"prog_form_prog\" class=\"prog_form\" action=\"\">"
+            . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+            . get_string('programme', 'report_myfeedback')
+            . "</span>
     <input type=\"hidden\" name=\"deptselect\" value=$deptview />
     <select id=\"progSelect\" value=$progview name=\"progselect\"><option>".get_string('choosedots')."</option>";
     $pg = $padmin;
@@ -93,7 +100,10 @@ if ($cur_dept) {
 $cur_mod = 0;
 $progmodview = (isset($_COOKIE['curmodprog']) && isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots && $progview != $dots ? $_COOKIE['curmodprog'] : $progmodview);
 if ($cur_prog) {
-    echo "<form method=\"POST\" id=\"prog_form_mod\" class=\"prog_form\" action=\"\">".get_string('coursecolon', 'report_myfeedback')."</span>
+    echo "<form method=\"POST\" id=\"prog_form_mod\" class=\"prog_form\" action=\"\">"
+            . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+            . get_string('coursecolon', 'report_myfeedback')
+            . "</span>
     <input type=\"hidden\" name=\"deptselect\" value=$deptview />
     <input type=\"hidden\" name=\"progselect\" value=$progview />
     <select id=\"progmodSelect\" value=$progmodview name=\"progmodselect\"><option>".get_string('choosedots')."</option>";
@@ -280,7 +290,9 @@ if ($cur_dept && $cur_prog) {
 
         foreach ($pgeach as $k1 => $each) {
             $scol1 = $scol2 = $scol3 = '';
-            $progtable .= '<tr class="permod"><td class="mod' . $k1 . '">' . '<a href="#" class="progmodClick">' . $pgeach1[$k1] . '</a><form method="POST" class="prog_form_mod_click">
+            $progtable .= '<tr class="permod"><td class="mod' . $k1 . '">' . '<a href="#" class="progmodClick">' . $pgeach1[$k1] . '</a>';
+            $progtable .= '<form method="POST" class="prog_form_mod_click">
+            <input type="hidden" name="sesskey" value="' . sesskey() . '" />
             <input type="hidden" name="currenttab" value="progadmin" />
         <input type="hidden" name="deptselect" value="' . $deptview . '" />
         <input type="hidden" name="progselect" value="' . $progview . '" />    

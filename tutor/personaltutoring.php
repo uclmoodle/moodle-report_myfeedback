@@ -192,6 +192,7 @@ echo '<div class="personaltutoremails"><span class="personaltutoremail ex_port">
 // END CATALYST CUSTOM.
 
 echo '<form method="POST" id="emailform" action="">';
+echo '<input type="hidden" name="sesskey" value="' . sesskey() . '" />';
 echo $tutortable;
 echo '</form>';
 echo "<script type=\"text/javascript\">

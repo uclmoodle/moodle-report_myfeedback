@@ -36,7 +36,9 @@ $varprog = $progadmin ? 'yes' : 'no';
 $varsadmin = $siteadmin ? 'yes' : 'no';
 $vararchiveinst = $archivedinstance ? 'yes' : 'no';
 
-echo "<form method=\"POST\" id=\"yearform\" action=\"\"><input type=\"hidden\" name=\"archive\" value=\"no\"><select id=\"mySelect\" value=$res name=\"myselect\">";
+echo '<form method="POST" id="yearform" action="">'
+        . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
+        . "<input type=\"hidden\" name=\"archive\" value=\"no\"><select id=\"mySelect\" value=$res name=\"myselect\">";
 foreach ($ac_years as $val) {
     echo "<option value=" . $val;
     if ($res == $val) {
@@ -72,9 +74,15 @@ $('#mySelect').change(function(){
     if (ptut == 'no' && prog == 'no' && siteadmin == 'no') {
       if (archiveinst) {
         if (t == 'current') {
-          location.replace(livedomain+'/report/myfeedback/index.php?userid='+userid+'&currenttab='+currenttab);
+          location.replace(
+            livedomain + '/report/myfeedback/index.php?userid=' + userid
+              + '&currenttab=' + currenttab + '$sesskeyqs'
+          );
         } else {
-          location.replace(archivedomain+archiveyear+'/report/myfeedback/index.php?userid='+userid+'&currenttab='+currenttab);
+          location.replace(
+              archivedomain + archiveyear + '/report/myfeedback/index.php?userid=' + userid
+              + '&currenttab=' + currenttab + '$sesskeyqs'
+          );
         }
       } else {
         $('#yearform').submit();
@@ -84,9 +92,15 @@ $('#mySelect').change(function(){
          $('#yearform').submit();
        } else { //if not archive insance
           if (t == 'current') {
-             location.replace(livedomain+'/report/myfeedback/index.php?userid='+userid+'&currenttab='+currenttab);
+            location.replace(
+              livedomain + '/report/myfeedback/index.php?userid=' + userid
+                + '&currenttab=' + currenttab + '$sesskeyqs'
+            );
           } else {
-             location.replace(archivedomain+archiveyear+'/report/myfeedback/index.php?userid='+userid+'&currenttab='+currenttab);
+            location.replace(
+              archivedomain + archiveyear + '/report/myfeedback/index.php?userid=' + userid
+                + '&currenttab=' + currenttab + '$sesskeyqs'
+            );
           }
        }         
     }
