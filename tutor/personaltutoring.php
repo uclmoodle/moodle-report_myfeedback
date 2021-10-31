@@ -9,6 +9,11 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+
+if (!$canaccessuser) {
+    throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
+}
+
 if ($USER->lastlogin) {
     $userlastlogin = userdate($USER->lastlogin) . "&nbsp; (" . format_time(time() - $USER->lastaccess) . ")";
 } else {

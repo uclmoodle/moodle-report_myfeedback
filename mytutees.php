@@ -10,6 +10,13 @@
  
 defined('MOODLE_INTERNAL') || die;
 
+$tutorview = $report->get_dashboard_capability($USER->id, 'report/myfeedback:modtutor') ||
+        $report->get_dashboard_capability($USER->id, 'report/myfeedback:personaltutor', $usercontext->id);
+if (!($canaccessuser && $tutorview)) {
+    echo report_myfeedback_stop_spinner();
+    throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
+}
+
 echo '<p>'.get_string('studentsaccessto', 'report_myfeedback').'</p>';
 //$check = optional_param('mytick', '', PARAM_TEXT);
       

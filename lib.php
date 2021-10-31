@@ -6106,3 +6106,18 @@ class report_myfeedback {
     }
 
 }
+
+/**
+ * Return HTML/JS to remove the "loading" spinner.
+ *
+ * @return str HTML & javascript fragment.
+ */
+function report_myfeedback_stop_spinner() {
+    $s = "<script>
+    $(document).ready(function() {
+        $('#wait').css({'cursor':'default','display':'none'});
+        $('body').css('cursor', 'default');
+    });
+</script>";
+    return $s;
+}

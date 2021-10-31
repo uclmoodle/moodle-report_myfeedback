@@ -9,6 +9,11 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+
+if (!$report->get_dashboard_capability($USER->id, 'report/myfeedback:modtutor')) {
+    throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
+}
+
 $m = '';
 if (isset($_SESSION['viewmod'])) {
     $m = $_SESSION['viewmod'];

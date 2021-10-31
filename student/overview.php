@@ -10,6 +10,11 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+if (!$canaccessuser) {
+    echo report_myfeedback_stop_spinner();
+    throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewstudentreports', 'report_myfeedback'));
+}
+
 if ($user->lastlogin) {
     $userlastlogin = userdate($user->lastlogin) . "&nbsp; (" . format_time(time() - $user->lastaccess) . ")";
 } else {

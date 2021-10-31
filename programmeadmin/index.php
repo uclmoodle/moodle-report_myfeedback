@@ -9,6 +9,12 @@
  */
 
 defined('MOODLE_INTERNAL') || die;
+
+if (!$report->get_dashboard_capability($USER->id, 'report/myfeedback:progadmin')) {
+    echo report_myfeedback_stop_spinner();
+    throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewadminreports', 'report_myfeedback'));
+}
+
 //echo "<div style='float:right'><div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
 //require_once(dirname(__FILE__) . '/../student/academicyear.php');
 //echo '</div>';

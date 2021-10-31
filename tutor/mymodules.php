@@ -10,6 +10,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+if (!$report->get_dashboard_capability($USER->id, 'report/myfeedback:modtutor')) {
+    throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
+}
+
 if ($USER->lastlogin) {
     $userlastlogin = userdate($USER->lastlogin) . "&nbsp; (" . format_time(time() - $USER->lastaccess) . ")";
 } else {

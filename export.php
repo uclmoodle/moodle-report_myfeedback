@@ -12,6 +12,16 @@
 require('../../config.php');
 require_login();
 
+// Export data is loaded from $_SESSION["exp_sess"], which is set by one of:
+//  * report_feedback::get_staff_statistics_table()
+//  * report_feedback::get_student_statistics_table()
+//  * report_feedback::get_content()
+// Access to these seems to be guarded by one or both of:
+//  * Capability checks on the files included as tabs.
+//  * Role variables (e.g. $module_tutor) in index.php, which are initialised false,
+//    enabled to true when relevant capability checks are passed, and then
+//    used to deny access to the files included as tabs.
+
 //Because we are using sessions to store the information, if a user opens multiple tabs and tries to export, 
 //they will just get the data from the last tab they opened.
 $data = $_SESSION["exp_sess"];

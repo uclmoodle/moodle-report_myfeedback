@@ -213,8 +213,10 @@ if ($mods = get_user_capability_course('moodle/course:viewparticipants', $userid
 }
 
 //If user doesn't have the moodle capability to see the specific user they can't access it
+$canaccessuser = false;
 if ($progadmin || $module_tutor || $userid == $USER->id || has_capability('moodle/user:viewdetails', $usercontext)) {
-//Has access to the user
+    // Has access to the user.
+    $canaccessuser = true;
 } else {
     echo $OUTPUT->notification(get_string('usernotavailable', 'error'));
     die();

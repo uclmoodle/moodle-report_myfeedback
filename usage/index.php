@@ -29,11 +29,12 @@ defined('MOODLE_INTERNAL') || die();
 // Report all errors except E_NOTICE
 error_reporting(E_ALL & E_NOTICE);
 
-$report->setup_ExternalDB();
-
 //check permission to view usage reports - must have a role with this permission
 //TODO: Make the permission site wide only (if possible).
 if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
+
+    $report->setup_ExternalDB();
+
 	//display the description for those who have permission
 	echo "<div class=\"usagereport\"><p>" . get_string('overview_text_usage', 'report_myfeedback') . "</p>";
 	
