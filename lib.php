@@ -402,7 +402,7 @@ class report_myfeedback {
                 $feedback .= "<br/><strong>" . get_string('comments', 'report_myfeedback') . "</strong>";
             }
             foreach ($commentscheck as $ts) {
-                $feedback .= strip_tags($ts->description) ? "<br/><b>" . $ts->description : '';
+                $feedback .= strip_tags($ts->description) ? "<br/><b>" . strip_tags($ts->description) : '';
                 $feedback .= strip_tags($ts->description) ? "<br/><strong>" . get_string('comment', 'report_myfeedback') . "</strong>: " . strip_tags($ts->peercomment) . "<br/>" : '';
             }
         }
