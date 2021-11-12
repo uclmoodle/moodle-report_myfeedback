@@ -4015,7 +4015,7 @@ class report_myfeedback {
                  JOIN {assign} a ON gi.iteminstance=a.id AND a.course=gi.courseid AND gi.courseid = ?
                  LEFT JOIN {assign_submission} su ON a.id = su.assignment AND su.userid = ?
                  WHERE c.visible=1 AND c.showgrades = 1 ";
-            $params = array_push($params, $now, $userid, $now, $courseid, $courseid, $userid);
+            array_push($params, $now, $userid, $now, $courseid, $courseid, $userid);
         }
         if ($this->mod_is_available('quiz')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, q.id, q.timeclose as due, gg.timecreated as sub, gi.itemmodule as type,
@@ -4030,7 +4030,7 @@ class report_myfeedback {
                  JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name AND gi.itemmodule = 'quiz'
                  JOIN {quiz} q ON q.id = gi.iteminstance AND q.course = gi.courseid AND gi.courseid = ?
                  WHERE c.visible=1 AND c.showgrades = 1 ";
-            $params = array_push($params, $now, $userid, $now, $courseid, $courseid);
+            array_push($params, $now, $userid, $now, $courseid, $courseid);
         }
         if ($this->mod_is_available('workshop')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, w.id, w.submissionend as due, ";
@@ -4055,7 +4055,7 @@ class report_myfeedback {
             } else {
                 $sql .= "LEFT JOIN {workshop_submissions} ws ON w.id = ws.workshopid AND ws.example = 0 AND ws.userid = ? ";
             }
-            $params = array_push($params, $now, $userid, $now, $courseid, $courseid, $userid);
+            array_push($params, $now, $userid, $now, $courseid, $courseid, $userid);
             $sql .= "WHERE c.visible=1 AND c.showgrades = 1 ";
         }
         if ($this->mod_is_available('turnitintool')) {
@@ -4073,7 +4073,7 @@ class report_myfeedback {
                  LEFT JOIN {turnitintool_submissions} ts ON ts.turnitintoolid = t.id AND ts.userid = ?
                  LEFT JOIN {turnitintool_parts} tp ON tp.id = ts.submission_part 
                  WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < ? ";
-            $params = array_push($params, $now, $userid, $now, $courseid, $courseid, $userid, $now);
+            array_push($params, $now, $userid, $now, $courseid, $courseid, $userid, $now);
         }
         if ($this->mod_is_available('turnitintooltwo')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, tp.id, tp.dtdue as due, ts.submission_modified as sub, gi.itemmodule as type, 
@@ -4091,7 +4091,7 @@ class report_myfeedback {
                  LEFT JOIN {turnitintooltwo_submissions} ts ON ts.turnitintooltwoid = t.id AND ts.userid = ?
                  LEFT JOIN {turnitintooltwo_parts} tp ON tp.id = ts.submission_part
                  WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < ? ";
-            $params = array_push($params, $now, $userid, $now, $courseid, $courseid, $userid, $now);
+            array_push($params, $now, $userid, $now, $courseid, $courseid, $userid, $now);
         }
         $r = $remotedb->get_recordset_sql($sql, $params);
         $all = array();
