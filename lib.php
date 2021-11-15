@@ -1185,8 +1185,8 @@ class report_myfeedback {
             array_unshift($params, $context);
         }
         $sql .= "AND userid = ? AND capability = ? GROUP BY c.id, r.roleid";
-        $capy = $remotedb->get_record_sql($sql, $params);
-        return $capy ? $capy->roleid : 0;
+        $capy = $remotedb->get_records_sql($sql, $params);
+        return sizeof($capy) ? true : false;
     }
 	
     /**
