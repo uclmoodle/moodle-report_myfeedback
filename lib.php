@@ -2343,12 +2343,12 @@ class report_myfeedback {
 		//get all the courses in the category, then iterate through the below
 		//CONTINUE HERE - get courses in a category and iterate though each enrolled user on that course
 		//$courseids = $this->get_courses_in_category($catid);
-		//get the contextid of the category
-		$contextid = $this->get_categorycontextid($catid);
 		$params = array();
 
 		$sql = 'SELECT DISTINCT ra.userid FROM {role_assignments} ra JOIN {user} u on u.id = ra.userid JOIN {context} con ON ra.contextid = con.id AND con.contextlevel = 50 WHERE u.deleted = 0 AND u.suspended = 0';
 		if($catid > 0){
+            // If this category isn't the root, get its contextid.
+            $contextid = $this->get_categorycontextid($catid);
 			$params = array("%/".$contextid, "%/".$contextid."/%");
 			$sql .= ' AND (con.path LIKE ? OR con.path LIKE ? )';
 		}
@@ -2504,7 +2504,9 @@ class report_myfeedback {
         $catname = $remotedb->get_record_sql("SELECT cat.name 
                                                     FROM {course_categories} cat
                                                    WHERE cat.id = ?", array($id));
-		return $catname->name;
+        if (!empty($catname->name)) {
+            return $catname->name;
+        }
 	}
 	
 	/**
@@ -2523,7 +2525,7 @@ class report_myfeedback {
         $category = $remotedb->get_record_sql("SELECT cat.parent 
                                                     FROM {course_categories} cat
                                                    WHERE cat.id = ?", array($categoryid));
-		if($category->parent > 0){		
+		if(!empty($category->parent) && $category->parent > 0){
 		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=" . $reporttype
                 . $sesskeyqs
                 . "&categoryid=".$category->parent."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
@@ -2549,7 +2551,7 @@ class report_myfeedback {
         $course = $remotedb->get_record_sql("SELECT c.category 
                                                     FROM {course} c
                                                    WHERE c.id = ?", array($courseid));
-		if($course->category > 0){		
+		if(!empty($course->category) && $course->category > 0){
 		return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=" . $reporttype
                 . $sesskeyqs
                 . "&categoryid=".$course->category."\" title=\"Up to parent category\"><img class=\"uparrow\" src=\"".
@@ -2594,7 +2596,7 @@ class report_myfeedback {
         $contextid = $remotedb->get_record_sql("SELECT id
                                                     FROM {context}
                                                    WHERE contextlevel = 40 AND instanceid = ?", array($id));
-		return $contextid->id;
+        return $contextid->id;
 	}
 	
 	/**
