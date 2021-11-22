@@ -4599,7 +4599,9 @@ class report_myfeedback {
                 $cat = core_course_category::get($catid, $strictness = MUST_EXIST, $alwaysreturnhidden = true); //Use strictness so even hidden category names are shown without error
                 if ($cat) {
                     $path = explode("/", $cat->path);
-                    $parent = ($cat->parent ? coursecat::get($cat->parent, $strictness = MUST_EXIST, $alwaysreturnhidden = true) : $cat);
+                    // CATALYST CUSTOM WR362236: Replace deprecated coursecat with core_course_category.
+                    $parent = ($cat->parent ? core_course_category::get($cat->parent, $strictness = MUST_EXIST, $alwaysreturnhidden = true) : $cat);
+                    // END CATALYST CUSTOM WR362236.
                     $progcat = array();
                     if ($cat->parent) {
                         $progcat = $cat;
@@ -4609,8 +4611,10 @@ class report_myfeedback {
                         $progcat->name = get_string('uncategorized', 'report_myfeedback');
                     }
                     if (count($path) > 3) {
-                        $parent = coursecat::get($path[1], $strictness = MUST_EXIST, $alwaysreturnhidden = true);
-                        $progcat = coursecat::get($path[2], $strictness = MUST_EXIST, $alwaysreturnhidden = true);
+                        // CATALYST CUSTOM WR362236: Replace deprecated coursecat with core_course_category.
+                        $parent = core_course_category::get($path[1], $strictness = MUST_EXIST, $alwaysreturnhidden = true);
+                        $progcat = core_course_category::get($path[2], $strictness = MUST_EXIST, $alwaysreturnhidden = true);
+                        // END CATALYST CUSTOM WR362236.
                     }
                     $prog[$parent->id]['dept'] = $parent->name;
                     $tomod['dept'] = $parent->name;
