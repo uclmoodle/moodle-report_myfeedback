@@ -61,7 +61,7 @@ $modview = optional_param_array('modselect', array(), PARAM_NOTAGS); // The sele
 
 $deptview = optional_param('deptselect', $dots, PARAM_NOTAGS); // For top level category on Dept admin dashboard.
 $progview = optional_param('progselect', $dots, PARAM_NOTAGS); // For second level category on Dept admin dashboard.
-$progmodview = optional_param('deptprogmodselectselect', $dots, PARAM_NOTAGS); // For the course on the Dept admin dashboard.
+$progmodview = optional_param('progmodselect', $dots, PARAM_NOTAGS); // For the course on the Dept admin dashboard.
 $searchuser = optional_param('searchuser', '', PARAM_NOTAGS); // For the user search input on My students tab.
 $searchusage = optional_param('searchusage', '', PARAM_NOTAGS); // For the search input on Usage dashboard.
 
