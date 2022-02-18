@@ -3913,18 +3913,23 @@ class report_myfeedback {
                 unset($items[$key]);
             }
         }
-        $items = "'" . implode("','", $items) . "'";
+        list($itemsql, $params) = $remotedb->get_in_or_equal($items, SQL_PARAMS_NAMED);
         $sql = "SELECT DISTINCT c.id AS cid, gg.id as tid, finalgrade, gg.timemodified as feed_date, gi.id as gid, grademax, cm.id AS cmid
                 FROM {course} c
-                JOIN {grade_items} gi ON c.id = gi.courseid AND (gi.hidden != 1 AND gi.hidden < ?)
-                JOIN {grade_grades} gg ON gi.id = gg.itemid AND gg.userid = ? AND (gi.hidden != 1 AND gi.hidden < ?)
-                AND (gg.hidden != 1 AND gg.hidden < ?) AND gi.courseid = ?
-                AND gg.finalgrade IS NOT NULL AND (gi.itemmodule IN (?) OR (gi.itemtype = 'manual'))
-                LEFT JOIN {course_modules} cm ON gi.iteminstance = cm.instance AND c.id = cm.course AND cm.course = ?
+                JOIN {grade_items} gi ON c.id = gi.courseid AND (gi.hidden != 1 AND gi.hidden < :now1)
+                JOIN {grade_grades} gg ON gi.id = gg.itemid AND gg.userid = :userid AND (gi.hidden != 1 AND gi.hidden < :now2)
+                AND (gg.hidden != 1 AND gg.hidden < :now3) AND gi.courseid = :courseid1
+                AND gg.finalgrade IS NOT NULL AND (gi.itemmodule $itemsql OR (gi.itemtype = 'manual'))
+                LEFT JOIN {course_modules} cm ON gi.iteminstance = cm.instance AND c.id = cm.course AND cm.course = :courseid2
                 LEFT JOIN {context} con ON cm.id = con.instanceid AND con.contextlevel=70
                 LEFT JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name
                 WHERE c.visible=1 AND c.showgrades = 1";
-        $params = array($now, $userid, $now, $now, $courseid, $items, $courseid);
+        $params['now1'] = $now;
+        $params['now2'] = $now;
+        $params['now3'] = $now;
+        $params['userid'] = $userid;
+        $params['courseid1'] = $courseid;
+        $params['courseid2'] = $courseid;
         $gr = $remotedb->get_recordset_sql($sql, $params);
         $grades = array();
         if ($gr->valid()) {
