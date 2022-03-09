@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/grade/lib.php');
 require_once($CFG->dirroot . '/grade/querylib.php');
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
+raise_memory_limit(MEMORY_EXTRA); // CATALYST CUSTOM.
 
 $url = new moodle_url('/report/myfeedback/index.php');
 

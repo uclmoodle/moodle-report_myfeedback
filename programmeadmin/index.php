@@ -138,8 +138,13 @@ if ($cur_dept && $cur_prog) {
     $pgtutcontext = array();
     $pgeach = array();
     $pgeach1 = array();
-    if (count($pgmods[$cur_dept]['prog'][$cur_prog]['mod']) <= $report->get_course_limit()) {
-        foreach ($pgmods[$cur_dept]['prog'][$cur_prog]['mod'] as $key1 => $pmod) {//All modules in the category
+    if (count($pgmods[$cur_dept]['prog'][$cur_prog]['mod']) <= $report->get_course_limit() || $cur_mod) { // CATALYST CUSTOM.
+        foreach ($pgmods[$cur_dept]['prog'][$cur_prog]['mod'] as $key1 => $pmod) {//All modules in the category.
+            // CATALYST CUSTOM START - IF a course is selected, process just that selected course.
+            if ($cur_mod && $cur_mod != $key1) {
+                continue;
+            }
+            // CATALYST CUSTOM END.
             $prog_mod_context = context_course::instance($key1);
             $pgtutcontext[$key1] = $prog_mod_context->id;
             $puids = array();
