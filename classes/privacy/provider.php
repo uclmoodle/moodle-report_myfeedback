@@ -36,7 +36,7 @@ use core_privacy\local\request\userlist;
  * @copyright  2019 Segun Babalola <segun@babalola.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
+class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\core_userlist_provider, \core_privacy\local\request\plugin\provider {
 
     /**
      * Declare/define the scope of data this plugin is responsible for.
@@ -94,7 +94,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      *
      * @param userlist $userlist
      */
-    public static function get_users_in_context_ (userlist $userlist) {
+    public static function get_users_in_context (userlist $userlist) {
         $context = $userlist->get_context();
 
         if (!$context instanceof \context_user) {
@@ -179,7 +179,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      *
      * @param approved_userlist $userlist
      */
-    public static function delete_data_for_users_(approved_userlist $userlist) {
+    public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
 
         $context = $userlist->get_context();
