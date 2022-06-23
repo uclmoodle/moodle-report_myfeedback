@@ -41,7 +41,7 @@ use core_privacy\local\request\userlist;
 class provider implements
     // This plugin has data.
     \core_privacy\local\metadata\provider,
-
+    \core_privacy\local\request\core_userlist_provider,
     // This plugin currently implements the original plugin\provider interface.
     \core_privacy\local\request\plugin\provider
 {
@@ -103,7 +103,7 @@ class provider implements
      *
      * @param userlist $userlist
      */
-    public static function get_users_in_context_ (userlist $userlist) {
+    public static function get_users_in_context (userlist $userlist) {
         $context = $userlist->get_context();
 
         if (!$context instanceof \context_user) {
@@ -187,7 +187,7 @@ class provider implements
      *
      * @param approved_userlist $userlist
      */
-    public static function delete_data_for_users_(approved_userlist $userlist) {
+    public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
 
         $context = $userlist->get_context();
