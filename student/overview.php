@@ -10,6 +10,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+$PAGE->requires->js_call_amd('report_myfeedback/overview', 'init');
+
 if (!$canaccessuser) {
     echo report_myfeedback_stop_spinner();
     throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewstudentreports', 'report_myfeedback'));
@@ -120,101 +122,3 @@ $content = $report->get_content($currenttab, $personal_tutor, $progadmin, $arch)
 echo $content->text;
 echo $OUTPUT->container_start('info');
 echo $OUTPUT->container_end();
-
-// Enable sorting.
-echo "<script type=\"text/javascript\">
-   /* Plugin API method to determine is a column is sortable */
-$.fn.dataTable.Api.register( 'column().searchable()', function () {
-  var ctx = this.context[0];
-  return ctx.aoColumns[ this[0] ].bSearchable;
-} );
-
-$(document).ready( function () {
-
-$('#wait').css({'cursor':'default','display':'none'});
-$('body').css('cursor', 'default');
-
-//before initializing Datatables get the cells in the second row of the header so you can reference them later on 
-var filterCells = $('thead tr:eq(1) td');
-
-// Initialize the DataTable
-  var table = $('#grades').DataTable( {
-    dom: 'RlfBrtip',
-    fixedHeader: true,
-    pageLength: 25,
-    orderCellsTop: true,
-    columnDefs: [
-      { targets: [ 5, 8 ],
-        searchable: false, 
-        orderable:  false 
-      }
-    ],
-    order: [[ 4, 'desc' ]],
-    buttons: [ 'colvis' ],
-    stateSave: true,
-    stateSaveCallback: function(settings,data) {
-      localStorage.setItem( 'Overview', JSON.stringify(data) )
-    },
-    stateLoadCallback: function(settings) {
-    return JSON.parse( localStorage.getItem( 'Overview' ) )
-    },
-    responsive: true
-  } );
-  
-  // Add filtering
-  table.columns().every( function () {
-    if ( this.searchable() ) {
-      var that = this;
-
-      // Create the `select` element
-      var select = $('<select><option value=\"\"></option></select>')
-        .appendTo(
-          filterCells.eq( table.colReorder.transpose( this.index(), 'toOriginal' ) )
-        )
-        .on( 'change', function() {
-          that
-            .search($(this).val())
-            .draw();
-        } );
-
-      // Add data
-      this
-        .data()
-        .sort()
-        .unique()
-        .each( function(d) {
-          select.append($('<option>' + d + '</option>'));
-        } );
-      
-      // Restore state saved values
-      var state = this.state.loaded();
-      if ( state ) {
-        var val = state.columns[ this.index() ];
-        select.val( val.search.search );
-      }
-    }
-  } );
- 
-//when button is clicked to reset table
-$('#tableDestroy').on( 'click', function () {
-    table.colReorder.reset();
-    table.destroy(false);
-    $('thead select').val('').change();
-    table.state.clear();
-    location.reload();
-} );
- 
-$('#exportexcel').on( 'click', function() {
-window.location.href= 'export.php';
-});
- 
-$('#reportPrint').on( 'click', function () {
-        print();
-});
-
-$('#toggle-grade').on( 'click', function () {
-$('.t-rel').toggleClass('off');
-});
-
-} ); 
-   </script>";
