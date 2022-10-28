@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$PAGE->requires->js_call_amd('report_myfeedback/usage', 'init');
+
 //TODO: turn off error reporting
 // Report all errors except E_NOTICE
 error_reporting(E_ALL & E_NOTICE);
@@ -440,49 +442,3 @@ $event->trigger();
 
 echo "</div>";
 //stop the progress bar when page loads.
-echo "<script type=\"text/javascript\">
-    $(document).ready( function () {
-
-$('#wait').css({'cursor':'default','display':'none'});
-$('body').css('cursor', 'default');
-
-$('#reportSelect').change(function(){
-    $('#report_form_select').submit();    
-});
-
-$('#categorySelect').change(function(){
-    $('#report_category_select').submit();    
-});
-
-$('td#long-name').css({
-    'max-width': '300px',
-    'white-space': 'nowrap',
-    'overflow': 'hidden',
-    'text-overflow': 'ellipsis'
-});
-
-var usertable = $('#userstable').DataTable({
-        'dom': 'rtip',
-        'order': [[0, 'asc' ]]
-});
-
-var usagetable = $('#usagetable').DataTable({
-		/*dom: 'f',*/
-		pageLength: -1,
-		filtering: false,
-		ordering: true,
-		searching: false,
-		pagination: false,
-		order: [[1, 'desc' ]]
-});
-
-$('.reportPrint').on( 'click', function () {
-        print();
-});
-
-$('.x_port').on( 'click', function() {
-window.location.href= 'export.php';
-});
-
-});
-</script>";
