@@ -10,6 +10,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+$PAGE->requires->js_call_amd('report_myfeedback/mymodules', 'init');
+
 if (!$report->get_dashboard_capability($USER->id, 'report/myfeedback:modtutor')) {
     throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
 }
@@ -278,96 +280,3 @@ $_SESSION['user_name'] = 'nil';
 //trigger teh logging to database
 $event = \report_myfeedback\event\myfeedbackreport_viewed_mtutordash::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
 $event->trigger();
-
-//Use datables to display the table, sort, etc.
-echo "<script type=\"text/javascript\">
-    $(document).ready(function() {
-
-$('#wait').css({'cursor':'default','display':'none'});
-$('body').css('cursor', 'default');
-
-// Create the DataTable
-  var table = $('.modtable').DataTable( {
-    dom: '',
-    fixedHeader: true,
-    columnDefs: [
-      { targets: [ 0,1,2,3,4,5,6 ],
-        searchable: false, 
-        orderable:  false 
-      }
-    ],
-    order: [ ]
- });
-
-    $('.overallgrade').show();
-    $('span.studentsassessed').text('" . get_string('dashboard_students', 'report_myfeedback') . "');
-    $('.studentimgdue').attr('title', '" . get_string('student_due_info', 'report_myfeedback') . "');
-    $('.studentimgnon').attr('title', '" . get_string('student_nonsub_info', 'report_myfeedback') . "');
-    $('.studentimglate').attr('title', '" . get_string('student_late_info', 'report_myfeedback') . "');
-    $('.studentimggraded').attr('title', '" . get_string('student_graded_info', 'report_myfeedback') . "');
-    $('.studentimglow').attr('title', '" . get_string('student_low_info', 'report_myfeedback') . "');
-});
-
-$('.ex_port').on( 'click', function() {
-window.location.href= 'export.php';
-});
-
-$('.reportPrint').on( 'click', function () {
-        print();
-});
-/*var w = $('td:first-child').innerWidth();*/
-$('td#assess-name').css({
-    'max-width': '300px',
-    'white-space': 'nowrap',
-    'overflow': 'hidden',
-    'text-overflow': 'ellipsis'
-});
-
-$('.sToggle').click(function(e){
-        $(this).closest('.fullRec').find('table.tutor-inner.assRec').hide();
-        $(this).closest('.fullRec').find('table.tutor-inner.stuRecP').hide();
-        $('.settableheight').hide();
-        $('.overallgrade').hide();
-        $('.assessdue').show();
-        $('span.studentsassessed').text('" . get_string('dashboard_assessments', 'report_myfeedback') . "');
-        $('.studentimgdue').attr('title', '" . get_string('tutortblheader_assessment_info', 'report_myfeedback') . "');
-        $('.studentimgnon').attr('title', '" . get_string('tutortblheader_nonsubmissions_info', 'report_myfeedback') . "');
-        $('.studentimglate').attr('title', '" . get_string('tutortblheader_latesubmissions_info', 'report_myfeedback') . "');
-        $('.studentimggraded').attr('title', '" . get_string('tutortblheader_graded_info', 'report_myfeedback') . "');
-        $('.studentimglow').attr('title', '" . get_string('tutortblheader_lowgrades_info', 'report_myfeedback') . "');
-        $(this).closest('.fullRec').find('table.tutor-inner.stuRecM').show();
-        $(this).closest('.fullRec').find('span.aToggle').css({'background-color':'#f5f5f5','color':'#444'});
-        $(this).closest('.fullRec').find('span.sToggle').css({'background-color':'#619eb6','color':'#fff'});    
-});
-$('.aToggle').click(function(e){
-        $(this).closest('.fullRec').find('table.tutor-inner.stuRecM').hide();
-        $(this).closest('.fullRec').find('table.tutor-inner.assRec').show();
-        $('.settableheight').show();
-        $('.overallgrade').show();
-        $('span.studentsassessed').text('" . get_string('dashboard_students', 'report_myfeedback') . "');
-        $('.studentimgdue').attr('title', '" . get_string('student_due_info', 'report_myfeedback') . "');
-        $('.studentimgnon').attr('title', '" . get_string('student_nonsub_info', 'report_myfeedback') . "');
-        $('.studentimglate').attr('title', '" . get_string('student_late_info', 'report_myfeedback') . "');
-        $('.studentimggraded').attr('title', '" . get_string('student_graded_info', 'report_myfeedback') . "');
-        $('.studentimglow').attr('title', '" . get_string('student_low_info', 'report_myfeedback') . "');
-        $('.modtable .modangle').text('\u25bc');
-        $(this).closest('.fullRec').find('span.aToggle').css({'background-color':'#619eb6','color':'#fff'});
-        $(this).closest('.fullRec').find('span.sToggle').css({'background-color':'#f5f5f5','color':'#444'});    
-});
-
-$('.assess-br').click(function(e){
-    var thisAs = $(this).closest('.assRec');
-    var rem = '.stuRecP.'+$(thisAs).attr('data-aid');
-    if ($(rem).is(':visible')){
-        $(rem).nextUntil('.settableheight').hide();
-        $(rem).hide();
-        $('.assessdue').hide();
-        $(thisAs).find('.modangle').text('\u25bc');
-    } else if ($(rem).is(':hidden')){
-        $(rem).nextUntil(':not(rem)').show();
-        $(rem).show();
-        $('.assessdue').hide();
-        $(thisAs).find('.modangle').text('\u25b2');
-    }
- });
-</script>";

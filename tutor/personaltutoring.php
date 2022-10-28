@@ -10,6 +10,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+$PAGE->requires->js_call_amd('report_myfeedback/personaltutor', 'init');
+
 if (!$canaccessuser) {
     throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
 }
@@ -195,55 +197,3 @@ echo '<form method="POST" id="emailform" action="">';
 echo '<input type="hidden" name="sesskey" value="' . sesskey() . '" />';
 echo $tutortable;
 echo '</form>';
-echo "<script type=\"text/javascript\">
-   $(document).ready(function() {
-
-$('#wait').css({'cursor':'default','display':'none'});
-$('body').css('cursor', 'default');
-
-        var ttable = $('#tutortable').DataTable({
-        'dom': 'lfBrtip',
-        fixedHeader: true,
-        'order': [1, 'asc' ],
-        'columnDefs': [
-        { 'orderable': false, 'targets': 0 }],
-        buttons: [ 'colvis' ],
-        responsive: true
-    });
- 
-$('#selectall').change(function(){
-      $('.chk1').prop('checked', $(this).prop('checked'));
-});
-$(\"#emailform\").click(function(){
-                var mylink = [];
-                $(\"input:checked\").each(function(i){
-                if ($(this).val() != 'on') {
-                 mylink.push($(this).val());
-                 }
-                });
-                if (mylink.length > 0) {
-                $(\"a#mail\").attr(\"href\", \"mailto:?bcc=\" + mylink.join
-        (\";\")+\"&Subject=" . get_string('email_tutee_subject', 'report_myfeedback') . "\");
-     }
-});
-
-$('.reportPrint').on( 'click', function () {
-        print();
-});
-
-$('.ex_port').on( 'click', function() {
-window.location.href= 'export.php';
-});
-
-$('.tutorCanvas').click(function(e){
-    var thisEl = $(this).closest('tr.recordRow ').find('table.accord');
-    if($(thisEl).is(':visible')) {
-        $(this).closest('.recordRow').find('table.accord').hide();
-        $(this).closest('.recordRow').find('.tangle').text('\u25bc');
-    } else if ($(thisEl).is(':hidden')) {
-        $(this).closest('.recordRow').find('table.accord').show();
-        $(this).closest('.recordRow').find('.tangle').text('\u25b2');
-    }        
-});
-});
-   </script>";
