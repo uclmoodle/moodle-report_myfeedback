@@ -99,9 +99,9 @@ if ($progmodview != $dots) {
 echo $OUTPUT->header();
 
 //Initialize the report and set the database to get info from
-$report = new report_myfeedback();
+$report = new report_myfeedback\local\report();
 $report->init();
-$report->setup_ExternalDB();
+$report->setup_external_db();
 
 //get a progress bar when report is getting info
 echo "<div id=\"wait\" style=\"width:70px;height:60px;position:absolute;top:40%;left:50%;z-index:9999\"><img src=\"pix/progress.gif\"/></div>

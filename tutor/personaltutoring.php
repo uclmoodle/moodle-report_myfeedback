@@ -104,7 +104,7 @@ if ($tutees = $report->get_dashboard_tutees()) {// Get all personal tutees for t
     echo "<div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
     require_once(dirname(__FILE__) . '/../student/academicyear.php');
     echo '</div>';
-    $report->setup_ExternalDB($res);
+    $report->setup_external_db($res);
     foreach ($tutees as $uid => $tutee) {
         $name_sort = $tutee[1];
         $user_email[$tutee[3]] = $tutee[2];

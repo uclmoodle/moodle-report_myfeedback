@@ -117,7 +117,7 @@ if (!$personal_tutor && !$progadmin && !is_siteadmin()) {
     $res = '';//If all else fails it should check only it's current database
 }
 
-$report->setup_ExternalDB($res);
+$report->setup_external_db($res);
 $content = $report->get_content($currenttab, $personal_tutor, $progadmin, $arch);
 echo $content->text;
 echo $OUTPUT->container_start('info');

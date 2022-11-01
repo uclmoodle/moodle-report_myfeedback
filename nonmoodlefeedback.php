@@ -18,9 +18,9 @@ $gradeid = optional_param('gradeid2', 0, PARAM_INT);
 $userid = optional_param('userid2', 0, PARAM_INT);
 $instance = optional_param('instance', 0, PARAM_INT);
 
-$report = new report_myfeedback();
+$report = new report_myfeedback\local\report();
 $report->init();
-$report->setup_ExternalDB();
+$report->setup_external_db();
 if (!empty($feedname) && $gradeid2 && $userid2) {
     $feednotes = strip_tags($feedname, '<br>');
     $now = time();

@@ -124,7 +124,7 @@ $zscore->assess = array();
 //echo "<div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
 //require_once(dirname(__FILE__) . '/../student/academicyear.php');
 //echo '</div>';
-$report->setup_ExternalDB();
+$report->setup_external_db();
 $my_tutor_mods = array();
 if ($archive_mods = get_user_capability_course('report/myfeedback:modtutor', $USER->id, $doanything = false, $fields = 'visible,shortname,fullname,category')) {
     foreach ($archive_mods as $value) {

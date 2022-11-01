@@ -35,7 +35,7 @@ error_reporting(E_ALL & E_NOTICE);
 //TODO: Make the permission site wide only (if possible).
 if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
-    $report->setup_ExternalDB();
+    $report->setup_external_db();
 
 	//display the description for those who have permission
 	echo "<div class=\"usagereport\"><p>" . get_string('overview_text_usage', 'report_myfeedback') . "</p>";
