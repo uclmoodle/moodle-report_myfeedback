@@ -30,7 +30,7 @@ echo '<div style="float:right">
 // END CATALYST CUSTOM.
 
 //</div>';
-$report->setup_ExternalDB();
+$report->setup_external_db();
 $admin_mods = array();
 if ($get_mods = get_user_capability_course('report/myfeedback:progadmin', $USER->id, $doanything = false, $fields = 'category,fullname,visible')) {//enrol_get_users_courses($USER->id, $onlyactive = TRUE)) {
     foreach ($get_mods as $value) {//The above function gets all courses even if they are not enrolled but in other users. Particularly for category assignments.
