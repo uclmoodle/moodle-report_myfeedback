@@ -32,7 +32,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugins = array(
-    'dataTables' => array('files' => array('datatables.js')),
     'tooltip' => array('files' => array('tooltip.js', 'tooltip.css')),
     'modal' => array('files' => array('modal.js'))
 );
