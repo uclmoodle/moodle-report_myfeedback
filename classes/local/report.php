@@ -33,6 +33,7 @@ use dml_exception;
 use html_writer;
 use moodle_database;
 use moodle_exception;
+use moodle_url;
 use stdClass;
 
 /**
@@ -6436,31 +6437,33 @@ class report {
 
                                 // The self-reflective notes bootstrap modal.
                                 echo $OUTPUT->render_from_template('report_myfeedback/modal', [
-                                    'id' => 'Abs2',
+                                    'actionurl' => new moodle_url('/report/myfeedback/reflectivenotes.php'),
+                                    'formid' => 'notesform',
+                                    'gradeid' => 'gradeid',
+                                    'instanceid' => 'instance1',
+                                    'modalid' => 'Abs2',
+                                    'submitbtnid' => 'submitnotes',
+                                    'submitbtntext' => get_string('savenotes', 'report_myfeedback'),
+                                    'textid' => 'notename',
+                                    'title' => get_string('addeditnotes', 'report_myfeedback'),
+                                    'userformid' => 'user_id',
+                                    'userformname' => 'userid',
                                 ]);
 
                                 // The non-moodle(turnitin) feedback bootstrap modal.
-                                echo '<div style="height: 0; width: 0;" class="container">
-                            <div style="display: none;" id="Abs1" class="modal hide fade">
-                            <div class="modal-header"><a class="close" data-dismiss="modal"> X </a>
-                            <h3>' . get_string("addeditfeedback", "report_myfeedback") . '</h3>
-                            </div>
-                            <div class="modal-body">
-                            <form  method="POST"  id="feedform" action="nonmoodlefeedback.php" >
-                            <input type="hidden" name="sesskey" value="' . sesskey() . '" />
-                            <textarea id="feedname" class="autoexpand" name="feedname" wrap="hard" rows="4" data-min-rows="4"
-                             cols="60" value=""></textarea>
-                            <input type="hidden" name="gradeid2" id="gradeid2" value="" />
-                            <input type="hidden" name="instance" id="instance" value="" />
-                            <input type="hidden" name="userid2" id="user_id2" value="" />
-                            <input type="submit" id="submitfeed" value="' . get_string("savefeedback", "report_myfeedback") . '" />
-                            </form>
-                            </div>
-                            <div class="modal-footer">
-                                <a class="btn" href="#" data-dismiss="modal">' . get_string("closebuttontitle") . '</a>
-                            </div>
-                            </div>
-                            </div>';
+                                echo $OUTPUT->render_from_template('report_myfeedback/modal', [
+                                    'actionurl' => new moodle_url('/report/myfeedback/nonmoodlefeedback.php'),
+                                    'formid' => 'feedform',
+                                    'gradeid' => 'gradeid2',
+                                    'instanceid' => 'instance',
+                                    'modalid' => 'Abs2',
+                                    'submitbtnid' => 'submitfeed',
+                                    'submitbtntext' => get_string('savefeedback', 'report_myfeedback'),
+                                    'textid' => 'feedname',
+                                    'title' => get_string('addeditnotes', 'report_myfeedback'),
+                                    'userformid' => 'user_id2',
+                                    'userformname' => 'userid2',
+                                ]);
                             }
 
                             // The feedback comments table.

@@ -66,7 +66,7 @@ $progmodview = optional_param('progmodselect', $dots, PARAM_NOTAGS); // For the 
 $searchuser = optional_param('searchuser', '', PARAM_NOTAGS); // For the user search input on My students tab.
 $searchusage = optional_param('searchusage', '', PARAM_NOTAGS); // For the search input on Usage dashboard.
 
-if ($userid || $modview) {
+if (($userid && $USER->id != $userid) || $modview) {
     require_sesskey();
 }
 $sesskeyqs = '&sesskey=' . sesskey();
