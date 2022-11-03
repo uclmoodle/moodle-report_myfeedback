@@ -66,7 +66,7 @@ $capabilities = array(
             'student' => CAP_ALLOW
         )
     ),
-	'report/myfeedback:usage' => array(
+    'report/myfeedback:usage' => array(
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
