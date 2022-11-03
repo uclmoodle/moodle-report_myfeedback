@@ -16,14 +16,15 @@
 
 /*
  * An included file for getting the academic year for archive functionality
- * 
+ *
  * @package  report_myfeedback
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
-$ac_years = $report->get_archived_dbs();
+
+$acyears = $report->get_archived_dbs();
 $res = 'current';
 $siteadmin = is_siteadmin() ? 1 : 0;
 $archivedinstance = $archive = false;
@@ -53,7 +54,7 @@ $vararchiveinst = $archivedinstance ? 'yes' : 'no';
 echo '<form method="POST" id="yearform" action="">'
         . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
         . "<input type=\"hidden\" name=\"archive\" value=\"no\"><select id=\"mySelect\" value=$res name=\"myselect\">";
-foreach ($ac_years as $val) {
+foreach ($acyears as $val) {
     echo "<option value=" . $val;
     if ($res == $val) {
         echo ' selected';
@@ -66,57 +67,20 @@ foreach ($ac_years as $val) {
 }
 echo "</select></form>";
 
-//No support before academic year 1213
+// No support before academic year 1213.
 if ($res != 'current' && $res < 1213) {
     echo get_string('noarchivesupporth1', 'report_myfeedback');
     echo get_string('noarchivesupporth2', 'report_myfeedback');
     $_SESSION['viewyear'] = 'current';
 }
 
-echo "<script>
-$('#mySelect').change(function(){
-    var t = this.value.toString();
-    var archivedomain = '".$archivedomain."';
-    var userid = ".$userid.";
-    var currenttab = '".$currenttab."';
-    var ptut = ".$varptut.";
-    var prog = ".$varprog.";
-    var siteadmin = ".$varsadmin.";
-    var livedomain = '".$livedomain."';
-    var archiveinst = ".$vararchiveinst.";
-    var archiveyear = t.substring(0,2)+'-'+t.substring(2);
-    if (ptut == 'no' && prog == 'no' && siteadmin == 'no') {
-      if (archiveinst) {
-        if (t == 'current') {
-          location.replace(
-            livedomain + '/report/myfeedback/index.php?userid=' + userid
-              + '&currenttab=' + currenttab + '$sesskeyqs'
-          );
-        } else {
-          location.replace(
-              archivedomain + archiveyear + '/report/myfeedback/index.php?userid=' + userid
-              + '&currenttab=' + currenttab + '$sesskeyqs'
-          );
-        }
-      } else {
-        $('#yearform').submit();
-      }
-    } else {// if personal tutor or dept admin or site admin
-      if (archiveinst == 'no') {// only if not archive instance
-         $('#yearform').submit();
-       } else { //if not archive insance
-          if (t == 'current') {
-            location.replace(
-              livedomain + '/report/myfeedback/index.php?userid=' + userid
-                + '&currenttab=' + currenttab + '$sesskeyqs'
-            );
-          } else {
-            location.replace(
-              archivedomain + archiveyear + '/report/myfeedback/index.php?userid=' + userid
-                + '&currenttab=' + currenttab + '$sesskeyqs'
-            );
-          }
-       }         
-    }
-});
-</script>";
+$PAGE->requires->js_call_amd('report_myfeedback/academicyear', 'init', [
+    $archivedomain,
+    $userid,
+    $currenttab,
+    $varptut,
+    $varprog,
+    $varsadmin,
+    $livedomain,
+    $vararchiveinst
+]);
