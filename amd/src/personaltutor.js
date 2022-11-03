@@ -47,9 +47,6 @@ define([
         init: function() {
             $(document).ready(function() {
 
-                $('#wait').css({'cursor':'default','display':'none'});
-                $('body').css('cursor', 'default');
-
                 $('#tutortable').DataTable({
                     'dom': 'lfBrtip',
                     fixedHeader: true,

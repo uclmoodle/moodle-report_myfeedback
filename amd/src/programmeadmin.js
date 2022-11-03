@@ -89,9 +89,6 @@ define(['jquery', 'core/str'], function ($, str) {
                     stringResults[string.key] = val;
                 }));
 
-                $('#wait').css({'cursor': 'default', 'display': 'none'});
-                $('body').css('cursor', 'default');
-
                 $('#deptSelect').change(function () {
                     $('#prog_form_dept').submit();
                 });

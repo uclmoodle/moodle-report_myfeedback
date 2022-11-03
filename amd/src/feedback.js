@@ -53,9 +53,6 @@ define([
             $(document).ready( function () {
                 const $feedbackcomments = $('#feedbackcomments');
 
-                $('#wait').css({'cursor':'default','display':'none'});
-                $('body').css('cursor', 'default');
-
                 var filterCells = $('thead tr:eq(1) td');
 
                 // Create the DataTable

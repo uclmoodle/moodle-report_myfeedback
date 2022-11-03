@@ -368,6 +368,9 @@ if ($usage && !$viewtutee) {
 
 echo $OUTPUT->tabtree($tabs, $currenttab);
 
+// Stop the progress bar when page loads.
+$PAGE->requires->js_call_amd('report_myfeedback/main', 'init');
+
 switch ($currenttab) {
     case 'overview':
         require_once('student/overview.php');
@@ -419,5 +422,3 @@ if (array_key_exists('viewed', $_SESSION)) {
     $event->trigger();
     $_SESSION['viewed'] = $userid;
 }
-// Stop the progress bar when page loads.
-$PAGE->requires->js_call_amd('report_myfeedback/main', 'init');

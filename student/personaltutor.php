@@ -52,10 +52,3 @@ if ($mytutorid) {
 } else {
     echo get_string('notutor', 'report_myfeedback');
 }
-echo "<script type=\"text/javascript\">
-    $(document).ready(function() {
-
-$('#wait').css({'cursor':'default','display':'none'});
-$('body').css('cursor', 'default');
- });
-</script>";

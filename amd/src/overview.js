@@ -52,9 +52,6 @@ define([
 
             $(document).ready( function () {
 
-                $('#wait').css({'cursor':'default','display':'none'});
-                $('body').css('cursor', 'default');
-
                 // Before initializing Datatables get the cells in the second row of the header so you can reference them later on
                 var filterCells = $('thead tr:eq(1) td');
 

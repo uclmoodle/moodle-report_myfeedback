@@ -46,9 +46,6 @@ define([
         init: function() {
             $(document).ready( function () {
 
-                $('#wait').css({'cursor':'default','display':'none'});
-                $('body').css('cursor', 'default');
-
                 $('#reportSelect').change(function(){
                     $('#report_form_select').submit();
                 });

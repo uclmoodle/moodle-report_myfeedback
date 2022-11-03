@@ -45,9 +45,6 @@ define([
     return {
         init: function() {
             $(document).ready(function() {
-                $('#wait').css({'cursor':'default','display':'none'});
-                $('body').css('cursor', 'default');
-
                 $('#userstable').DataTable({
                     'dom': 'rtip',
                     'order': [[1, 'desc'], [0, 'asc']]

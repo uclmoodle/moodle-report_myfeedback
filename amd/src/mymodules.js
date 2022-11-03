@@ -104,9 +104,6 @@ define([
                     stringResults[string.key] = val;
                 }));
 
-                $('#wait').css({'cursor': 'default', 'display': 'none'});
-                $('body').css('cursor', 'default');
-
                 // Create the DataTable.
                 $('.modtable').DataTable({
                     dom: '',
