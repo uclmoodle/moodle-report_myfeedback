@@ -38,7 +38,7 @@ echo '<p>'.get_string('studentsaccessto', 'report_myfeedback').'</p>';
       
 /*echo "<form method=\"POST\" id=\"alltutees\" action=\"\"><p>". get_string('alltutees', 'report_myfeedback').
         "<input id=\"myCheckbox\" type=\"checkbox\" name=\"mytick\" value=\"checked\" $check></form></p>";*/
-$tutees = $report->get_all_accessible_users($personal_tutor,$searchuser,$module_tutor,$prog);
+$tutees = $report->get_all_accessible_users($personaltutor,$searchuser,$moduletutor,$prog);
 echo $tutees;
 $event = \report_myfeedback\event\myfeedbackreport_viewed_mystudents::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
 $event->trigger();

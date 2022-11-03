@@ -31,7 +31,7 @@ if (isset($_SESSION['viewyear'])) {
     $res = $_SESSION['viewyear'];
 }
 
-if (!$personal_tutor && !$progadmin && !$siteadmin) {
+if (!$personaltutor && !$progadmin && !$siteadmin) {
     if ($yrr->academicyear && $yrr->archivedinstance) {
         $res = $yrr->academicyear;
         $archivedinstance = true;
@@ -45,7 +45,7 @@ if (isset($_REQUEST['archive']) && $_REQUEST['archive'] == 'yes') {
 if ($res != 'current') {
     $archive = true;
 }
-$varptut = $personal_tutor ? 'yes' : 'no';
+$varptut = $personaltutor ? 'yes' : 'no';
 $varprog = $progadmin ? 'yes' : 'no';
 $varsadmin = $siteadmin ? 'yes' : 'no';
 $vararchiveinst = $archivedinstance ? 'yes' : 'no';

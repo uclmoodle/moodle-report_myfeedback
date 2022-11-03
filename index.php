@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,11 +20,11 @@
  * @package   report_myfeedback
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
- *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
+ * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
+ *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga
  *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
- *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
+ *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and
  *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -56,8 +55,8 @@ require_login();
 $dots = get_string('choosedots');
 
 $userid = optional_param('userid', 0, PARAM_INT); // User id.
-$yearview = optional_param('myselect', 0, PARAM_ALPHANUMEXT); // academic year for archive
-$modview = optional_param_array('modselect', array(), PARAM_NOTAGS); // The selected course for Mod tutor Dashboard
+$yearview = optional_param('myselect', 0, PARAM_ALPHANUMEXT); // Academic year for archive.
+$modview = optional_param_array('modselect', array(), PARAM_NOTAGS); // The selected course for Mod tutor Dashboard.
 
 $deptview = optional_param('deptselect', $dots, PARAM_NOTAGS); // For top level category on Dept admin dashboard.
 $progview = optional_param('progselect', $dots, PARAM_NOTAGS); // For second level category on Dept admin dashboard.
@@ -71,12 +70,13 @@ if (($userid && $USER->id != $userid) || $modview) {
 $sesskeyqs = '&sesskey=' . sesskey();
 
 $_SESSION['viewmod'] = $modview;
-if ($yearview) {//keep the academic year for the loggen-in session
+if ($yearview) {
+    // Keep the academic year for the logged-in session.
     $_SESSION['viewyear'] = $yearview;
 }
-$yrr = get_config('report_myfeedback');//For the archive
-$livedomain = isset($yrr->livedomain) ?  $yrr->livedomain : get_string('livedomaindefault', 'report_myfeedback');
-$archivedomain = isset($yrr->archivedomain) ?  $yrr->archivedomain : get_string('archivedomaindefault', 'report_myfeedback');
+$yrr = get_config('report_myfeedback'); // For the archive.
+$livedomain = isset($yrr->livedomain) ? $yrr->livedomain : get_string('livedomaindefault', 'report_myfeedback');
+$archivedomain = isset($yrr->archivedomain) ? $yrr->archivedomain : get_string('archivedomaindefault', 'report_myfeedback');
 
 // Save filter selection to cookies so they are available to the JS form sort on future page loads.
 if ($deptview != $dots) {
@@ -97,13 +97,15 @@ if ($progmodview != $dots) {
 
 echo $OUTPUT->header();
 
-//Initialize the report and set the database to get info from
+// Initialize the report and set the database to get info from.
 $report = new report_myfeedback\local\report();
 $report->init();
 $report->setup_external_db();
 
-//get a progress bar when report is getting info
-echo "<div id=\"wait\" style=\"width:70px;height:60px;position:absolute;top:40%;left:50%;z-index:9999\"><img src=\"pix/progress.gif\"/></div>
+// Get a progress bar when report is getting info.
+echo "<div id=\"wait\" style=\"width:70px;height:60px;position:absolute;top:40%;left:50%;z-index:9999\">
+        <img src=\"pix/progress.gif\"/>
+    </div>
     <script type=\"text/javascript\">jQuery(\"body\").css(\"cursor\", \"progress\");</script>";
 
 if (empty($userid)) {
@@ -112,23 +114,15 @@ if (empty($userid)) {
 } else {
     $usercontext = context_user::instance($userid, MUST_EXIST);
 }
-//$coursecontext = context_course::instance($COURSE->id);
-//Show the Module leader view or other view if the user is not looking at a student report
+
+// Show the Module leader view or other view if the user is not looking at a student report.
 $viewtutee = false;
 if ($userid != $USER->id) {
     $viewtutee = true;
 }
 $ucontext = context_user::instance($USER->id, MUST_EXIST);
-//If user don't have the report capability they can't access it
-/*try {
-  if (!has_capability('report/myfeedback:view', $usercontext)) {
-  echo $OUTPUT->notification(get_string('nopermissiontoshow', 'error'));
-  die();
-  }
-  } catch (Exception $ex) {
-  echo $ex->getMessage();
-  die();
-  }*/ 
+// If user don't have the report capability they can't access it.
+
 $user = $remotedb->get_record('user', array('id' => $userid, 'deleted' => 0));
 $userlinked = "<a href='" . $CFG->wwwroot . "/user/view.php?id=" . $userid . "'>" . $user->firstname .
         " " . $user->lastname . "</a>";
@@ -139,18 +133,18 @@ if (empty($user->username)) {
     die();
 }
 
-//Set user roles to determine what pages they can access
-//report/myfeedback:modtutor for tutors
-//moodle/user:viewalldetails for personal tutor
-//report/myfeedback:progadmin for dept admin
-//report/myfeedback:student for students
-//report/myfeedback:usage to see usage reports
-$module_tutor = false;
-$personal_tutor = false;
+// Set user roles to determine what pages they can access:
+// ... report/myfeedback:modtutor for tutors
+// ... moodle/user:viewalldetails for personal tutor
+// ... report/myfeedback:progadmin for dept admin
+// ... report/myfeedback:student for students
+// ... report/myfeedback:usage to see usage reports.
+$moduletutor = false;
+$personaltutor = false;
 $progadmin = false;
 $usage = false;
 $prog = false;
-$is_student = false;
+$isstudent = false;
 $ownreport = '';
 $showstudentstab = true;
 if ($userid != $USER->id) {
@@ -159,67 +153,73 @@ if ($userid != $USER->id) {
             get_string('ownreport', 'report_myfeedback') . '</a></span>';
     $showstudentstab = false;
 }
-$report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . 
+$reportheading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' .
         $user->lastname . $ownreport;
 
-if ($p_tutor_cap = $report->get_dashboard_capability($USER->id, 'report/myfeedback:personaltutor')) {
-    $personal_tutor = true;
-    $report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . 
-            $user->lastname . get_string('personaltutorview', 'report_myfeedback') . $ownreport;
+if ($ptutorcap = $report->get_dashboard_capability($USER->id, 'report/myfeedback:personaltutor')) {
+    $personaltutor = true;
+    $reportheading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback')
+        . $user->firstname . ' ' . $user->lastname . get_string('personaltutorview', 'report_myfeedback') . $ownreport;
 }
 $ptutorid = $report->get_personal_tutor_id();
-//Get the personal tutor details of the user
-if ($mytutorid = $report->get_my_personal_tutor($ptutorid, $usercontext->id)) {
-    //
-}
+// Get the personal tutor details of the user.
+$mytutorid = $report->get_my_personal_tutor($ptutorid, $usercontext->id);
 
-//Added this here because when the dept admin is not accessing a student there is no course to get the context 
-//so the report_heading does not have the dept admin view
-if ($prog_admin_id = $report->get_dashboard_capability($USER->id, 'report/myfeedback:progadmin')) {
+// Added this here because when the dept admin is not accessing a student there is no course to get the context
+// so the report_heading does not have the dept admin view.
+if ($progadminid = $report->get_dashboard_capability($USER->id, 'report/myfeedback:progadmin')) {
     $prog = true;
-    $report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . 
-            $user->lastname . get_string('progadminview', 'report_myfeedback') . $ownreport;
+    $reportheading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback')
+        . $user->firstname . ' ' . $user->lastname . get_string('progadminview', 'report_myfeedback') . $ownreport;
 }
 
-//Added this here because the usage report is not accessing a student so there is no course to get the context 
-//so the report_heading does not have the dept admin view
+// Added this here because the usage report is not accessing a student so there is no course to get the context
+// so the report_heading does not have the dept admin view.
 if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
-	$usage = true;
+    $usage = true;
 }
 
 if ($student = $report->get_dashboard_capability($USER->id, 'report/myfeedback:student')) {
-    $is_student = true;
+    $isstudent = true;
 }
 
-//TODO - should we only do this if we are wanting to look at a student's report though? It would be redunant if we're just veiwing our own report, or the usage dashboard.
-//This capability is something that everyone who has been enrolled on a course has on that course.
-//Here we want to check the courses and see if the logged in user has modtutor or prog admin capability for the user they are trying to look at so they can see their report.
-if ($mods = get_user_capability_course('moodle/course:viewparticipants', $userid, $doanything = false, $fields = 'shortname,visible')) {
+// TODO - should we only do this if we are wanting to look at a student's report though?
+// ... It would be redundant if we're just viewing our own report, or the usage dashboard.
+// This capability is something that everyone who has been enrolled on a course has on that course.
+// Here we want to check the courses and see if the logged in user has modtutor or prog admin capability
+// for the user they are trying to look at so they can see their report.
+$mods = get_user_capability_course(
+    'moodle/course:viewparticipants',
+    $userid,
+    $doanything = false,
+    $fields = 'shortname,visible'
+);
+if ($mods) {
     foreach ($mods as $value) {
         if ($value->visible) {
             $coursecontext = context_course::instance($value->id);
             if (has_capability('report/myfeedback:student', $coursecontext, $userid)) {
-                $is_student = true; //for roles where they copy from default student role
+                $isstudent = true; // For roles where they copy from default student role.
             }
             if (has_capability('report/myfeedback:modtutor', $coursecontext, $USER->id, $doanything = false)) {
-                $module_tutor = true;
-                $report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . 
-                        $user->lastname . get_string('moduleleaderview', 'report_myfeedback') . $ownreport;
+                $moduletutor = true;
+                $reportheading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback')
+                    . $user->firstname . ' ' . $user->lastname . get_string('moduleleaderview', 'report_myfeedback') . $ownreport;
             }
 
-            //If looking at a student account and you have progadmin capability then you are not barred from that user
+            // If looking at a student account and you have progadmin capability then you are not barred from that user.
             if (has_capability('report/myfeedback:progadmin', $coursecontext, $USER->id, $doanything = false)) {
                 $progadmin = true;
-                $report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . 
-                        $user->lastname . get_string('progadminview', 'report_myfeedback') . $ownreport;
+                $reportheading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback')
+                    . $user->firstname . ' ' . $user->lastname . get_string('progadminview', 'report_myfeedback') . $ownreport;
             }
         }
     }
 }
 
-//If user doesn't have the moodle capability to see the specific user they can't access it
+// If user doesn't have the moodle capability to see the specific user they can't access it.
 $canaccessuser = false;
-if ($progadmin || $module_tutor || $userid == $USER->id || has_capability('moodle/user:viewdetails', $usercontext)) {
+if ($progadmin || $moduletutor || $userid == $USER->id || has_capability('moodle/user:viewdetails', $usercontext)) {
     // Has access to the user.
     $canaccessuser = true;
 } else {
@@ -227,44 +227,45 @@ if ($progadmin || $module_tutor || $userid == $USER->id || has_capability('moodl
     die();
 }
 
-//Display the different tabs based on the logged-in user's roles
+// Display the different tabs based on the logged-in user's roles.
 $thistab = optional_param('currenttab', '', PARAM_TEXT);
 if ((($thistab == 'overview' || $thistab == 'feedback' || $thistab == 'ptutor') && $userid == $USER->id) || $userid == $USER->id) {
-    $report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . $user->lastname . $ownreport;
+    $reportheading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname
+        . ' ' . $user->lastname . $ownreport;
 }
 if ($thistab == 'mytutees') {
-    $report_heading = get_string('tabs_mytutees', 'report_myfeedback') . $ownreport;
+    $reportheading = get_string('tabs_mytutees', 'report_myfeedback') . $ownreport;
 }
 if ($thistab == 'tutor') {
-    $report_heading = get_string('tabs_tutor', 'report_myfeedback') . $ownreport;
+    $reportheading = get_string('tabs_tutor', 'report_myfeedback') . $ownreport;
 }
 if ($thistab == 'mymodules') {
-    $report_heading = get_string('tabs_mtutor', 'report_myfeedback') . $ownreport;
+    $reportheading = get_string('tabs_mtutor', 'report_myfeedback') . $ownreport;
 }
 if ($thistab == 'progadmin') {
-    $report_heading = get_string('progadmin_dashboard', 'report_myfeedback') . $ownreport;
+    $reportheading = get_string('progadmin_dashboard', 'report_myfeedback') . $ownreport;
 }
 if ($thistab == 'usage') {
-    $report_heading = get_string('usage_dashboard', 'report_myfeedback') . $ownreport;
+    $reportheading = get_string('usage_dashboard', 'report_myfeedback') . $ownreport;
 }
 
 echo '<div class="heading">';
-echo $OUTPUT->heading($report_heading);
+echo $OUTPUT->heading($reportheading);
 echo '</div>';
 
-//get the year on the programme for the user from their profile
-//This requires that the below profile field is added
+// Get the year on the programme for the user from their profile.
+// This requires that the below profile field is added.
 $year = 1;
 profile_load_data($user);
 if (isset($user->profile_field_courseyear)) {
     $year = $user->profile_field_courseyear;
 }
-//Tabs setup
+// Tabs setup.
 $currenttab = optional_param('currenttab', 'overview', PARAM_TEXT);
 $thispageurl = 'index.php';
 $tabs = array();
 
-//If departmental admin and not viewing a tutee's report
+// If departmental admin and not viewing a tutee's report.
 if ($prog && !$viewtutee) {
     $tabs[] = new tabobject('progadmin',
             new moodle_url($thispageurl, array(
@@ -276,8 +277,8 @@ if ($prog && !$viewtutee) {
     );
 }
 
-//If tutor and not viewing a tutee's report
-if ($module_tutor && !$viewtutee) {
+// If tutor and not viewing a tutee's report.
+if ($moduletutor && !$viewtutee) {
     $tabs[] = new tabobject('mymodules',
             new moodle_url($thispageurl, array(
                     'userid' => $userid,
@@ -286,8 +287,8 @@ if ($module_tutor && !$viewtutee) {
             )),
             get_string('tabs_mtutor', 'report_myfeedback'));
 }
-//If personal tutor and not viewing a tutee's report
-if ($personal_tutor && !$viewtutee) {
+// If personal tutor and not viewing a tutee's report.
+if ($personaltutor && !$viewtutee) {
     $tabs[] = new tabobject('tutor',
             new moodle_url($thispageurl, array(
                     'userid' => $userid,
@@ -298,21 +299,21 @@ if ($personal_tutor && !$viewtutee) {
     );
 }
 
-if ($personal_tutor && !$viewtutee) {
-    $currenttab = optional_param('currenttab', 'tutor', PARAM_TEXT);    
+if ($personaltutor && !$viewtutee) {
+    $currenttab = optional_param('currenttab', 'tutor', PARAM_TEXT);
 }
-if ($module_tutor && !$viewtutee) {
-    $currenttab = optional_param('currenttab', 'mymodules', PARAM_TEXT);    
+if ($moduletutor && !$viewtutee) {
+    $currenttab = optional_param('currenttab', 'mymodules', PARAM_TEXT);
 }
 if ($prog && !$viewtutee) {
-    $currenttab = optional_param('currenttab', 'progadmin', PARAM_TEXT);    
+    $currenttab = optional_param('currenttab', 'progadmin', PARAM_TEXT);
 }
 if ($usage && !$viewtutee) {
-    $currenttab = optional_param('currenttab', 'usage', PARAM_TEXT);    
+    $currenttab = optional_param('currenttab', 'usage', PARAM_TEXT);
 }
 
 if ($showstudentstab) {
-    if ($prog || $module_tutor || $personal_tutor) {
+    if ($prog || $moduletutor || $personaltutor) {
         $tabs[] = new tabobject('mytutees',
                 new moodle_url($thispageurl, array(
                         'userid' => $userid,
@@ -324,7 +325,7 @@ if ($showstudentstab) {
     }
 }
 
-if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && !$personal_tutor && !$usage)) {
+if ($viewtutee || $isstudent || is_siteadmin() || (!$prog && !$moduletutor && !$personaltutor && !$usage)) {
     $tabs[] = new tabobject('overview',
             new moodle_url($thispageurl, array(
                     'userid' => $userid,
@@ -341,7 +342,7 @@ if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && 
             )),
             get_string('tabs_feedback', 'report_myfeedback')
     );
-    if ($mytutorid && !$personal_tutor) {
+    if ($mytutorid && !$personaltutor) {
         $tabs[] = new tabobject('ptutor',
                 new moodle_url($thispageurl, array(
                         'userid' => $userid,
@@ -353,7 +354,7 @@ if ($viewtutee || $is_student || is_siteadmin() || (!$prog && !$module_tutor && 
     $currenttab = optional_param('currenttab', 'overview', PARAM_TEXT);
 }
 
-//If usage and not viewing a tutee's report
+// If usage and not viewing a tutee's report.
 if ($usage && !$viewtutee) {
     $tabs[] = new tabobject('usage',
             new moodle_url($thispageurl, array(
@@ -392,33 +393,31 @@ switch ($currenttab) {
     case 'progadmin':
         require_once('programmeadmin/index.php');
         break;
-	case 'usage':
+    case 'usage':
         require_once('usage/index.php');
         break;
     default:
         break;
 }
-//End of tabs setup
+// End of tabs setup.
 echo $OUTPUT->footer();
 
-//Only log the action if the related user is changed in the session
+// Only log the action if the related user is changed in the session.
 if (array_key_exists('viewed', $_SESSION)) {
     if ($_SESSION['viewed'] != $userid) {
         // Trigger a viewed event.
-        $event = \report_myfeedback\event\myfeedbackreport_viewed::create(array('context' => context_system::instance(0), 'relateduserid' => $userid));
+        $event = \report_myfeedback\event\myfeedbackreport_viewed::create(
+            array('context' => context_system::instance(0), 'relateduserid' => $userid)
+        );
         $event->trigger();
         $_SESSION['viewed'] = $userid;
     }
 } else {
-    $event = \report_myfeedback\event\myfeedbackreport_viewed::create(array('context' => context_system::instance(0), 'relateduserid' => $userid));
+    $event = \report_myfeedback\event\myfeedbackreport_viewed::create(
+        array('context' => context_system::instance(0), 'relateduserid' => $userid)
+    );
     $event->trigger();
     $_SESSION['viewed'] = $userid;
 }
-//stop the progress bar when page loads.
-echo "<script type=\"text/javascript\">
-    $(document).ready( function () {
-
-$('#wait').css({'cursor':'default','display':'none'});
-$('body').css('cursor', 'default');
-});
-</script>";
+// Stop the progress bar when page loads.
+$PAGE->requires->js_call_amd('report_myfeedback/main', 'init');

@@ -115,11 +115,11 @@ if ($userid != $USER->id) {
 $archiveyear = substr_replace($res, '-', 2, 0); //for building the archive link
 $arch = $res;
 $pos = stripos($CFG->wwwroot, $archiveyear);
-/*if (!$personal_tutor && !$progadmin && !is_siteadmin() && !$archivedinstance && $pos === false && $res != 'current') {
+/*if (!$personaltutor && !$progadmin && !is_siteadmin() && !$archivedinstance && $pos === false && $res != 'current') {
     //echo '<script>location.replace("http://127.0.0.1:88/v288/report/myfeedback/index.php?userid=' . $userid . '&currenttab=' . $currenttab . '");</script>';
     echo '<script>location.replace("'.$archivedomain.$archiveyear.'/report/myfeedback/index.php?userid='.$userid.'&currenttab='.$currenttab.'");</script>';
 }
-if (!$personal_tutor && !$progadmin && !is_siteadmin() && $archivedinstance && $pos === false && $res != 'current') {
+if (!$personaltutor && !$progadmin && !is_siteadmin() && $archivedinstance && $pos === false && $res != 'current') {
     //echo '<script>location.replace("http://127.0.0.1:88/v288/report/myfeedback/index.php?userid=' . $userid . '&currenttab=' . $currenttab . '");</script>';
     echo '<script>location.replace("'.$archivedomain.$archiveyear.'/report/myfeedback/index.php?userid='.$userid.'&currenttab='.$currenttab.'");</script>';
 }
@@ -127,12 +127,12 @@ if (isset($yrr->archivedinstance) && $yrr->archivedinstance && $res == 'current'
     //echo '<script>location.replace("http://127.0.0.1:88/v2810/report/myfeedback/index.php?userid=' . $userid . '&archive=yes&currenttab=' . $currenttab . '");</script>';
     echo '<script>location.replace("'.$livedomain.'report/myfeedback/index.php?userid='.$userid.'&archive=yes&currenttab='.$currenttab.'");</script>';
 }*/
-if (!$personal_tutor && !$progadmin && !is_siteadmin()) {
+if (!$personaltutor && !$progadmin && !is_siteadmin()) {
     $res = '';//If all else fails it should check only it's current database
 }
 
 $report->setup_external_db($res);
-$content = $report->get_content($currenttab, $personal_tutor, $progadmin, $arch);
+$content = $report->get_content($currenttab, $personaltutor, $progadmin, $arch);
 echo $content->text;
 echo $OUTPUT->container_start('info');
 echo $OUTPUT->container_end();

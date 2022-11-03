@@ -32,7 +32,7 @@ require_login();
 //  * report_feedback::get_content()
 // Access to these seems to be guarded by one or both of:
 //  * Capability checks on the files included as tabs.
-//  * Role variables (e.g. $module_tutor) in index.php, which are initialised false,
+//  * Role variables (e.g. $moduletutor) in index.php, which are initialised false,
 //    enabled to true when relevant capability checks are passed, and then
 //    used to deny access to the files included as tabs.
 
