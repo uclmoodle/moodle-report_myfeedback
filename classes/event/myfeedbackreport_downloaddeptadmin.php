@@ -24,8 +24,6 @@
 
 namespace report_myfeedback\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The report_myfeedback report viewed event class.
  * @since      Moodle 2.7

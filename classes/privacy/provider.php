@@ -24,8 +24,6 @@
 
 namespace report_myfeedback\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 use \core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
@@ -38,21 +36,14 @@ use core_privacy\local\request\userlist;
  * @copyright  2019 Segun Babalola <segun@babalola.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements
-    // This plugin has data.
-    \core_privacy\local\metadata\provider,
-
-    // This plugin currently implements the original plugin\provider interface.
-    \core_privacy\local\request\plugin\provider
-{
+class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\plugin\provider {
 
     /**
      * Declare/define the scope of data this plugin is responsible for.
      * @param collection $collection
      * @return collection
      */
-    public static function get_metadata(collection $collection): collection
-    {
+    public static function get_metadata(collection $collection): collection {
         $collection->add_database_table(
             'report_myfeedback',
             [
@@ -123,8 +114,7 @@ class provider implements
      * @throws \coding_exception
      * @throws \dml_exception
      */
-    public static function export_user_data(approved_contextlist $contextlist)
-    {
+    public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
 
         // Confirm we're exporting data for the correct component.
@@ -139,7 +129,7 @@ class provider implements
             }
         });
 
-        // Get user Ids
+        // Get user Ids.
         $userids = array_map(function($context) {
             return $context->instanceid;
         }, $validcontexts);
@@ -176,8 +166,10 @@ class provider implements
         }
 
         foreach ($outputrecords as $r) {
-            \core_privacy\local\request\writer::with_context($r->context)->export_data([get_string('privacy:exportpath', 'report_myfeedback')],
-                (object) $r->entries);
+            \core_privacy\local\request\writer::with_context($r->context)->export_data(
+                [get_string('privacy:exportpath', 'report_myfeedback')],
+                (object) $r->entries
+            );
         }
 
     }
@@ -216,15 +208,14 @@ class provider implements
      * Delete data for single (specified) user in a specified context.
      * @param approved_contextlist $contextlist
      */
-    public static function delete_data_for_user(approved_contextlist $contextlist)
-    {
+    public static function delete_data_for_user(approved_contextlist $contextlist) {
         if ($contextlist->get_component() != 'report_myfeedback') {
             return;
         }
 
         foreach ($contextlist->get_contexts() as $context) {
             if ($context->contextlevel == CONTEXT_COURSE) {
-                // $context->instanceid and $contextlist->get_user()->id should have same value, so use either.
+                // Vars $context->instanceid and $contextlist->get_user()->id should have same value, so use either.
                 static::delete_single_user_data($contextlist->get_user()->id);
             }
         }

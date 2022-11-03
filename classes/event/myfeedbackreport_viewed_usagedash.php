@@ -25,8 +25,6 @@
 
 namespace report_myfeedback\event;
 
-defined('MOODLE_INTERNAL') || die();
-
 class myfeedbackreport_viewed_usagedash extends \core\event\base {
 
     /**
