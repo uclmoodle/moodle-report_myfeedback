@@ -16,7 +16,7 @@
 
 /*
  * The included file for for to select modules on Mod tutor dashboard
- * 
+ *
  * @package  report_myfeedback
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -40,7 +40,7 @@ echo "<div class=\"ac-year-right\"><p class=\"my\">" . $modheading . ": " . $mod
         . '<form method="POST" id="mod_form" action="">'
         . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
         . '<select multiple="multiple" id="modSelect" name="modselect[]">';
-foreach ($my_tutor_mods as $val1) {
+foreach ($mytutormods as $val1) {
     echo "<option value=\"" . $val1->shortname."\"";
     foreach ($m as $v2) {
         if ($v2 == $val1->shortname) {
@@ -49,6 +49,5 @@ foreach ($my_tutor_mods as $val1) {
     }
     echo ">" . $val1->shortname;
 }
-echo "</select><input type='submit' value='".get_string('analyse','report_myfeedback')."'>
+echo "</select><input type='submit' value='".get_string('analyse', 'report_myfeedback')."'>
     </form></p></div>";
-
