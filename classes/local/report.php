@@ -3611,7 +3611,7 @@ class report {
      * Get table for progadmin page.
      *
      * @param $ptutors
-     * @param $p_tutor_id
+     * @param $ptutorid
      * @param $modtut
      * @param $tutgroup
      * @param $currentmod
@@ -4203,9 +4203,9 @@ class report {
      * @param array $tutor stats from mod tutor tab
      * @param string An id for the canvas image
      * @param string An id for the assessment table
-     * @return stdClass The canvas images of the overall position and the module breakdown images
+     * @return string The canvas images of the overall position and the module breakdown images
      */
-    public function get_dashboard_zscore($userid, $tutor = null, $coid = null, $asid = null): stdClass {
+    public function get_dashboard_zscore($userid, $tutor = null, $coid = null, $asid = null): string {
         global $remotedb;
         $eachavg = [];
         $allcourses = [];

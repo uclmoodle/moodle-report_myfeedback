@@ -167,9 +167,9 @@ if ($p_tutor_cap = $report->get_dashboard_capability($USER->id, 'report/myfeedba
     $report_heading = get_string('dashboard', 'report_myfeedback') . get_string('for', 'report_myfeedback') . $user->firstname . ' ' . 
             $user->lastname . get_string('personaltutorview', 'report_myfeedback') . $ownreport;
 }
-$p_tutor_id = $report->get_personal_tutor_id();
+$ptutorid = $report->get_personal_tutor_id();
 //Get the personal tutor details of the user
-if ($mytutorid = $report->get_my_personal_tutor($p_tutor_id, $usercontext->id)) {
+if ($mytutorid = $report->get_my_personal_tutor($ptutorid, $usercontext->id)) {
     //
 }
 
