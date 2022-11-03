@@ -55,17 +55,17 @@ class behat_myfeedback extends behat_base {
         $colummappings = $this->extract_column_mappings($data);
 
         if (is_array($data) && (count($data) > 1)) {
-            for ($i=1; $i < count($data); $i++) {
+            for ($i = 1; $i < count($data); $i++) {
                 $usernamestudent = $data[$i][$colummappings['student']];
                 $usernametutor = $data[$i][$colummappings['grader']];
                 $assigmentname = $data[$i][$colummappings['assignment']];
                 $assignedgrade = $data[$i][$colummappings['grade']];
 
-                $studentid = $DB->get_field('user', 'id',['username' => $usernamestudent], MUST_EXIST);
-                $tutorid = $DB->get_field('user', 'id',['username' => $usernametutor], MUST_EXIST);
-                $assignmentid = $DB->get_field('assign', 'id',['name' => $assigmentname], MUST_EXIST);
+                $studentid = $DB->get_field('user', 'id', ['username' => $usernamestudent], MUST_EXIST);
+                $tutorid = $DB->get_field('user', 'id', ['username' => $usernametutor], MUST_EXIST);
+                $assignmentid = $DB->get_field('assign', 'id', ['name' => $assigmentname], MUST_EXIST);
 
-                // Create grade_items record
+                // Create grade_items record.
                 $gradeassignment = new stdClass();
                 $gradeassignment->assignment = $assignmentid;
                 $gradeassignment->grade = $assignedgrade;
@@ -74,9 +74,9 @@ class behat_myfeedback extends behat_base {
 
                 $DB->insert_record('assign_grades', $gradeassignment);
 
-                $gradeitemid = $DB->get_field('grade_items', 'id',['itemname' => $assigmentname], MUST_EXIST);
+                $gradeitemid = $DB->get_field('grade_items', 'id', ['itemname' => $assigmentname], MUST_EXIST);
 
-                // Create grade_grades record
+                // Create grade_grades record.
                 $gradeitem = new stdClass();
                 $gradeitem->itemid = $gradeitemid;
                 $gradeitem->userid = $studentid;
@@ -127,8 +127,8 @@ class behat_myfeedback extends behat_base {
         $coursedata = $courses->getRows();
         $coursepermissions[] = ['capability', 'permission', 'role', 'contextlevel', 'reference'];
 
-        if (is_array($coursedata) && (count($coursedata) > 1)){
-            for ($i=1; $i<count($coursedata); $i++) {
+        if (is_array($coursedata) && (count($coursedata) > 1)) {
+            for ($i = 1; $i < count($coursedata); $i++) {
                 $coursepermissions[] = [
                     'report/myfeedback:progadmin',
                     'Allow',
@@ -138,7 +138,7 @@ class behat_myfeedback extends behat_base {
                 ];
             }
 
-            $this->execute("behat_data_generators::the_following_entities_exist",['permission overrides',
+            $this->execute("behat_data_generators::the_following_entities_exist", ['permission overrides',
                 new TableNode($coursepermissions)
             ]);
         }
@@ -152,15 +152,15 @@ class behat_myfeedback extends behat_base {
      * @throws Exception
      */
     public function the_following_personal_tutors_are_assigned_the_following_tutees(TableNode $table) {
-        // Grant "report/myfeedback:personaltutor" to the personal tutor role
+        // Grant "report/myfeedback:personaltutor" to the personal tutor role.
         $coursepermissions[] = ['capability', 'permission', 'role', 'contextlevel', 'reference'];
         $coursepermissions[] = ['report/myfeedback:personaltutor', 'Allow', 'personal_tutor', 'System', ''];
 
-        $this->execute("behat_data_generators::the_following_entities_exist",['permission overrides',
+        $this->execute("behat_data_generators::the_following_entities_exist", ['permission overrides',
             new TableNode($coursepermissions)
         ]);
 
-        // Grant listed user accounts the personal tutor role
+        // Grant listed user accounts the personal tutor role.
         $data[] = ['role', 'contextlevel', 'user', 'reference'];
         foreach ($table as $relationship) {
             $data[] = ['personal_tutor', 'User', $relationship['tutor'], $relationship['tutee']];
@@ -179,7 +179,7 @@ class behat_myfeedback extends behat_base {
         $colummappings = $this->extract_column_mappings($expectedstudents);
 
         if (is_array($expectedstudents) && (count($expectedstudents) > 1)) {
-            for ($i=1; $i < count($expectedstudents); $i++) {
+            for ($i = 1; $i < count($expectedstudents); $i++) {
                 $studentfullname = $expectedstudents[$i][$colummappings['fullname']];
                 $xpath = "//tr//td//a[contains(text(),'{$studentfullname}')]";
 
@@ -192,9 +192,9 @@ class behat_myfeedback extends behat_base {
 
     /**
      * Turns editing mode on.
-     * @Given /^I navigate to the My feedback plugin page$/
+     * @Given /^I navigate to the my feedback plugin page$/
      */
-    public function i_navigate_to_the_My_feedback_plugin_page() {
+    public function i_navigate_to_the_my_feedback_plugin_page() {
         $url = new moodle_url('/report/myfeedback/index.php', []);
         $this->getSession()->visit($this->locate_path($url->out_as_local_url(false)));
     }
@@ -229,7 +229,7 @@ class behat_myfeedback extends behat_base {
      *
      * @When /^I search for tutees using "(?P<tab_name_string>(?:[^"]|\\")*)"$/
      */
-    public function i_submit_search_form_For_students($crieria) {
+    public function i_submit_search_form_for_students($crieria) {
         $searchbox = $this->find_field("searchu");
         $searchbox->setValue($crieria);
         $submit = $this->find_button('Search');

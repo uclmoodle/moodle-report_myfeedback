@@ -40,8 +40,8 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
     $now = time();
     $sql = "SELECT feedback FROM {report_myfeedback}
                     WHERE userid=? AND gradeitemid=? AND iteminstance=?";
-    $sql1 = "UPDATE {report_myfeedback} 
-                    SET modifierid=?, feedback=?, timemodified=?   
+    $sql1 = "UPDATE {report_myfeedback}
+                    SET modifierid=?, feedback=?, timemodified=?
                     WHERE userid=? AND gradeitemid=? AND iteminstance=?";
     $sql2 = "INSERT INTO {report_myfeedback}
                     (userid, gradeitemid, modifierid, iteminstance, feedback, timemodified)

@@ -33,7 +33,7 @@ Feature: Students checking their own academic progress throughout the year
   @javascript
   Scenario: Access my personalised My feedback report
     When I log in as "student1"
-    And I navigate to the My feedback plugin page
+    And I navigate to the my feedback plugin page
     Then I should see a tab named "Overview"
     And I should see a tab named "Feedback comments"
 
@@ -41,7 +41,7 @@ Feature: Students checking their own academic progress throughout the year
   Scenario: A student is preparing for a meeting with a Career Advisor or Personal Tutor, and the student wishes to use
   the comments field to reflect on employability before the meeting.
     When I log in as "student1"
-    And I navigate to the My feedback plugin page
+    And I navigate to the my feedback plugin page
     And I should see a tab named "Feedback comments"
     When I click the tab titled "Feedback comments"
     Then I should see "C1 assignment" in the "feedbackcomments" "table"

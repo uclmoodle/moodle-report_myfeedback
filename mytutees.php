@@ -16,12 +16,12 @@
 
 /*
  * The main file for the My students tab
- * 
+ *
  * @package  report_myfeedback
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 defined('MOODLE_INTERNAL') || die;
 
 $PAGE->requires->js_call_amd('report_myfeedback/mytutees', 'init');
@@ -34,11 +34,10 @@ if (!($canaccessuser && $tutorview)) {
 }
 
 echo '<p>'.get_string('studentsaccessto', 'report_myfeedback').'</p>';
-//$check = optional_param('mytick', '', PARAM_TEXT);
-      
-/*echo "<form method=\"POST\" id=\"alltutees\" action=\"\"><p>". get_string('alltutees', 'report_myfeedback').
-        "<input id=\"myCheckbox\" type=\"checkbox\" name=\"mytick\" value=\"checked\" $check></form></p>";*/
-$tutees = $report->get_all_accessible_users($personaltutor,$searchuser,$moduletutor,$prog);
+
+$tutees = $report->get_all_accessible_users($personaltutor, $searchuser, $moduletutor, $prog);
 echo $tutees;
-$event = \report_myfeedback\event\myfeedbackreport_viewed_mystudents::create(array('context' => context_user::instance($USER->id), 'relateduserid' => $userid));
+$event = \report_myfeedback\event\myfeedbackreport_viewed_mystudents::create(
+    array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+);
 $event->trigger();

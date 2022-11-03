@@ -20,15 +20,14 @@
  * @package   report_myfeedback
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
- *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
+ * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
+ *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga
  *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
- *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
+ *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and
  *            Prof John Mitchell <j.mitchell@ucl.ac.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die;
 
 /**
  * This function extends the navigation with the My feedback report.
@@ -49,10 +48,12 @@ function report_myfeedback_extend_navigation(global_navigation $navigation) {
  * @param stdClass $course The course object
  * @param stdClass $user The user object
  */
-function report_myfeedback_extend_navigation_user($navigation, $user, $course) {//backward compatibility to v2.8 and earlier versions
+function report_myfeedback_extend_navigation_user($navigation, $user, $course) {
+    // Backward compatibility to v2.8 and earlier versions.
     $context = context_user::instance($user->id, MUST_EXIST);
     $url = new moodle_url('/report/myfeedback/index.php', array('userid' => $user->id));
-    $navigation->add(get_string('pluginname', 'report_myfeedback'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+    $navigation->add(get_string('pluginname', 'report_myfeedback'),
+        $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
 }
 
 /**
@@ -66,7 +67,8 @@ function report_myfeedback_extend_navigation_user($navigation, $user, $course) {
  */
 function report_myfeedback_extend_navigation_user_settings($navigation, $user, $context, $course, $coursecontext) {
     $url = new moodle_url('/report/myfeedback/index.php', array('userid' => $user->id));
-    $navigation->add(get_string('pluginname', 'report_myfeedback'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+    $navigation->add(get_string('pluginname', 'report_myfeedback'), $url,
+        navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
 }
 
 /**
@@ -78,9 +80,11 @@ function report_myfeedback_extend_navigation_user_settings($navigation, $user, $
  */
 function report_myfeedback_extend_navigation_course($navigation, $course, $context) {
     global $USER;
-    $url = has_capability('report/myfeedback:modtutor', $context) ? new moodle_url('/report/myfeedback/index.php', array('userid' => $USER->id, 'currenttab' => 'mymodules')) :
+    $url = has_capability('report/myfeedback:modtutor', $context)
+        ? new moodle_url('/report/myfeedback/index.php', array('userid' => $USER->id, 'currenttab' => 'mymodules')) :
             new moodle_url('/report/myfeedback/index.php', array('userid' => $USER->id));
-    $navigation->add(get_string('pluginname', 'report_myfeedback'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+    $navigation->add(get_string('pluginname', 'report_myfeedback'),
+        $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
 }
 
 /**
@@ -91,8 +95,9 @@ function report_myfeedback_extend_navigation_course($navigation, $course, $conte
  * @param bool $iscurrentuser Whether the logged-in user is current user
  * @param stdClass $course The course object
  */
-function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {//for comaptibility with v2.9 and later   
-    $url = new moodle_url('/report/myfeedback/index.php',array(
+function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
+    // For compatibility with v2.9 and later.
+    $url = new moodle_url('/report/myfeedback/index.php', array(
             'userid' => $user->id,
             'sesskey' => sesskey()
     ));
@@ -107,16 +112,10 @@ function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree 
 
 
 /**
- * Return HTML/JS to remove the "loading" spinner.
- *
- * @return str HTML & javascript fragment.
+ * Initialise JS to remove the "loading" spinner.
  */
-function report_myfeedback_stop_spinner() {
-    $s = "<script>
-    $(document).ready(function() {
-        $('#wait').css({'cursor':'default','display':'none'});
-        $('body').css('cursor', 'default');
-    });
-</script>";
-    return $s;
+function report_myfeedback_stop_spinner(): void {
+    global $PAGE;
+
+    $PAGE->requires->js_call_amd('report_myfeedback/main', 'init');
 }
