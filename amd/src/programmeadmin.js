@@ -78,12 +78,23 @@ define(['jquery', 'core/str'], function ($, str) {
         },
     ];
 
+    const stringResults = {};
+
+    const setupStudentTable = () => {
+        $('.overallgrade').show();
+        $('span.studentsassessed').text(stringResults.dashboard_students);
+        $('.studentimgdue').attr('title', stringResults.student_due_info);
+        $('.studentimgnon').attr('title', stringResults.student_nonsub_info);
+        $('.studentimglate').attr('title', stringResults.student_late_info);
+        $('.studentimggraded').attr('title', stringResults.student_graded_info);
+        $('.studentimglow').attr('title', stringResults.student_low_info);
+    };
+
     return {
         init: function () {
             $(document).ready(function () {
 
                 // Populate strings.
-                const stringResults = {};
                 str.get_strings(strings).then(results => results.forEach((val, key) => {
                     const string = strings[key];
                     stringResults[string.key] = val;
@@ -158,15 +169,8 @@ define(['jquery', 'core/str'], function ($, str) {
                     });
                 });
 
-                $('.modass').click(function () {
-                    $('.overallgrade').show();
-                    $('span.studentsassessed').text(stringResults.dashboard_students);
-                    $('.studentimgdue').attr('title', stringResults.student_due_info);
-                    $('.studentimgnon').attr('title', stringResults.student_nonsub_info);
-                    $('.studentimglate').attr('title', stringResults.student_late_info);
-                    $('.studentimggraded').attr('title', stringResults.student_graded_info);
-                    $('.studentimglow').attr('title', stringResults.student_low_info);
-                });
+                setupStudentTable();
+                $('.modass').click(setupStudentTable);
 
                 $('.pToggle').click(function () {
                     $(this).closest('#selected-prog-container').find('.progtable').hide();

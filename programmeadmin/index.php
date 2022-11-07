@@ -309,18 +309,6 @@ if ($curdept && $curprog) {
                 . '</i></td></tr>';
             $dup = 1;
         }
-
-        echo "<script type=\"text/javascript\">
-        $(document).ready(function() {
-        $('.overallgrade').show();
-        $('span.studentsassessed').text('".get_string('dashboard_students', 'report_myfeedback')."');
-        $('.studentimgdue').attr('title', '".get_string('student_due_info', 'report_myfeedback')."');
-        $('.studentimgnon').attr('title', '".get_string('student_nonsub_info', 'report_myfeedback')."');
-        $('.studentimglate').attr('title', '".get_string('student_late_info', 'report_myfeedback')."');
-        $('.studentimggraded').attr('title', '".get_string('student_graded_info', 'report_myfeedback')."');
-        $('.studentimglow').attr('title', '".get_string('student_low_info', 'report_myfeedback')."');
-        });
-        </script>";
     } else {
         echo '<h3><b>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$curdept]['prog'][$curprog]['name']
             . '</b></h3>' . '<p style = "margin: 20px 0">
