@@ -68,5 +68,10 @@ if (!empty($notename) && $gradeid && $userid) {
 
     $event->trigger();
 
-    header('Location: index.php?userid=' . $userid . '&currenttab=feedback');
+    redirect(new \moodle_url('/report/myfeedback/index.php',
+        [
+            'userid' => $userid,
+            'currenttab' => 'feedback'
+        ]
+    ));
 }
