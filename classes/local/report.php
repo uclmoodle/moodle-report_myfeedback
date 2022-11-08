@@ -6364,7 +6364,7 @@ class report {
                             }
 
                             $notes = '';
-                            $noteslink = '<a href="#" class="addnote" data-toggle="modal" title="'
+                            $noteslink = '<a href="#" class="addnote" data-target="#Abs2" data-toggle="modal" title="'
                                 . get_string('addnotestitle', 'report_myfeedback') . '" rel="tooltip" data-uid="' .
                                 $userid . '" data-gid="' . $tdid . '" data-inst="' . $instn . '">'
                                 . get_string('addnotes', 'report_myfeedback') . '</a>';
@@ -6456,7 +6456,7 @@ class report {
                                     'formid' => 'feedform',
                                     'gradeid' => 'gradeid2',
                                     'instanceid' => 'instance',
-                                    'modalid' => 'Abs2',
+                                    'modalid' => 'Abs1',
                                     'submitbtnid' => 'submitfeed',
                                     'submitbtntext' => get_string('savefeedback', 'report_myfeedback'),
                                     'textid' => 'feedname',

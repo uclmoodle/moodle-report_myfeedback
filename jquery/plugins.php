@@ -32,6 +32,5 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugins = array(
-    'tooltip' => array('files' => array('tooltip.js', 'tooltip.css')),
-    'modal' => array('files' => array('modal.js'))
+    'tooltip' => array('files' => array('tooltip.js', 'tooltip.css'))
 );

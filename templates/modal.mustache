@@ -35,24 +35,28 @@
     }
 
 }}
-<div class="container modal-container">
-    <div id="{{modalid}}" class="modal hide fade">
-        <div class="modal-header">
-            <h3 class="modal-title">{{title}}</h3>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+<div class="modal fade" id="{{modalid}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="{{modalid}}ModalLabel">{{title}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="{{formid}}" action="{{{actionurl}}}">
+                    <input type="hidden" name="sesskey" value="{{globals.config.sesskey}}" />
+                    <textarea id="{{textid}}" class="autoexpand" name="{{textid}}" wrap="hard" rows="4" data-min-rows="4" cols="60"></textarea>
+                    <input type="hidden" name="{{gradeid}}" id="{{gradeid}}" value="" />
+                    <input type="hidden" name="{{instanceid}}" id="{{instanceid}}" value="" />
+                    <input type="hidden" name="{{userformname}}" id="{{userformid}}" value="" />
+                    <input type="submit" id="{{submitbtnid}}" value="{{submitbtntext}}" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body">
-            <form method="POST" id="{{formid}}" action="{{{actionurl}}}">
-                <input type="hidden" name="sesskey" value="{{globals.config.sesskey}}" />
-                <textarea id="{{textid}}" class="autoexpand" name="{{textid}}" wrap="hard" rows="4" data-min-rows="4" cols="60"></textarea>
-                <input type="hidden" name="{{gradeid}}" id="{{gradeid}}" value="" />
-                <input type="hidden" name="{{instanceid}}" id="{{instanceid}}" value="" />
-                <input type="hidden" name="{{userformname}}" id="{{userformid}}" value="" />
-                <input type="submit" id="{{submitbtnid}}" value="{{submitbtntext}}" />
-            </form>
-        </div>
-        <div class="modal-footer"><a class="btn" href="#" data-dismiss="modal">{{#str}} close, report_myfeedback {{/str}}</a></div>
     </div>
 </div>

@@ -49,7 +49,6 @@ $PAGE->set_heading($COURSE->fullname);
 $PAGE->set_title(get_string('pluginname', 'report_myfeedback'));
 
 $PAGE->requires->jquery_plugin('tooltip', 'report_myfeedback');
-$PAGE->requires->jquery_plugin('modal', 'report_myfeedback');
 
 require_login();
 $dots = get_string('choosedots');

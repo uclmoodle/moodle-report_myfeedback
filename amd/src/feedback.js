@@ -139,9 +139,6 @@ define([
                     $('#instance1').val(instn);
                     $('#user_id').val($(this).data('uid'));
                     $('#notename').val($('#note-val'+gradeid+instn).text());
-                    if ($('#Abs2').modal) {
-                        $('#Abs2').modal('show');
-                    }
                 });
 
                 $feedbackcomments.on('click', '.addfeedback', function () {
@@ -151,9 +148,6 @@ define([
                     $('#instance').val(instn);
                     $('#user_id2').val($(this).data('uid'));
                     $('#feedname').val($('#feed-val'+gradeid2+instn).text());
-                    if ($('#Abs1').modal) {
-                        $('#Abs1').modal('show');
-                    }
                 });
             });
         }
