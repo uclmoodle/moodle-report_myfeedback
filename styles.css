@@ -29,6 +29,15 @@
     margin-left: 7px;
 }
 
+.path-report-myfeedback .progress-spinner {
+    width: 70px;
+    height: 60px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    z-index: 9999;
+}
+
 /*
  * Table
 */

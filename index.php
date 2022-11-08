@@ -103,10 +103,9 @@ $report->init();
 $report->setup_external_db();
 
 // Get a progress bar when report is getting info.
-echo "<div id=\"wait\" style=\"width:70px;height:60px;position:absolute;top:40%;left:50%;z-index:9999\">
-        <img src=\"pix/progress.gif\"/>
-    </div>
-    <script type=\"text/javascript\">jQuery(\"body\").css(\"cursor\", \"progress\");</script>";
+echo $OUTPUT->render_from_template('report_myfeedback/progress', [
+    'progressimg' => new moodle_url('/report/myfeedback/pix/progress.gif')
+]);
 
 if (empty($userid)) {
     $userid = $USER->id;
