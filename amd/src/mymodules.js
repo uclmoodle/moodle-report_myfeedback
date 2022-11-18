@@ -13,23 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Helper function to build JS vendor path.
- *
- * @param {string} path
- * @returns {string}
- */
-const vendorJSURL = function (path) {
-    return M.cfg.wwwroot + '/report/myfeedback/vendor/js/' + path + '.min';
-};
-
 require.config({
     paths: {
-        'datatables.net': vendorJSURL('jquery.dataTables'),
-        'datatables.net-buttons': vendorJSURL('dataTables.buttons'),
-        'datatables.net-colreorder': vendorJSURL('dataTables.colReorder'),
-        'datatables.net-fixedheader': vendorJSURL('dataTables.fixedHeader'),
-        'datatables.net-responsive': vendorJSURL('dataTables.responsive'),
+        'datatables.net': M.cfg.wwwroot + '/report/myfeedback/vendor/js/jquery.dataTables.min',
+        'datatables.net-buttons': M.cfg.wwwroot + '/report/myfeedback/vendor/js/dataTables.buttons.min',
+        'datatables.net-colreorder': M.cfg.wwwroot + '/report/myfeedback/vendor/js/dataTables.colReorder.min',
+        'datatables.net-fixedheader': M.cfg.wwwroot + '/report/myfeedback/vendor/js/dataTables.fixedHeader.min',
+        'datatables.net-responsive': M.cfg.wwwroot + '/report/myfeedback/vendor/js/dataTables.responsive.min',
     },
 });
 
