@@ -1478,7 +1478,7 @@ class report {
         // The search form.
         echo '<form  method="POST"  id="searchform" action="" >
                 <input type="hidden" name="sesskey" value="' . sesskey() . '" />
-                            <input type="text" id="searchu" name="searchuser" value="'
+                            <input type="text" id="searchu" name="searchuser" placeholder="'
                                 . get_string("searchusers", "report_myfeedback") . '"
                             />
                             <input type="hidden" name="mytick" value="checked"/>
