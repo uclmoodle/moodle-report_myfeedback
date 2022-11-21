@@ -4203,9 +4203,9 @@ class report {
      * @param array $tutor stats from mod tutor tab
      * @param string An id for the canvas image
      * @param string An id for the assessment table
-     * @return stdClass The canvas images of the overall position and the module breakdown images
+     * @return mixed The canvas images of the overall position and the module breakdown images
      */
-    public function get_dashboard_zscore($userid, $tutor = null, $coid = null, $asid = null): stdClass {
+    public function get_dashboard_zscore($userid, $tutor = null, $coid = null, $asid = null) {
         global $remotedb;
         $eachavg = [];
         $allcourses = [];
