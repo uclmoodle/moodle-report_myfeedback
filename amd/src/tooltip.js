@@ -84,7 +84,7 @@ define(['jquery'], function($) {
 
                     const remove_tooltip = () => {
                         tooltip.animate({top: '-=10', opacity: 0}, 50, () => {
-                            $(this).remove();
+                            tooltip.remove();
                         });
 
                         target.attr('title', tip);
