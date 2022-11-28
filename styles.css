@@ -1492,6 +1492,12 @@ a:visited {
     -moz-background-clip: padding-box;
     background-clip: padding-box;
     outline: none;
+    height: fit-content;
+}
+
+.path-report-myfeedback #feedname, #notename {
+    height: 8em;
+    width: 30em;
 }
 
 .path-report-myfeedback .modal-backdrop {
