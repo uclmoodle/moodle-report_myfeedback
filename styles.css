@@ -1508,6 +1508,10 @@ a:visited {
     opacity: .8;
 }
 
+.path-report-myfeedback #tooltip2 {
+    z-index: 9999;
+}
+
 @media print {
     .path-report-myfeedback table.fixedHeader-floating {
         display: none;
