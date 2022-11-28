@@ -2049,7 +2049,7 @@ class report {
             return strcasecmp($a11['name'], $b11['name']);
         });
 
-        $aname = $ad = $an = $al = $ag = $af = $alo = $avas = '';
+        $anamecell = $ad = $an = $al = $ag = $af = $alo = $avas = '';
         foreach ($assess as $aid => $a) {
             $scol1 = $scol2 = $scol3 = $scol4 = '';
             $adue = $anon = $agraded = $alate = $afeed = $alow = 0;
@@ -2114,7 +2114,7 @@ class report {
             $ag .= $minortable . "<td>" . $agraded . "</td></tr></table></div>" . $ug;
             $alo .= $minortable . "<td>" . "<span class=$scol3>" . $alow . "</span></td></tr></table></div>" . $ulo;
             $avas .= $minortable . "<td class='overallgrade'>" . $assessgraph . "</td></tr></table></div>" . $uvas;
-            $aname .= $minortable . "<td id='assess-name'>" . $assessmenticon . $aname
+            $anamecell .= $minortable . "<td id='assess-name'>" . $assessmenticon . $aname
                 . $breakdown . "</td></tr></table></div>" . $uname;
         }
         $as = new stdClass();
@@ -2124,7 +2124,7 @@ class report {
         $as->ag = $ag;
         $as->alo = $alo;
         $as->a_vas = $avas;
-        $as->aname = $aname;
+        $as->aname = $anamecell;
         return $as;
     }
 
@@ -2151,7 +2151,7 @@ class report {
         $userassess = [];
         $assessuser = []; // If adding user for each assessment.
 
-        $uname = $uname = $ud = $un = $ul = $ug = $uf = $ulo = $uvas = $fname = $lname = '';
+        $usercell = $uname = $ud = $un = $ul = $ug = $uf = $ulo = $uvas = $fname = $lname = '';
 
         $usergraph = '<i style="color:#5A5A5A">' . get_string('nographtodisplay', 'report_myfeedback') . '</i>';
         if ($users) {
@@ -2223,7 +2223,7 @@ class report {
                     $height = '80px';
                     $studenttable = "<table style='" . $style . "' class='tutor-inner " . $display . "' height='"
                         . $height . "' align='center'><tr class='st-accord'>";
-                    $uname .= $studenttable . "<td>" . $uname . $breakdodwn . '</td></tr></table>';
+                    $usercell .= $studenttable . "<td>" . $uname . $breakdodwn . '</td></tr></table>';
                     $ud .= $studenttable . "<td class='assessdue'>" . $udue . "</td></tr></table>";
                     $un .= $studenttable . "<td>" . "<span class=$scol1>" . $unon . "</span></td></tr></table>";
                     $ul .= $studenttable . "<td>" . "<span class=$scol2>" . $ulate . "</span></td></tr></table>";
@@ -2245,7 +2245,7 @@ class report {
         $us->ug = $ug;
         $us->ulo = $ulo;
         $us->u_vas = $uvas;
-        $us->uname = $uname;
+        $us->uname = $usercell;
         $us->newusers = ($fromassess ? '' : $users);
         return $us;
     }
@@ -3585,13 +3585,13 @@ class report {
                 $result->graph .= "<td></td>";
                 $result->graph .= "<td></td></tr>";
             } else {
-                $result->graph .= "<tr class='recordRow' ><td>" . $mainassess->aname . $mainuser->uname . /* $uname . */ "</td>";
-                $result->graph .= "<td class='overallgrade'>" . $mainassess->a_vas . $mainuser->u_vas . /* $u_vas . */ "</td>";
-                $result->graph .= "<td>" . $mainassess->ad . $mainuser->ud . /* $ud . */ "</td>";
-                $result->graph .= "<td>" . $mainassess->an . $mainuser->un . /* $un . */ "</td>";
-                $result->graph .= "<td>" . $mainassess->al . $mainuser->ul . /* $ul . */ "</td>";
-                $result->graph .= "<td>" . $mainassess->ag . $mainuser->ug . /* $ug . */ "</td>";
-                $result->graph .= "<td>" . $mainassess->alo . $mainuser->ulo . /* $ulo . */ "</td></tr>";
+                $result->graph .= "<tr class='recordRow' ><td>" . $mainassess->aname . $mainuser->uname . "</td>";
+                $result->graph .= "<td class='overallgrade'>" . $mainassess->a_vas . $mainuser->u_vas . "</td>";
+                $result->graph .= "<td>" . $mainassess->ad . $mainuser->ud . "</td>";
+                $result->graph .= "<td>" . $mainassess->an . $mainuser->un . "</td>";
+                $result->graph .= "<td>" . $mainassess->al . $mainuser->ul . "</td>";
+                $result->graph .= "<td>" . $mainassess->ag . $mainuser->ug . "</td>";
+                $result->graph .= "<td>" . $mainassess->alo . $mainuser->ulo . "</td></tr>";
             }
         }
         $result->modgraph = $maingraph;
