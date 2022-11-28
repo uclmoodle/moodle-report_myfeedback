@@ -66,7 +66,10 @@ function report_myfeedback_extend_navigation_user($navigation, $user, $course) {
  * @param stdClass $coursecontext The context of the course
  */
 function report_myfeedback_extend_navigation_user_settings($navigation, $user, $context, $course, $coursecontext) {
-    $url = new moodle_url('/report/myfeedback/index.php', array('userid' => $user->id));
+    $url = new moodle_url('/report/myfeedback/index.php', array(
+        'userid' => $user->id,
+        'sesskey' => sesskey()
+    ));
     $navigation->add(get_string('pluginname', 'report_myfeedback'), $url,
         navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
 }
