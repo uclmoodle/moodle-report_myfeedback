@@ -1512,6 +1512,10 @@ a:visited {
     z-index: 9999;
 }
 
+.path-report-myfeedback #progtable > tbody > tr.recordRow {
+    display: none;
+}
+
 @media print {
     .path-report-myfeedback table.fixedHeader-floating {
         display: none;

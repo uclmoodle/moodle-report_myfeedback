@@ -364,7 +364,7 @@ if ($curdept && $curprog) {
     $stu = $report->get_user_analytics($pgusers, $cid = 't', $display = 'stuRec', $style = 'display:none');
     $progadminptutors = array();
 
-    $progtable .= "<tr><td>" . $stu->uname . "</td>";
+    $progtable .= "<tr class=\"recordRow\"><td>" . $stu->uname . "</td>";
     $progtable .= "<td  class='overallgrade'>" . $stu->u_vas . "</td>";
     $progtable .= "<td>" . $stu->ud . "</td>";
     $progtable .= "<td>" . $stu->un . "</td>";
