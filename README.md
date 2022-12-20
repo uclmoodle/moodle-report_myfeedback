@@ -31,6 +31,9 @@ The report requires jQuery to be enabled, otherwise sorting and searching will n
 Change log:
 
 Unreleased
+
+2.16 (Build 2022122100)
+Requirement increased to 3.9 but only tested on 3.11 - 4.x updating work is next
 Fix Behat 'The username must be in lower case' error.
 Replace $_POST with optional_param().
 Add missing MOODLE_INTERNAL lines.
