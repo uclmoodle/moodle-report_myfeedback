@@ -32,16 +32,15 @@ if (!$report->get_dashboard_capability($USER->id, 'report/myfeedback:progadmin')
 }
 
 echo "<p>" . get_string('overview_text_dept', 'report_myfeedback') . "</p>";
-
-// CATALYST CUSTOM (339111): Remove "Launch Student Record System" link.
 echo '<div style="float:right">
-            <p><span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip">
+            <p><span class="personaltutoremail">
+            <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></span>  
+            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip">
                 <a href="#">' . get_string('print_report', 'report_myfeedback') .
         '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
             <span class="personaltutoremail x_port">
             <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></span></p>
             </div>';
-// END CATALYST CUSTOM.
 
 $report->setup_external_db();
 $adminmods = array();

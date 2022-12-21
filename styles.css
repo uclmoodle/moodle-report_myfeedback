@@ -397,6 +397,8 @@
     margin: 0;
     margin-bottom: 10px;
     padding-left: 10px;
+    background: #619eb6;
+    color: #fff;
 }
 
 .path-report-myfeedback .nav.nav-tabs {
@@ -1287,12 +1289,6 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     float: right;
     margin: 0 40px;
 }
-
-/* CATALYST CUSTOM (339111): */
-.path-report-myfeedback .userprofilebox.overviewtab .ac-year-right {
-    display: none;
-}
-/* END CATALYST CUSTOM. */
 
 .path-report-myfeedback .ac-year-left {
     float: left;
