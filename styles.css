@@ -1463,11 +1463,6 @@ a {
     text-decoration: none;
 }
 
-a,
-a:visited {
-    color: #005e8d;
-}
-
 .path-report-myfeedback .modal {
     position: fixed;
     top: 10%;
