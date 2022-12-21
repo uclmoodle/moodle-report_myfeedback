@@ -1,8 +1,24 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 defined('MOODLE_INTERNAL') || die;
+
 if ($ADMIN->fulltree) {
-    //Database Settings
-    $settings->add(new admin_setting_heading('report_myfeedback_addheading',get_string('dbsettings', 'report_myfeedback'),''));
+    // Database Settings.
+    $settings->add(new admin_setting_heading('report_myfeedback_addheading', get_string('dbsettings', 'report_myfeedback'), ''));
     $settings->add(new admin_setting_configtext('report_myfeedback/dbhost', get_string('dbhost', 'report_myfeedback'),
                     get_string('dbhostinfo', 'report_myfeedback'), '', PARAM_URL, 30));
     $settings->add(new admin_setting_configtext('report_myfeedback/dbname', get_string('dbname', 'report_myfeedback'),
@@ -11,48 +27,56 @@ if ($ADMIN->fulltree) {
                     get_string('dbuserinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
     $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbpass', get_string('dbpass', 'report_myfeedback'),
                     get_string('dbpassinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
-    
+
     $options = array();
-    //If we are in Sept-Dec we subtract 2014 from the current year we are in otherwise we subtract 2015
-    //This is because we can only support up to 14/15 academic year
+    // If we are in Sept-Dec we subtract 2014 from the current year we are in otherwise we subtract 2015.
+    // This is because we can only support up to 14/15 academic year.
     $max = date('m') > 8 ? date('Y') - 2014 : date('Y') - 2015;
-    for ($i=0; $i<=$max; $i++) {
+    for ($i = 0; $i <= $max; $i++) {
         $options[$i] = $i;
-    }    
-    
-    //Archived Database Settings - 
-    $settings->add(new admin_setting_heading('report_myfeedback_addheading_archive',get_string('archivedbsettings', 'report_myfeedback'),''));
-    $settings->add(new admin_setting_configselect('report_myfeedback/archivedyears', get_string('archiveyears', 'report_myfeedback'),
-            get_string('archiveyearsinfo', 'report_myfeedback'), 0, $options));
-    $settings->add(new admin_setting_configtext('report_myfeedback/archivedomain', get_string('archivedomain', 'report_myfeedback'),
-            get_string('archivedomaininfo', 'report_myfeedback'), get_string('archivedomaindefault', 'report_myfeedback')));
-    $settings->add(new admin_setting_configtext('report_myfeedback/namingconvention', get_string('archivenamingconvention', 'report_myfeedback'), 
-            get_string('archivenamingconventioninfo', 'report_myfeedback'), get_string('archivenamingconventiondefault', 'report_myfeedback')));
-    $settings->add(new admin_setting_configtext('report_myfeedback/dbhostarchive', get_string('archivedbhost', 'report_myfeedback'),
+    }
+
+    // Archived Database Settings.
+    $settings->add(new admin_setting_heading('report_myfeedback_addheading_archive',
+                    get_string('archivedbsettings', 'report_myfeedback'), ''));
+    $settings->add(new admin_setting_configselect('report_myfeedback/archivedyears',
+                    get_string('archiveyears', 'report_myfeedback'),
+                    get_string('archiveyearsinfo', 'report_myfeedback'), 0, $options));
+    $settings->add(new admin_setting_configtext('report_myfeedback/archivedomain',
+                    get_string('archivedomain', 'report_myfeedback'),
+                    get_string('archivedomaininfo', 'report_myfeedback'), get_string('archivedomaindefault', 'report_myfeedback')));
+    $settings->add(new admin_setting_configtext('report_myfeedback/namingconvention',
+                    get_string('archivenamingconvention', 'report_myfeedback'),
+                    get_string('archivenamingconventioninfo', 'report_myfeedback'),
+                    get_string('archivenamingconventiondefault', 'report_myfeedback')));
+    $settings->add(new admin_setting_configtext('report_myfeedback/dbhostarchive',
+                    get_string('archivedbhost', 'report_myfeedback'),
                     get_string('archivedbhostinfo', 'report_myfeedback'), '', PARAM_URL, 30));
-    $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbuserarchive', get_string('archivedbuser', 'report_myfeedback'),
+    $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbuserarchive',
+                    get_string('archivedbuser', 'report_myfeedback'),
                     get_string('archivedbuserinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
-    $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbpassarchive', get_string('archivedbpass', 'report_myfeedback'),
+    $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbpassarchive',
+                    get_string('archivedbpass', 'report_myfeedback'),
                     get_string('archivedbpassinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
     $settings->add(new admin_setting_configtext('report_myfeedback/livedomain', get_string('livedomain', 'report_myfeedback'),
-            get_string('livedomaininfo', 'report_myfeedback'), get_string('livedomaindefault', 'report_myfeedback')));
-    $settings->add(new admin_setting_configtext('report_myfeedback/academicyear', get_string('settingsacademicyear', 'report_myfeedback'),
+                    get_string('livedomaininfo', 'report_myfeedback'), get_string('livedomaindefault', 'report_myfeedback')));
+    $settings->add(new admin_setting_configtext('report_myfeedback/academicyear',
+                    get_string('settingsacademicyear', 'report_myfeedback'),
                     get_string('academicyearinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
-    $settings->add(new admin_setting_configcheckbox('report_myfeedback/archivedinstance', get_string('archivedinstance', 'report_myfeedback'),
+    $settings->add(new admin_setting_configcheckbox('report_myfeedback/archivedinstance',
+                    get_string('archivedinstance', 'report_myfeedback'),
                     get_string('archivedinstanceinfo', 'report_myfeedback'), '0'));
-    
-    //Dept Admin dashboard Settings - 
-    $settings->add(new admin_setting_heading('report_myfeedback_addheading_courselimit',get_string('courselimitheading', 'report_myfeedback'),''));
+
+    // Dept Admin dashboard Settings.
+    $settings->add(new admin_setting_heading('report_myfeedback_addheading_courselimit',
+                    get_string('courselimitheading', 'report_myfeedback'), ''));
     $settings->add(new admin_setting_configtext('report_myfeedback/courselimit', get_string('courselimit', 'report_myfeedback'),
-            get_string('courselimitsettings', 'report_myfeedback'), 200, PARAM_INT));
-    
-    //Overview tab Settings - 
-    $settings->add(new admin_setting_heading('report_myfeedback_addheading_overviewlimit',get_string('overviewlimitheading', 'report_myfeedback'),''));
+                    get_string('courselimitsettings', 'report_myfeedback'), 200, PARAM_INT));
+
+    // Overview tab Settings.
+    $settings->add(new admin_setting_heading('report_myfeedback_addheading_overviewlimit',
+                    get_string('overviewlimitheading', 'report_myfeedback'), ''));
     $settings->add(new admin_setting_configtext('report_myfeedback/overviewlimit', get_string('overviewlimit', 'report_myfeedback'),
-            get_string('overviewlimitsettings', 'report_myfeedback'), 10, PARAM_INT));
-    
-        //Late feedback Settings - 
-    /*$settings->add(new admin_setting_heading('report_myfeedback_addheading_latefeedback',get_string('latefeedbackheading', 'report_myfeedback'),''));
-    $settings->add(new admin_setting_configtext('report_myfeedback/latefeedback', get_string('latefeedback', 'report_myfeedback'),
-            get_string('latefeedbacksettings', 'report_myfeedback'), 28, PARAM_INT));*/
+                    get_string('overviewlimitsettings', 'report_myfeedback'), 10, PARAM_INT));
+
 }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,8 +23,6 @@
  */
 
 namespace report_myfeedback\event;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The report_myfeedback report viewed event class.

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -21,11 +20,11 @@
  * @package   report_myfeedback
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on 
- * 			  block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga 
- * 			  <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
- * 			  <http://www.twitter.com/jleyvadelgado> configurable reports block.
- *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and 
+ * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
+ *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga
+ *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
+ *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
+ *            The idea for this reporting tool originated with Dr Jason Davies <j.p.davies@ucl.ac.uk> and
  *            Dr John Mitchell <j.mitchell@ucl.ac.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -354,7 +353,7 @@ $string['usagetblheader_name_info'] = 'The name of the course or user.';
 $string['usagetblheader_courses_info'] = 'The number of courses within this category.';
 $string['usagetblheader_students_info'] = 'The number of students enrolled in this course/category.';
 $string['usagetblheader_staff_info'] = 'The number of staff enrolled in this course/category.';
-$string['usagetblheader_viewedby_info'] = 'How many staff have viewed the report for this student.'; // not currently implemented
+$string['usagetblheader_viewedby_info'] = 'How many staff have viewed the report for this student.'; // Not currently implemented.
 $string['usagetblheader_viewed_info'] = 'How many users (or whether one user has) viewed the report at least once.';
 $string['usagetblheader_totalviews_info'] = 'The total number of views of any MyFeedback report.';
 $string['usagetblheader_notes_info'] = 'The number of self-reflective notes added.';
@@ -383,6 +382,9 @@ $string['usage_staffmember_info'] = 'This report shows the usage of an individua
 $string['usage_personaltutorstudents_info'] = 'This report shows an overview of a tutor\'s personal tutees and their My Feedback activity.';
 $string['category'] = 'Category';
 $string['view'] = 'view';
+$string['viewadminreports'] = 'View admin reports';
+$string['viewstudentreports'] = 'View student reports';
+$string['viewtutorreports'] = 'View tutor reports';
 $string['views'] = 'views';
 $string['staff'] = 'staff';
 $string['eventreportviewed_usage'] = 'My feedback Usage dashboard viewed';
@@ -401,6 +403,7 @@ $string['categorystaff'] = 'Category staff';
 $string['coursestaff'] = 'Course staff';
 $string['personaltutorstudents'] = 'Personal tutor\'s students';
 $string['or'] = 'or';
+$string['close'] = 'Close';
 
 $string['privacy:metadata:report_myfeedback'] = 'Self-reflective notes and Turnitin feedback manually entered by users.';
 $string['privacy:metadata:report_myfeedback:userid'] = 'The Moodle databse ID of the user for whom notes and feedback is stored.';

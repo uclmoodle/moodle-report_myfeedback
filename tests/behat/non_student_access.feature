@@ -1,5 +1,5 @@
 # TODO: Investigate possibility of using language string variables in test steps.
-@mod @mod_feedback @javascript
+@mod @mod_feedback @report_myfeedback @javascript
 Feature: Tutors and administrators need access to grades and feedback to monitor student progress throughout the year
   In order to support students through the year
   As a tutor (i.e. personal, or module tutor) or administrator
@@ -14,7 +14,7 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
       | tutor1   | Module    | Tutor1     | tutor1@example.com   |
       | tutor2   | Module    | Tutor2     | tutor2@example.com   |
       | tutor3   | Module    | Tutor3     | tutor3@example.com   |
-      | deptAdmin| Department| Admin      | admin@example.com    |
+      | deptadmin| Department| Admin      | admin@example.com    |
     And the following "categories" exist:
       | name                     | category | idnumber          |
       | Course admins Category   | 0        | report_myfeedback |
@@ -39,7 +39,7 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
       | tutor  | tutee     |
       | tutor3 | student1  |
       | tutor3 | student3  |
-    And the user, "deptAdmin", is granted departmental admin rights for the courses:
+    And the user, "deptadmin", is granted departmental admin rights for the courses:
       | coursename |
       | C1         |
       | C3         |
@@ -61,7 +61,7 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
   @javascript
   Scenario: Module tutors need to be able to view grades of students taking courses they are recorded as a tutor for
     When I log in as "tutor1"
-    And I navigate to the My feedback plugin page
+    And I navigate to the my feedback plugin page
     Then I should see a tab named "Module tutor dashboard"
     And I should see a tab named "My students"
     When I click the tab titled "My students"
@@ -75,7 +75,7 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
   preparing for a meeting with a student during which the tutor wishes to discuss the student's performance
   (perhaps focusing on areas where they are doing well and where there is room for improvement.)
     When I log in as "tutor3"
-    And I navigate to the My feedback plugin page
+    And I navigate to the my feedback plugin page
     Then I should see a tab named "Module tutor dashboard"
     And I should see a tab named "My students"
     When I click the tab titled "My students"
@@ -88,6 +88,6 @@ Feature: Tutors and administrators need access to grades and feedback to monitor
   @javascript
   Scenario: A Departmental Admin wishes to log-in and check student performance across a cohort so that they can identify
   any potential students struggling (and subsequently raise these instances of concerning performance with module Tutors.)
-    When I log in as "deptAdmin"
-    And I navigate to the My feedback plugin page
+    When I log in as "deptadmin"
+    And I navigate to the my feedback plugin page
     Then I should see a tab named "Departmental admin dashboard"

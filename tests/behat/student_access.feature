@@ -1,5 +1,5 @@
 # TODO: Investigate possibility of using language string variables in test steps.
-@mod @mod_feedback @javascript
+@mod @mod_feedback @report_myfeedback @javascript
 Feature: Students checking their own academic progress throughout the year
   In order to give me an accurate and holistic view of my strengths, weaknesses, academic performance and progress
   As a student
@@ -32,17 +32,21 @@ Feature: Students checking their own academic progress throughout the year
 
   @javascript
   Scenario: Access my personalised My feedback report
-    When I log in as "student1"
-    And I navigate to the My feedback plugin page
+    Given I log in as "student1"
+    When I navigate to the my feedback plugin page
     Then I should see a tab named "Overview"
     And I should see a tab named "Feedback comments"
 
   @javascript
   Scenario: A student is preparing for a meeting with a Career Advisor or Personal Tutor, and the student wishes to use
   the comments field to reflect on employability before the meeting.
-    When I log in as "student1"
-    And I navigate to the My feedback plugin page
+    Given I log in as "student1"
+    And I navigate to the my feedback plugin page
     And I should see a tab named "Feedback comments"
     When I click the tab titled "Feedback comments"
-    Then I should see "C1 assignment" in the "feedbackcomments" "table"
-    And I should see "Add notes" in the "feedbackcomments" "table"
+    And I wait until the page is ready
+    And I click on "Add notes" "link"
+    And I set the following fields to these values:
+      | notename | Test comment |
+    And I press "Save notes and close"
+    Then I should see "Test comment" in the "feedbackcomments" "table"

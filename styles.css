@@ -2,52 +2,40 @@
  * Usage
 */
 
-.path-report-myfeedback .usagereport h3, .path-report-myfeedback .userstable{
-	clear:left;
+.path-report-myfeedback .usagereport h3,
+.path-report-myfeedback .userstable {
+    clear: left;
 }
 
-.path-report-myfeedback .report_form{
-	display: inline;
+.path-report-myfeedback .report_form {
+    display: inline;
 }
 
-.path-report-myfeedback .searchusage, .path-report-myfeedback #report_category_select{
-	margin-left: 20px;
+.path-report-myfeedback .searchusage,
+.path-report-myfeedback #report_category_select {
+    margin-left: 20px;
 }
 
-.path-report-myfeedback .report_info{
-	padding-bottom: 20px;
+.path-report-myfeedback .report_info {
+    padding-bottom: 20px;
 }
 
-.path-report-myfeedback .buttonswrapper{
-	float:right;
+.path-report-myfeedback .buttonswrapper {
+    float: right;
 }
 
-.path-report-myfeedback .uparrow{
-      margin-bottom: 12px;
-	  margin-left: 7px;
-	  /*background: #fcfcfc;
-	  background-image: -webkit-linear-gradient(top, #fcfcfc, #ececec);
-	  background-image: -moz-linear-gradient(top, #fcfcfc, #ececec);
-	  background-image: -ms-linear-gradient(top, #fcfcfc, #ececec);
-	  background-image: -o-linear-gradient(top, #fcfcfc, #ececec);
-	  background-image: linear-gradient(to bottom, #fcfcfc, #ececec);
-	  -webkit-border-radius: 7;
-	  -moz-border-radius: 7;
-	  border-radius: 7px;
-	  padding: 2px;*/
+.path-report-myfeedback .uparrow {
+    margin-bottom: 12px;
+    margin-left: 7px;
 }
 
-.path-report-myfeedback .uparrow:hover{
-	  /*box-shadow: 0 12px 16px 0 rgba(0,0,0,0.15), 0 17px 50px 0 rgba(0,0,0,0.09);
-	  -webkit-border-radius: 7;
-	  -moz-border-radius: 7;
-	  border-radius: 7px;
-	  background: #fcfce7;
-	  background-image: -webkit-linear-gradient(top, #f9f9f9, #e1e1e1);
-	  background-image: -moz-linear-gradient(top, #f9f9f9, #e1e1e1);
-	  background-image: -ms-linear-gradient(top, #f9f9f9, #e1e1e1);
-	  background-image: -o-linear-gradient(top, #f9f9f9, #e1e1e1);
-	  background-image: linear-gradient(to bottom, #f9f9f9, #e1e1e1);*/
+.path-report-myfeedback .progress-spinner {
+    width: 70px;
+    height: 60px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    z-index: 9999;
 }
 
 /*
@@ -83,19 +71,40 @@
 }
 
 .path-report-myfeedback table.dataTable img.smallicon {
-    height: 12px; 
+    height: 12px;
     width: 12px;
 }
 
-.path-report-myfeedback table.dataTable tr.odd { background-color: #FFF;/*#E2E4FF;*/ }
-.path-report-myfeedback table.dataTable tr.even { background-color: #FCFCF0; }
+.path-report-myfeedback table.dataTable tr.odd {
+    background-color: #fff;
+}
+.path-report-myfeedback table.dataTable tr.even {
+    background-color: #fcfcf0;
+}
 
-.path-report-myfeedback table.dataTable tr.odd td.sorting_1 { background-color: #FCFCE7;/*#F0f5f7;/*#D3D6FF;*/ }
-.path-report-myfeedback table.dataTable tr.odd td.sorting_2 { background-color: #FCFCF0;/*#DADCFF;*/ }
-.path-report-myfeedback table.dataTable tr.odd td.sorting_3 { background-color: #E0E2FF; }
-.path-report-myfeedback table.dataTable tr.even td.sorting_1 { background-color: #FCFCE0;/*#dce9f9; /*#EAEBFF;*/ }
-.path-report-myfeedback table.dataTable tr.even td.sorting_2 { background-color: #FCFCF0; /*#F2F3FF;*/ }
-.path-report-myfeedback table.dataTable tr.even td.sorting_3 { background-color: #F9F9FF; }
+.path-report-myfeedback table.dataTable tr.odd td.sorting_1 {
+    background-color: #fcfce7;
+}
+
+.path-report-myfeedback table.dataTable tr.odd td.sorting_2 {
+    background-color: #fcfcf0;
+}
+
+.path-report-myfeedback table.dataTable tr.odd td.sorting_3 {
+    background-color: #e0e2ff;
+}
+
+.path-report-myfeedback table.dataTable tr.even td.sorting_1 {
+    background-color: #fcfce0;
+}
+
+.path-report-myfeedback table.dataTable tr.even td.sorting_2 {
+    background-color: #fcfcf0;
+}
+
+.path-report-myfeedback table.dataTable tr.even td.sorting_3 {
+    background-color: #f9f9ff;
+}
 
 /*
  * Table wrapper
@@ -118,7 +127,6 @@
     float: left;
 }
 
-
 /*
  * Filter
 */
@@ -135,7 +143,6 @@
     clear: both;
     float: left;
 }
-
 
 /*
  * Pagination
@@ -158,7 +165,6 @@
     height: 19px;
     float: left;
     cursor: pointer;
-    *cursor: hand;
     color: #111 !important;
 }
 .path-report-myfeedback .paginate_disabled_previous:hover,
@@ -194,7 +200,7 @@
     line-height: 22px;
 }
 .path-report-myfeedback .paging_full_numbers a:active {
-    outline: none
+    outline: none;
 }
 .path-report-myfeedback .paging_full_numbers a:hover {
     text-decoration: none;
@@ -245,19 +251,30 @@
     background-color: white;
 }
 
-
 /*
  * Sorting
 */
-.path-report-myfeedback .sorting { background-image:url([[pix:moodle|t/sort]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
-.path-report-myfeedback .sorting_asc { background-image:url([[pix:moodle|t/sort_asc]]) !important;background-position: center right !important; background-repeat: no-repeat !important; }
-.path-report-myfeedback .sorting_desc { background-image:url([[pix:moodle|t/sort_desc]]) !important; background-position: center right !important; background-repeat: no-repeat !important; }
+.path-report-myfeedback .sorting {
+    background-image: url([[pix:moodle|t/sort]]) !important;
+    background-position: center right !important;
+    background-repeat: no-repeat !important;
+}
+.path-report-myfeedback .sorting_asc {
+    background-image: url([[pix:moodle|t/sort_asc]]) !important;
+    background-position: center right !important;
+    background-repeat: no-repeat !important;
+}
+
+.path-report-myfeedback .sorting_desc {
+    background-image:url([[pix:moodle|t/sort_desc]]) !important;
+    background-position: center right !important;
+    background-repeat: no-repeat !important;
+}
 
 .path-report-myfeedback table.dataTable thead th:active,
 .path-report-myfeedback table.dataTable thead td:active {
     outline: none;
 }
-
 
 /*
  * Scrolling
@@ -273,9 +290,8 @@
 
 .path-report-myfeedback table.grades,
 .path-report-myfeedback table#feedbackcomments {
-    color:#666;
-    font-size:13px;
-    /*background:#eaebec;*/
+    color: #666;
+    font-size: 13px;
     width: 100%;
 }
 
@@ -290,31 +306,28 @@
 .path-report-myfeedback table.grades th:first-child {
     text-align: left;
     padding-left:10px;
-    /*width: 80%;*/
-    /*border-right: 1px solid #e0e0e0;*/
 }
 
 .path-report-myfeedback table.grades tr {
     text-align: left;
-    padding-left:10px;
+    padding-left: 10px;
 }
 .path-report-myfeedback table.grades td:first-child {
     text-align: left;
-    padding-left:5px;
+    padding-left: 5px;
     border-left: 0;
 }
 .path-report-myfeedback table.grades td, .path-report-myfeedback table.dataTable tr.odd {
-    padding:5px;
+    padding: 5px;
     border-top: 1px solid #ffffff;
-    border-bottom:1px solid #e0e0e0;
-    /*border-left: 1px solid #e0e0e0;*/
-    min-width: 100px; /*changed from 80*/
-    /*background: #fafafa !important;*/
+    border-bottom: 1px solid #e0e0e0;
+    min-width: 100px;
 }
 
 .path-report-myfeedback table.grades tr:last-child td {
-    border-bottom:0;
+    border-bottom: 0;
 }
+
 .path-report-myfeedback table.grades tr:hover td {
     background: #f6f6f6 !important;
 }
@@ -332,7 +345,7 @@
 
 .path-report-myfeedback table.grades .tablefooter select,
 .path-report-myfeedback table#feedbackcomments .tablefooter select {
-    width: 100%;/*This solves the responsive issue*/
+    width: 100%; /*This solves the responsive issue*/
 }
 
 .path-report-myfeedback table.grades .horizontal-bar {
@@ -354,7 +367,6 @@
 .path-report-myfeedback table#feedbackcomments {
     border-collapse: separate;
     border-spacing: 0 10px;
-
 }
 
 .path-report-myfeedback table#feedbackcomments tr {
@@ -394,20 +406,16 @@
     margin-bottom: 10px;
 }
 
-.path-report-myfeedback .nav-tabs>li>a:focus {
+.path-report-myfeedback .nav-tabs > li > a:focus {
     background-color: #0070a8;
 }
 
-.path-report-myfeedback .nav-tabs>.active>a:focus,
-.path-report-myfeedback .nav-tabs>.active>a:hover {
+.path-report-myfeedback .nav-tabs > .active > a:focus,
+.path-report-myfeedback .nav-tabs > .active > a:hover {
     border-bottom-color: transparent;
     background-color: #fff;
     border-color: #ddd;
     border-bottom-color: #fff;
-}
-
-.path-report-myfeedback .userprofilebox {
-    /*font-weight: bold;*/
 }
 
 .path-report-myfeedback .profilepicture {
@@ -421,7 +429,7 @@
     margin-bottom: 10px;
 }
 
-.path-report-myfeedback .personaltutoremail {    
+.path-report-myfeedback .personaltutoremail {
     background: #f5f5f5;
     float: right;
     margin-right: 40px;
@@ -436,7 +444,7 @@
     font-weight: normal;
 }
 
-.path-report-myfeedback .personaltutoremails { 
+.path-report-myfeedback .personaltutoremails {
     float: right;
     margin-right: 40px;
 }
@@ -451,14 +459,6 @@
     text-decoration: none;
 }
 
-/*.path-report-myfeedback .enroltext {
-    width: 98%;
-    font-style: italic;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}*/
 .path-report-myfeedback .enrolledon {
     color: #619eb6;
     font-weight: normal;
@@ -527,7 +527,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
     box-shadow: 0 0 3px #444;
     box-sizing: content-box;
     content: '+';
-    background-color: #aaa;/*#31b131;*/
+    background-color: #aaa;
 }
 table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child.dataTables_empty:before,
 table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child.dataTables_empty:before {
@@ -536,7 +536,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child.dataTables_em
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
 table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
     content: '-';
-    background-color: #aaa;/*#d33333;*/
+    background-color: #aaa;
 }
 table.dataTable.dtr-inline.collapsed > tbody > tr.child td:before {
     display: none;
@@ -696,12 +696,12 @@ button.ColVis_Button {
     padding: 3px 8px;
 }
 
-button.ColVis_Button::-moz-focus-inner { 
+button.ColVis_Button::-moz-focus-inner {
     border: none !important;
     padding: 0;
 }
 
-button.ColVis_Button:active { 
+button.ColVis_Button:active {
     outline: none;
 }
 
@@ -968,144 +968,144 @@ a.dt-button:focus:not(.disabled) {
 }
 
 .dt-button embed {
-  outline: none;
+    outline: none;
 }
 
 div.dt-buttons {
-  position: relative;
-  float: right;
+    position: relative;
+    float: right;
 }
 div.dt-buttons.buttons-right {
-  float: right;
+    float: right;
 }
 
 div.dt-button-collection {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 150px;
-  margin-top: 3px;
-  padding: 8px 8px 4px 8px;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  background-color: white;
-  overflow: hidden;
-  z-index: 2002;
-  border-radius: 5px;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-  z-index: 2002;
-  -webkit-column-gap: 8px;
-  -moz-column-gap: 8px;
-  -ms-column-gap: 8px;
-  -o-column-gap: 8px;
-  column-gap: 8px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    margin-top: 3px;
+    padding: 8px 8px 4px 8px;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    background-color: white;
+    overflow: hidden;
+    z-index: 2002;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    z-index: 2002;
+    -webkit-column-gap: 8px;
+    -moz-column-gap: 8px;
+    -ms-column-gap: 8px;
+    -o-column-gap: 8px;
+    column-gap: 8px;
 }
 div.dt-button-collection button.dt-button,
 div.dt-button-collection div.dt-button,
 div.dt-button-collection a.dt-button {
-  position: relative;
-  left: 0;
-  right: 0;
-  display: block;
-  float: none;
-  margin-bottom: 4px;
-  margin-right: 0;
+    position: relative;
+    left: 0;
+    right: 0;
+    display: block;
+    float: none;
+    margin-bottom: 4px;
+    margin-right: 0;
 }
 div.dt-button-collection button.dt-button:active:not(.disabled), div.dt-button-collection button.dt-button.active:not(.disabled),
 div.dt-button-collection div.dt-button:active:not(.disabled),
 div.dt-button-collection div.dt-button.active:not(.disabled),
 div.dt-button-collection a.dt-button:active:not(.disabled),
 div.dt-button-collection a.dt-button.active:not(.disabled) {
-  background-color: #dadada;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, #f0f0f0 0%, #dadada 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f0f0f0', EndColorStr='#dadada');
-  box-shadow: inset 1px 1px 3px #666;
+    background-color: #dadada;
+    /* Fallback */
+    background-image: -webkit-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
+    /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image: -moz-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
+    /* FF3.6 */
+    background-image: -ms-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
+    /* IE10 */
+    background-image: -o-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
+    /* Opera 11.10+ */
+    background-image: linear-gradient(to bottom, #f0f0f0 0%, #dadada 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f0f0f0', EndColorStr='#dadada');
+    box-shadow: inset 1px 1px 3px #666;
 }
 div.dt-button-collection.fixed {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  margin-left: -75px;
-  border-radius: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -75px;
+    border-radius: 0;
 }
 div.dt-button-collection.fixed.two-column {
-  margin-left: -150px;
+    margin-left: -150px;
 }
 div.dt-button-collection.fixed.three-column {
-  margin-left: -225px;
+    margin-left: -225px;
 }
 div.dt-button-collection.fixed.four-column {
-  margin-left: -300px;
+    margin-left: -300px;
 }
 div.dt-button-collection > * {
-  -webkit-column-break-inside: avoid;
-  break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    break-inside: avoid;
 }
 div.dt-button-collection.two-column {
-  width: 300px;
-  padding-bottom: 1px;
-  -webkit-column-count: 2;
-  -moz-column-count: 2;
-  -ms-column-count: 2;
-  -o-column-count: 2;
-  column-count: 2;
+    width: 300px;
+    padding-bottom: 1px;
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    -ms-column-count: 2;
+    -o-column-count: 2;
+    column-count: 2;
 }
 div.dt-button-collection.three-column {
-  width: 450px;
-  padding-bottom: 1px;
-  -webkit-column-count: 3;
-  -moz-column-count: 3;
-  -ms-column-count: 3;
-  -o-column-count: 3;
-  column-count: 3;
+    width: 450px;
+    padding-bottom: 1px;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    -ms-column-count: 3;
+    -o-column-count: 3;
+    column-count: 3;
 }
 div.dt-button-collection.four-column {
-  width: 600px;
-  padding-bottom: 1px;
-  -webkit-column-count: 4;
-  -moz-column-count: 4;
-  -ms-column-count: 4;
-  -o-column-count: 4;
-  column-count: 4;
+    width: 600px;
+    padding-bottom: 1px;
+    -webkit-column-count: 4;
+    -moz-column-count: 4;
+    -ms-column-count: 4;
+    -o-column-count: 4;
+    column-count: 4;
 }
 
 div.dt-button-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  /* Fallback */
-  background: -ms-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* IE10 Consumer Preview */
-  background: -moz-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* Firefox */
-  background: -o-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* Opera */
-  background: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, rgba(0, 0, 0, 0.3)), color-stop(1, rgba(0, 0, 0, 0.7)));
-  /* Webkit (Safari/Chrome 10) */
-  background: -webkit-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* Webkit (Chrome 11+) */
-  background: radial-gradient(ellipse farthest-corner at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-  /* W3C Markup, IE10 Release Preview */
-  z-index: 2001;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    /* Fallback */
+    background: -ms-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    /* IE10 Consumer Preview */
+    background: -moz-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    /* Firefox */
+    background: -o-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    /* Opera */
+    background: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, rgba(0, 0, 0, 0.3)), color-stop(1, rgba(0, 0, 0, 0.7)));
+    /* Webkit (Safari/Chrome 10) */
+    background: -webkit-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    /* Webkit (Chrome 11+) */
+    background: radial-gradient(ellipse farthest-corner at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
+    /* W3C Markup, IE10 Release Preview */
+    z-index: 2001;
 }
 
 @media screen and (max-width: 640px) {
-  div.dt-buttons {
-    float: none !important;
-    text-align: center;
-  }
+    div.dt-buttons {
+        float: none !important;
+        text-align: center;
+    }
 }
 
 .disabled {
@@ -1114,8 +1114,6 @@ div.dt-button-background {
 
 /*hiding the unix date that is used to sort the data, even when expanded
 also the blank invisible column that shows up on ColVis hide/Show list*/
-/*.path-report-myfeedback tr.child>td.child>ul>li:last-child,
-.path-report-myfeedback ul.ColVis_collection>li:last-child,*/
 .invisibly,
 .paginate_button.previous.disabled,
 .paginate_button.next.disabled {
@@ -1156,7 +1154,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .grade-bar40 {
-    display: inline-block;    
+    display: inline-block;
     width: 40%;
     text-align: center;
     background: -webkit-linear-gradient(left, #ce9d93, #d4b5af); /* For Safari 5.1 to 6.0 */
@@ -1180,22 +1178,22 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .top-text {
-    width: 100%;  
-    line-height: 1; 
+    width: 100%;
+    line-height: 1;
 }
 
 .path-report-myfeedback .btext {
     display: inline-block;
     line-height: 1;
     font-size: 12px;
-    text-align: right; 
+    text-align: right;
 }
 
 .path-report-myfeedback .vline {
     display: inline-block;
     line-height: 1;
     font-size: 12px;
-    text-align: right; 
+    text-align: right;
 }
 
 .path-report-myfeedback .grade-bar-b {
@@ -1205,7 +1203,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .grade-bar-b40 {
-    display: inline-block;    
+    display: inline-block;
     width: 40%;
     border-right: 1px solid #444;
 }
@@ -1219,13 +1217,13 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 .path-report-myfeedback .btext-b40 {
     display: inline-block;
     width: 41%;
-    text-align:right;
+    text-align: right;
 }
 
 .path-report-myfeedback .btext-b {
     display: inline-block;
     width: 10.3%;
-    text-align:right;
+    text-align: right;
 }
 
 .path-report-myfeedback .fullhundred {
@@ -1233,9 +1231,9 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .mymods-container {
-    width: 60%; 
+    width: 60%;
     float: left;
-    display: inline-block
+    display: inline-block;
 }
 
 .path-report-myfeedback .mymods-container-right {
@@ -1243,17 +1241,17 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     float: right;
     display: inline-block;
     margin: 20px;
-    text-align: center
+    text-align: center;
 }
 
 .path-report-myfeedback .mymods-content {
     width: 40%;
     float: left;
-    color:#fff
+    color: #fff;
 }
 
 .path-report-myfeedback .db {
-    display: block
+    display: block;
 }
 
 .path-report-myfeedback #toggle-grade {
@@ -1278,7 +1276,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .student {
-    background-color: #FCFCE0;
+    background-color: #fcfce0;
 }
 
 .path-report-myfeedback table#feedbackcomments td.note-val-2 {
@@ -1296,7 +1294,6 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     float: left;
     margin: 0 40px;
 }
-
 
 .path-report-myfeedback #tutortable {
     text-align: center;
@@ -1318,8 +1315,8 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .ownreport {
-    float: right;    
-    background-color: #284956;/*#d69859;*/
+    float: right;
+    background-color: #284956;
     padding: 0px 10px 5px;
     line-height: 1em;
     margin: 5px 20px;
@@ -1327,12 +1324,12 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .ownreport:hover {
-    background-color: #227C94;/*#30ADD1; */
+    background-color: #227C94;
 }
 
 .path-report-myfeedback .ownreport a {
     color: #fff;
-    text-decoration: none; 
+    text-decoration: none;
     font-size: 0.8em;
 }
 
@@ -1345,11 +1342,10 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .tri {
-    text-align:center;
+    text-align: center;
 }
 
 .path-report-myfeedback #tutortable tfoot td {
-    /*border-right: 0px; Removedel*/
     border: 1px solid #fafafa;
 }
 
@@ -1361,9 +1357,9 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     padding: 5px 5px 0 5px !important;
 }
 
-.path-report-myfeedback h4{
-	color: #444;
-	font-weight: bold;
+.path-report-myfeedback h4 {
+    color: #444;
+    font-weight: bold;
 }
 
 .path-report-myfeedback .modtable.dataTable td {
@@ -1387,8 +1383,8 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback .modass {
-	background-color:#619eb6;
-	color:#fff
+    background-color: #619eb6;
+    color: #fff;
 }
 
 .path-report-myfeedback .fullRec {
@@ -1419,29 +1415,29 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback table th {
-    border-bottom:1px solid #aaa !important;
+    border-bottom: 1px solid #aaa !important;
 }
 
 .path-report-myfeedback aside#block-region-side-pre,
 .path-report-myfeedback aside#block-region-side-post {
-    display:none;
+    display: none;
 }
 
 .path-report-myfeedback #region-main {
     width: 100%;
 }
 .path-report-myfeedback table.fixedHeader-floating {
-  position: fixed !important;
-  background-color: white;
+    position: fixed !important;
+    background-color: white;
 }
 
 .path-report-myfeedback table.fixedHeader-floating.no-footer {
-  border-bottom-width: 0;
+    border-bottom-width: 0;
 }
 
 .path-report-myfeedback table.fixedHeader-locked {
-  position: absolute !important;
-  background-color: white;
+    position: absolute !important;
+    background-color: white;
 }
 
 .path-report-myfeedback #reportPrint {
@@ -1452,22 +1448,21 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     outline: none;
 }
 
-div.dt-button-collection button.dt-button:active:not(.disabled), div.dt-button-collection button.dt-button.active:not(.disabled), 
-div.dt-button-collection div.dt-button:active:not(.disabled), div.dt-button-collection  div.dt-button.active:not(.disabled), 
-div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collection a.dt-button.active:not(.disabled) {
-     background: #DCE9F9;
-     box-shadow: inset 1px 1px 3px #666;  
- }
+div.dt-button-collection button.dt-button:active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled),
+div.dt-button-collection div.dt-button:active:not(.disabled),
+div.dt-button-collection  div.dt-button.active:not(.disabled),
+div.dt-button-collection a.dt-button:active:not(.disabled),
+div.dt-button-collection a.dt-button.active:not(.disabled) {
+    background: #dce9f9;
+    box-shadow: inset 1px 1px 3px #666;
+}
 
- a {
-     color: #005E8D;
-     text-decoration: none;
- }
+a {
+    color: #005e8d;
+    text-decoration: none;
+}
 
-/*  a, a:visited {
-     color: #005E8D;
- } */
- 
 .path-report-myfeedback .modal {
     position: fixed;
     top: 10%;
@@ -1477,18 +1472,23 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
     width: 560px;
     margin-left: -280px;
     background-color: #fff;
-    border: 1px solid #999;
-    border: 1px solid rgba(0,0,0,0.3);
+    border: 1px solid rgba(0, 0, 0, 0.3);
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
-    -webkit-box-shadow: 0 3px 7px rgba(0,0,0,0.3);
-    -moz-box-shadow: 0 3px 7px rgba(0,0,0,0.3);
-    box-shadow: 0 3px 7px rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
     background-clip: padding-box;
     outline: none;
+    height: fit-content;
+}
+
+.path-report-myfeedback #feedname, #notename {
+    height: 8em;
+    width: 30em;
 }
 
 .path-report-myfeedback .modal-backdrop {
@@ -1499,24 +1499,45 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
     opacity: .8;
 }
 
-@media print {
-  .path-report-myfeedback table.fixedHeader-floating {
+.path-report-myfeedback #tooltip2 {
+    z-index: 9999;
+}
+
+.path-report-myfeedback #progtable > tbody > tr.recordRow {
     display: none;
-  }
 }
 
 @media print {
-    #page-header, .navbar, #page-navbar, 
-    #block-region-side-pre, #page-footer,
-    #region-main .nav.nav-tabs, #region-main .buttonswrapper, .dataTables_wrapper .tablefooter,
-    p.helplink, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter,
-    .dataTables_wrapper .dataTables_paginate, .dataTables_wrapper .dataTables_info,
-    .dataTables_wrapper .bar, .dataTables_wrapper .ColVis, .path-report-myfeedback .personaltutoremails,
-    .personaltutoremail, .ac-year-right #mod_form, .ac-year-right .my, .path-report-myfeedback .ownreport {
-        display: none
+    .path-report-myfeedback table.fixedHeader-floating {
+        display: none;
+    }
+}
+
+@media print {
+    #page-header,
+    .navbar,
+    #page-navbar,
+    #block-region-side-pre,
+    #page-footer,
+    #region-main .nav.nav-tabs,
+    #region-main .buttonswrapper,
+    .dataTables_wrapper .tablefooter,
+    p.helplink,
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter,
+    .dataTables_wrapper .dataTables_paginate,
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .bar,
+    .dataTables_wrapper .ColVis,
+    .path-report-myfeedback .personaltutoremails,
+    .personaltutoremail,
+    .ac-year-right #mod_form,
+    .ac-year-right .my,
+    .path-report-myfeedback .ownreport {
+        display: none;
     }
 
-    @page { 
+    @page {
         size: landscape;
     }
 
@@ -1526,7 +1547,7 @@ div.dt-button-collection a.dt-button:active:not(.disabled), div.dt-button-collec
     }
 
     .back-to-top {
-        display: none !important
+        display: none !important;
     }
 }
 
