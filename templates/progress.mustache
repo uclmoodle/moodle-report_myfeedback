@@ -17,16 +17,20 @@
 {{!
     @template report_myfeedback/progress
 
-    This template renders the progress spinner.
+    This template renders a progress GIF.
+
+    Variables required for this template:
+    * progressimg - The URL to the progress image
 
     Example context (json):
     {
-        "progressimg": "/report/myfeedback/pix/progress.gif",
+        "progressimg": "/report/myfeedback/pix/progress.gif"
     }
 
 }}
+
 <div id="wait" class="progress-spinner">
-    <img src="{{{progressimg}}}"/>
+    <img src="{{progressimg}}" alt="progress image"/>
 </div>
 {{#js}}
     require(['jquery'], function($) {

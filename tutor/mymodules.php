@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * The main file for the Module tutor dashboard
  *
  * @package  report_myfeedback
+ * @copyright 2022 UCL
  * @author   Delvon Forrester <delvon@esparanza.co.uk>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -95,10 +96,17 @@ if ($mytutormods) {
     }
 }
 echo '</div></div>';
+$config = get_config('report_myfeedback');
+$studentrecordsystemlink = $config->studentrecordsystemlink;
+$studentrecordsystemlaunchtext = (isset($config->studentrecordsystem) && $config->studentrecordsystem ?
+    $config->studentrecordsystem :
+    get_string('studentrecordsystem', 'report_myfeedback'));
+
 echo '</div><div class="mymods-container-right">
             <p class="personaltutoremail">
-            <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></p>
-            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip">
+            <a href="' . $studentrecordsystemlink . '" target="_blank">' . $studentrecordsystemlaunchtext . '</a></p>
+            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg',
+        'report_myfeedback').'" rel="tooltip">
                 <a href="#">' . get_string('print_report', 'report_myfeedback') . '</a>
                 <img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/>
             </span>

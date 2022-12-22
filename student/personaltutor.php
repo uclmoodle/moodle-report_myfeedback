@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * The main file for the personal tutor tab
  *
  * @package  report_myfeedback
+ * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 
 $programme = '';
 if ($mytutorid) {
-    $mytutorobj = $remotedb->get_record('user', array('id' => $mytutorid));
+    $mytutorobj = $currentdb->get_record('user', array('id' => $mytutorid));
     profile_load_data($mytutorobj);
     echo "<p>" . get_string('overview_text_ptutor_tab', 'report_myfeedback') . "</p>";
     echo '<div class="userprofilebox clearfix">';

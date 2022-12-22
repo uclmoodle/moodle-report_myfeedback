@@ -16,8 +16,8 @@
 define(['jquery'], function($) {
     return {
         init: function() {
-            $(document).ready( function () {
-                $('#wait').css({'cursor':'default','display':'none'});
+            $(document).ready(function() {
+                $('#wait').css({'cursor': 'default', 'display': 'none'});
                 $('body').css('cursor', 'default');
             });
         }

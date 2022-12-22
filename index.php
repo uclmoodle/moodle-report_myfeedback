@@ -18,9 +18,10 @@
  * My Feedback Report.
  *
  * @package   report_myfeedback
+ * @copyright 2022 UCL
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
+ *  credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
  *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga
  *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
@@ -30,7 +31,7 @@
  */
 
 require('../../config.php');
-global $PAGE, $COURSE, $USER, $OUTPUT, $remotedb, $CFG;
+global $PAGE, $COURSE, $USER, $OUTPUT, $currentdb, $CFG;
 require_once($CFG->libdir . '/gradelib.php');
 require_once($CFG->dirroot . '/grade/report/overview/lib.php');
 require_once($CFG->dirroot . '/grade/lib.php');
@@ -122,7 +123,7 @@ if ($userid != $USER->id) {
 $ucontext = context_user::instance($USER->id, MUST_EXIST);
 // If user don't have the report capability they can't access it.
 
-$user = $remotedb->get_record('user', array('id' => $userid, 'deleted' => 0));
+$user = $currentdb->get_record('user', array('id' => $userid, 'deleted' => 0));
 $userlinked = "<a href='" . $CFG->wwwroot . "/user/view.php?id=" . $userid . "'>" . $user->firstname .
         " " . $user->lastname . "</a>";
 $_SESSION['user_name'] = $user->firstname . ' ' . $user->lastname;

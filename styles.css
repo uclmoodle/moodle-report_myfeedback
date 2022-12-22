@@ -165,13 +165,13 @@
     height: 19px;
     float: left;
     cursor: pointer;
-    color: #111 !important;
+    color: #111;
 }
 .path-report-myfeedback .paginate_disabled_previous:hover,
 .path-report-myfeedback .paginate_enabled_previous:hover,
 .path-report-myfeedback .paginate_disabled_next:hover,
 .path-report-myfeedback .paginate_enabled_next:hover {
-    text-decoration: none !important;
+    text-decoration: none;
 }
 .path-report-myfeedback .paginate_disabled_previous:active,
 .path-report-myfeedback .paginate_enabled_previous:active,
@@ -182,7 +182,7 @@
 
 .path-report-myfeedback .paginate_disabled_previous,
 .path-report-myfeedback .paginate_disabled_next {
-    color: #666 !important;
+    color: #666;
 }
 .path-report-myfeedback .paginate_disabled_previous,
 .path-report-myfeedback .paginate_enabled_previous {
@@ -215,7 +215,7 @@
     padding: 2px 5px;
     margin: 0 3px;
     cursor: pointer;
-    color: #333 !important;
+    color: #333;
 }
 
 .path-report-myfeedback .paging_full_numbers a.paginate_button {
@@ -224,11 +224,11 @@
 
 .path-report-myfeedback .paging_full_numbers a.paginate_button:hover {
     background-color: #ccc;
-    text-decoration: none !important;
+    text-decoration: none;
 }
 
 .path-report-myfeedback .paging_full_numbers a.paginate_active {
-    background-color: #99B3FF;
+    background-color: #99b3ff;
 }
 
 
@@ -255,20 +255,20 @@
  * Sorting
 */
 .path-report-myfeedback .sorting {
-    background-image: url([[pix:moodle|t/sort]]) !important;
-    background-position: center right !important;
-    background-repeat: no-repeat !important;
+    background-image: url([[pix:moodle|t/sort]]);
+    background-position: center right;
+    background-repeat: no-repeat;
 }
 .path-report-myfeedback .sorting_asc {
-    background-image: url([[pix:moodle|t/sort_asc]]) !important;
-    background-position: center right !important;
-    background-repeat: no-repeat !important;
+    background-image: url([[pix:moodle|t/sort_asc]]);
+    background-position: center right;
+    background-repeat: no-repeat;
 }
 
 .path-report-myfeedback .sorting_desc {
-    background-image:url([[pix:moodle|t/sort_desc]]) !important;
-    background-position: center right !important;
-    background-repeat: no-repeat !important;
+    background-image: url([[pix:moodle|t/sort_desc]]);
+    background-position: center right;
+    background-repeat: no-repeat;
 }
 
 .path-report-myfeedback table.dataTable thead th:active,
@@ -296,16 +296,16 @@
 }
 
 .path-report-myfeedback table.grades th {
-    padding:8px 10px 8px 10px;
-    border-top:1px solid #fafafa;
-    border-bottom:1px solid #fafafa;
+    padding: 8px 10px 8px 10px;
+    border-top: 1px solid #fafafa;
+    border-bottom: 1px solid #fafafa;
     background: #dce9f9;
-    background-image: linear-gradient(to bottom,#ebf3fc,#dce9f9);
+    background-image: linear-gradient(to bottom, #ebf3fc, #dce9f9);
 }
 
 .path-report-myfeedback table.grades th:first-child {
     text-align: left;
-    padding-left:10px;
+    padding-left: 10px;
 }
 
 .path-report-myfeedback table.grades tr {
@@ -317,9 +317,10 @@
     padding-left: 5px;
     border-left: 0;
 }
-.path-report-myfeedback table.grades td, .path-report-myfeedback table.dataTable tr.odd {
+.path-report-myfeedback table.grades td,
+.path-report-myfeedback table.dataTable tr.odd {
     padding: 5px;
-    border-top: 1px solid #ffffff;
+    border-top: 1px solid #fff;
     border-bottom: 1px solid #e0e0e0;
     min-width: 100px;
 }
@@ -329,18 +330,18 @@
 }
 
 .path-report-myfeedback table.grades tr:hover td {
-    background: #f6f6f6 !important;
+    background: #f6f6f6;
 }
 
 .path-report-myfeedback td.tablefooter {
     border-top: 1px solid #e0e0e0;
     background: #dce9f9;
-    background-image: linear-gradient(to bottom,#ebf3fc,#dce9f9);
+    background-image: linear-gradient(to bottom, #ebf3fc, #dce9f9);
 }
 
 .path-report-myfeedback table.grades tr.tablefooter:hover td,
 .path-report-myfeedback table#feedbackcomments tr.tablefooter:hover td {
-    background: #fff !important;
+    background: #fff;
 }
 
 .path-report-myfeedback table.grades .tablefooter select,
@@ -370,17 +371,13 @@
 }
 
 .path-report-myfeedback table#feedbackcomments tr {
-    background: #fff !important;
+    background: #fff;
     vertical-align: top;
 }
 
 .path-report-myfeedback table#feedbackcomments tr.tableheader,
 .path-report-myfeedback table tr.tableheader {
-    background: #dce9f9 !important;
-    position: -webkit-sticky;
-    position: -moz-sticky;
-    position: -ms-sticky;
-    position: -o-sticky;
+    background: #dce9f9;
     position: sticky;
     top: 0;
 }
@@ -412,7 +409,6 @@
 
 .path-report-myfeedback .nav-tabs > .active > a:focus,
 .path-report-myfeedback .nav-tabs > .active > a:hover {
-    border-bottom-color: transparent;
     background-color: #fff;
     border-color: #ddd;
     border-bottom-color: #fff;
@@ -491,7 +487,7 @@
     float: left;
     width: 45%;
     height: 150px;
-    background: #E0E2FF;
+    background: #e0e2ff;
     margin-right: 20px;
     margin-bottom: 20px;
 }
@@ -588,7 +584,7 @@ table.dataTable > tbody > tr.child {
     padding: 0.5em 1em;
 }
 table.dataTable > tbody > tr.child:hover {
-    background: transparent !important;
+    background: transparent;
 }
 table.dataTable > tbody > tr.child ul {
     display: inline-block;
@@ -624,7 +620,7 @@ table.DTCR_clonedTable {
 
 div.DTCR_pointer {
     width: 1px;
-    background-color: #0259C4;
+    background-color: #0259c4;
     z-index: 201;
 }
 
@@ -644,51 +640,34 @@ ul.ColVis_collection li {
     padding: 5px 8px;
     border: 1px solid #999;
     cursor: pointer;
-    *cursor: hand;
     font-size: 0.88em;
-    color: black !important;
+    color: black;
     white-space: nowrap;
 
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
     border-radius: 2px;
 
     -webkit-box-shadow: 1px 1px 3px #ccc;
     -moz-box-shadow: 1px 1px 3px #ccc;
-    -ms-box-shadow: 1px 1px 3px #ccc;
     -o-box-shadow: 1px 1px 3px #ccc;
     box-shadow: 1px 1px 3px #ccc;
 
     /* Generated by http://www.colorzilla.com/gradient-editor/ */
-    background: #ffffff; /* Old browsers */
-    background: -webkit-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* Chrome10+,Safari5.1+ */
-    background:    -moz-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* FF3.6+ */
-    background:     -ms-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* IE10+ */
-    background:      -o-linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* Opera 11.10+ */
-    background:         linear-gradient(top, #ffffff 0%,#f3f3f3 89%,#f9f9f9 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f9f9f9',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(to top, #fff 0%, #f3f3f3 89%, #f9f9f9 100%); /* W3C */
 }
 
 .ColVis_Button:hover,
 ul.ColVis_collection li:hover {
     border: 1px solid #666;
-    text-decoration: none !important;
+    text-decoration: none;
 
     -webkit-box-shadow: 1px 1px 3px #999;
     -moz-box-shadow: 1px 1px 3px #999;
-    -ms-box-shadow: 1px 1px 3px #999;
     -o-box-shadow: 1px 1px 3px #999;
     box-shadow: 1px 1px 3px #999;
 
-    background: #f3f3f3; /* Old browsers */
-    background: -webkit-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* Chrome10+,Safari5.1+ */
-    background:    -moz-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* FF3.6+ */
-    background:     -ms-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* IE10+ */
-    background:      -o-linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* Opera 11.10+ */
-    background:         linear-gradient(top, #f3f3f3 0%,#e2e2e2 89%,#f4f4f4 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#f4f4f4',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(to top, #f3f3f3 0%, #e2e2e2 89%, #f4f4f4 100%); /* W3C */
 }
 
 button.ColVis_Button {
@@ -697,7 +676,7 @@ button.ColVis_Button {
 }
 
 button.ColVis_Button::-moz-focus-inner {
-    border: none !important;
+    border: none;
     padding: 0;
 }
 
@@ -721,21 +700,16 @@ ul.ColVis_collection {
     padding: 8px 8px 4px 8px;
     margin: 0;
     border: 1px solid #ccc;
-    border: 1px solid rgba( 0, 0, 0, 0.4 );
     background-color: #f3f3f3;
-    background-color: rgba( 255, 255, 255, 0.3 );
     overflow: hidden;
     z-index: 2002;
 
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
     border-radius: 5px;
 
     -webkit-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    -ms-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
     -o-box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
 }
@@ -753,7 +727,6 @@ ul.ColVis_collection li {
 
     -webkit-box-shadow: 1px 1px 3px #999;
     -moz-box-shadow: 1px 1px 3px #999;
-    -ms-box-shadow: 1px 1px 3px #999;
     -o-box-shadow: 1px 1px 3px #999;
     box-shadow: 1px 1px 3px #999;
 }
@@ -775,23 +748,12 @@ ul.ColVis_collection li span {
 
 ul.ColVis_collection li.ColVis_Special {
     border-color: #555;
-    background: rgb(237,237,237); /* Old browsers */
-    background: -webkit-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* Chrome10+,Safari5.1+ */
-    background:    -moz-linear-gradient(top, rgba(237,237,237,1) 0%, rgba(214,214,214,1) 77%, rgba(232,232,232,1) 100%); /* FF3.6+ */
-    background:     -ms-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* IE10+ */
-    background:      -o-linear-gradient(top, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* Opera 11.10+ */
-    background:         linear-gradient(to bottom, rgba(237,237,237,1) 0%,rgba(214,214,214,1) 77%,rgba(232,232,232,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', endColorstr='#e8e8e8',GradientType=0 ); /* IE6-9 */
+    /* W3C */
+    background: linear-gradient(to bottom, rgba(237, 237, 237, 1) 0%, rgba(214, 214, 214, 1) 77%, rgba(232, 232, 232, 1) 100%);
 }
 
 ul.ColVis_collection li.ColVis_Special:hover {
-    background: #e2e2e2; /* Old browsers */
-    background: -webkit-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* Chrome10+,Safari5.1+ */
-    background:    -moz-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* FF3.6+ */
-    background:     -ms-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* IE10+ */
-    background:      -o-linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* Opera 11.10+ */
-    background:         linear-gradient(top, #d0d0d0 0%,#d5d5d5 89%,#e2e2e2 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3f3f3', endColorstr='#e2e2e2',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(to top, #d0d0d0 0%, #d5d5d5 89%, #e2e2e2 100%); /* W3C */
 }
 
 ul.ColVis_collection li label {
@@ -810,161 +772,108 @@ div.ColVis_catcher {
 
 /*button-colvis*/
 div.dt-button-info {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  margin-top: -100px;
-  margin-left: -200px;
-  background-color: white;
-  border: 2px solid #111;
-  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 3px;
-  text-align: center;
-  z-index: 21;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    margin-top: -100px;
+    margin-left: -200px;
+    background-color: white;
+    border: 2px solid #111;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    text-align: center;
+    z-index: 21;
 }
 div.dt-button-info h2 {
-  padding: 0.5em;
-  margin: 0;
-  font-weight: normal;
-  border-bottom: 1px solid #ddd;
-  background-color: #f3f3f3;
+    padding: 0.5em;
+    margin: 0;
+    font-weight: normal;
+    border-bottom: 1px solid #ddd;
+    background-color: #f3f3f3;
 }
 div.dt-button-info > div {
-  padding: 1em;
+    padding: 1em;
 }
 
 button.dt-button,
 div.dt-button,
 a.dt-button {
-  position: relative;
-  display: inline-block;
-  box-sizing: border-box;
-  margin-right: 0.333em;
-  padding: 0.5em 1em;
-  border: 1px solid #999;
-  border-radius: 2px;
-  cursor: pointer;
-  font-size: 0.88em;
-  color: black;
-  white-space: nowrap;
-  overflow: hidden;
-  background-color: #e9e9e9;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, white 0%, #e9e9e9 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, white 0%, #e9e9e9 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, white 0%, #e9e9e9 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, white 0%, #e9e9e9 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, white 0%, #e9e9e9 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='white', EndColorStr='#e9e9e9');
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-decoration: none;
-  outline: none;
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    margin-right: 0.333em;
+    padding: 0.5em 1em;
+    border: 1px solid #999;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 0.88em;
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    background-color: #e9e9e9;
+    background-image: -webkit-linear-gradient(top, white 0%, #e9e9e9 100%);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-decoration: none;
+    outline: none;
 }
 button.dt-button.disabled,
 div.dt-button.disabled,
 a.dt-button.disabled {
-  color: #999;
-  border: 1px solid #d0d0d0;
-  cursor: default;
-  background-color: #f9f9f9;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, #ffffff 0%, #f9f9f9 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #ffffff 0%, #f9f9f9 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #ffffff 0%, #f9f9f9 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #ffffff 0%, #f9f9f9 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, #ffffff 0%, #f9f9f9 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#ffffff', EndColorStr='#f9f9f9');
+    color: #999;
+    border: 1px solid #d0d0d0;
+    cursor: default;
+    background-color: #f9f9f9;
+    /* Fallback */
+    background-image: -webkit-linear-gradient(top, #fff 0%, #f9f9f9 100%);
 }
-button.dt-button:active:not(.disabled), button.dt-button.active:not(.disabled),
+button.dt-button:active:not(.disabled),
+button.dt-button.active:not(.disabled),
 div.dt-button:active:not(.disabled),
 div.dt-button.active:not(.disabled),
 a.dt-button:active:not(.disabled),
 a.dt-button.active:not(.disabled) {
-  background-color: #e2e2e2;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, #f3f3f3 0%, #e2e2e2 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f3f3f3', EndColorStr='#e2e2e2');
-  box-shadow: inset 1px 1px 3px #999999;
+    background-color: #e2e2e2;
+    /* Fallback */
+    background-image: -webkit-linear-gradient(top, #f3f3f3 0%, #e2e2e2 100%);
+    box-shadow: inset 1px 1px 3px #999;
 }
-button.dt-button:active:not(.disabled):hover:not(.disabled), button.dt-button.active:not(.disabled):hover:not(.disabled),
+button.dt-button:active:not(.disabled):hover:not(.disabled),
+button.dt-button.active:not(.disabled):hover:not(.disabled),
 div.dt-button:active:not(.disabled):hover:not(.disabled),
 div.dt-button.active:not(.disabled):hover:not(.disabled),
 a.dt-button:active:not(.disabled):hover:not(.disabled),
 a.dt-button.active:not(.disabled):hover:not(.disabled) {
-  box-shadow: inset 1px 1px 3px #999999;
-  background-color: #cccccc;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, #eaeaea 0%, #cccccc 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #eaeaea 0%, #cccccc 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #eaeaea 0%, #cccccc 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #eaeaea 0%, #cccccc 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, #eaeaea 0%, #cccccc 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#eaeaea', EndColorStr='#cccccc');
+    box-shadow: inset 1px 1px 3px #999;
+    background-color: #ccc;
+    /* Fallback */
+    background-image: -webkit-linear-gradient(top, #eaeaea 0%, #ccc 100%);
 }
 button.dt-button:hover,
 div.dt-button:hover,
 a.dt-button:hover {
-  text-decoration: none;
+    text-decoration: none;
 }
 button.dt-button:hover:not(.disabled),
 div.dt-button:hover:not(.disabled),
 a.dt-button:hover:not(.disabled) {
-  border: 1px solid #666;
-  background-color: #e0e0e0;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f9f9f9', EndColorStr='#e0e0e0');
+    border: 1px solid #666;
+    background-color: #e0e0e0;
+    /* Fallback */
+    background-image: -webkit-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%);
 }
 button.dt-button:focus:not(.disabled),
 div.dt-button:focus:not(.disabled),
 a.dt-button:focus:not(.disabled) {
-  border: 1px solid #426c9e;
-  text-shadow: 0 1px 0 #c4def1;
-  outline: none;
-  background-color: #79ace9;
-  /* Fallback */
-  background-image: -webkit-linear-gradient(top, #bddef4 0%, #79ace9 100%);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #bddef4 0%, #79ace9 100%);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #bddef4 0%, #79ace9 100%);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #bddef4 0%, #79ace9 100%);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(to bottom, #bddef4 0%, #79ace9 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#bddef4', EndColorStr='#79ace9');
+    border: 1px solid #426c9e;
+    text-shadow: 0 1px 0 #c4def1;
+    outline: none;
+    background-color: #79ace9;
+    /* Fallback */
+    background-image: -webkit-linear-gradient(top, #bddef4 0%, #79ace9 100%);
 }
 
 .dt-button embed {
@@ -987,17 +896,13 @@ div.dt-button-collection {
     margin-top: 3px;
     padding: 8px 8px 4px 8px;
     border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.4);
     background-color: white;
     overflow: hidden;
     z-index: 2002;
     border-radius: 5px;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
-    z-index: 2002;
     -webkit-column-gap: 8px;
     -moz-column-gap: 8px;
-    -ms-column-gap: 8px;
-    -o-column-gap: 8px;
     column-gap: 8px;
 }
 div.dt-button-collection button.dt-button,
@@ -1011,7 +916,8 @@ div.dt-button-collection a.dt-button {
     margin-bottom: 4px;
     margin-right: 0;
 }
-div.dt-button-collection button.dt-button:active:not(.disabled), div.dt-button-collection button.dt-button.active:not(.disabled),
+div.dt-button-collection button.dt-button:active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled),
 div.dt-button-collection div.dt-button:active:not(.disabled),
 div.dt-button-collection div.dt-button.active:not(.disabled),
 div.dt-button-collection a.dt-button:active:not(.disabled),
@@ -1019,15 +925,6 @@ div.dt-button-collection a.dt-button.active:not(.disabled) {
     background-color: #dadada;
     /* Fallback */
     background-image: -webkit-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-    /* Chrome 10+, Saf5.1+, iOS 5+ */
-    background-image: -moz-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-    /* FF3.6 */
-    background-image: -ms-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-    /* IE10 */
-    background-image: -o-linear-gradient(top, #f0f0f0 0%, #dadada 100%);
-    /* Opera 11.10+ */
-    background-image: linear-gradient(to bottom, #f0f0f0 0%, #dadada 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f0f0f0', EndColorStr='#dadada');
     box-shadow: inset 1px 1px 3px #666;
 }
 div.dt-button-collection.fixed {
@@ -1055,8 +952,6 @@ div.dt-button-collection.two-column {
     padding-bottom: 1px;
     -webkit-column-count: 2;
     -moz-column-count: 2;
-    -ms-column-count: 2;
-    -o-column-count: 2;
     column-count: 2;
 }
 div.dt-button-collection.three-column {
@@ -1064,8 +959,6 @@ div.dt-button-collection.three-column {
     padding-bottom: 1px;
     -webkit-column-count: 3;
     -moz-column-count: 3;
-    -ms-column-count: 3;
-    -o-column-count: 3;
     column-count: 3;
 }
 div.dt-button-collection.four-column {
@@ -1073,8 +966,6 @@ div.dt-button-collection.four-column {
     padding-bottom: 1px;
     -webkit-column-count: 4;
     -moz-column-count: 4;
-    -ms-column-count: 4;
-    -o-column-count: 4;
     column-count: 4;
 }
 
@@ -1084,18 +975,6 @@ div.dt-button-background {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    /* Fallback */
-    background: -ms-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-    /* IE10 Consumer Preview */
-    background: -moz-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-    /* Firefox */
-    background: -o-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-    /* Opera */
-    background: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, rgba(0, 0, 0, 0.3)), color-stop(1, rgba(0, 0, 0, 0.7)));
-    /* Webkit (Safari/Chrome 10) */
-    background: -webkit-radial-gradient(center, ellipse farthest-corner, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
-    /* Webkit (Chrome 11+) */
     background: radial-gradient(ellipse farthest-corner at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
     /* W3C Markup, IE10 Release Preview */
     z-index: 2001;
@@ -1103,7 +982,7 @@ div.dt-button-background {
 
 @media screen and (max-width: 640px) {
     div.dt-buttons {
-        float: none !important;
+        float: none;
         text-align: center;
     }
 }
@@ -1132,7 +1011,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     padding: 0 4px;
 }
 
-.path-report-myfeedback #userstable_filter input{
+.path-report-myfeedback #userstable_filter input {
     max-width: 180px;
 }
 
@@ -1145,11 +1024,8 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 .path-report-myfeedback .grades-bar {
     width: 100%;
     font-size: 14px;
-    background: -webkit-linear-gradient(left, #b9ccb7, #82c783); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(right, #b9ccb7, #82c783); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(right, #b9ccb7, #82c783); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, #b9ccb7, #82c783); /* Standard syntax (must be last) */
-    color: #FFF;
+    color: #fff;
     border: 1px solid #444;
 }
 
@@ -1157,9 +1033,6 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     display: inline-block;
     width: 40%;
     text-align: center;
-    background: -webkit-linear-gradient(left, #ce9d93, #d4b5af); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(right, #ce9d93, #d4b5af); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(right, #ce9d93, #d4b5af); /* For Firefox 3.6 to 15 */
     background: linear-gradient(to right, #ce9d93, #d4b5af); /* Standard syntax (must be last) */
     border-right: 1px solid #444;
 }
@@ -1317,14 +1190,14 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 .path-report-myfeedback .ownreport {
     float: right;
     background-color: #284956;
-    padding: 0px 10px 5px;
+    padding: 0 10px 5px;
     line-height: 1em;
     margin: 5px 20px;
     border-radius: 8px;
 }
 
 .path-report-myfeedback .ownreport:hover {
-    background-color: #227C94;
+    background-color: #227c94;
 }
 
 .path-report-myfeedback .ownreport a {
@@ -1354,7 +1227,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 .path-report-myfeedback #progtable td,
 .path-report-myfeedback #ptutor td,
 .path-report-myfeedback #ptutor th {
-    padding: 5px 5px 0 5px !important;
+    padding: 5px 5px 0 5px;
 }
 
 .path-report-myfeedback h4 {
@@ -1415,7 +1288,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback table th {
-    border-bottom: 1px solid #aaa !important;
+    border-bottom: 1px solid #aaa;
 }
 
 .path-report-myfeedback aside#block-region-side-pre,
@@ -1427,7 +1300,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
     width: 100%;
 }
 .path-report-myfeedback table.fixedHeader-floating {
-    position: fixed !important;
+    position: fixed;
     background-color: white;
 }
 
@@ -1436,7 +1309,7 @@ also the blank invisible column that shows up on ColVis hide/Show list*/
 }
 
 .path-report-myfeedback table.fixedHeader-locked {
-    position: absolute !important;
+    position: absolute;
     background-color: white;
 }
 
@@ -1480,13 +1353,14 @@ a {
     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
     -webkit-background-clip: padding-box;
-    -moz-background-clip: padding-box;
+    -moz-background-clip: padding;
     background-clip: padding-box;
     outline: none;
     height: fit-content;
 }
 
-.path-report-myfeedback #feedname, #notename {
+.path-report-myfeedback #feedname,
+#notename {
     height: 8em;
     width: 30em;
 }
@@ -1537,17 +1411,13 @@ a {
         display: none;
     }
 
-    @page {
-        size: landscape;
-    }
-
     #region-main {
         float: left;
         width: 100%;
     }
 
     .back-to-top {
-        display: none !important;
+        display: none;
     }
 }
 

@@ -14,17 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * An included file for getting the academic year for archive functionality
  *
  * @package  report_myfeedback
+ * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$acyears = $report->get_archived_dbs();
+$acyears = $report->get_archived_years();
 $res = 'current';
 $siteadmin = is_siteadmin() ? 1 : 0;
 $archivedinstance = $archive = false;
@@ -51,18 +52,36 @@ $varprog = $progadmin ? 'yes' : 'no';
 $varsadmin = $siteadmin ? 'yes' : 'no';
 $vararchiveinst = $archivedinstance ? 'yes' : 'no';
 
+// Get the URLs for the archives from the config.
+$config = get_config('report_myfeedback');
+$url = [];
+$i = 1;
+foreach ($acyears as $val) {
+    if ($val == 'current') {
+        $url[$val] = '';
+    } else {
+        $alink = "archivelink" . $i++;
+        $url[$val] = $config->$alink;
+    }
+}
+
+// Show the academic year menu.
 echo '<form method="POST" id="yearform" action="">'
         . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
-        . "<input type=\"hidden\" name=\"archive\" value=\"no\"><select id=\"mySelect\" value=$res name=\"myselect\">";
+        . "<input type=\"hidden\" name=\"archive\" value=\"no\">"
+        . "<select id=\"mySelect\" value=$res name=\"myselect\">";
+
 foreach ($acyears as $val) {
-    echo "<option value=" . $val;
+    echo "<option url='" . $url[$val] . "' value=" . $val;
     if ($res == $val) {
         echo ' selected';
     }
     if ($val == 'current') {
         echo ">" . $val;
     } else {
-        echo ">" . "20" . implode('/', str_split($val, 2));
+        if ($url[$val] != '') { // Show only archived years when there is a URL.
+            echo ">" . "20" . implode('/', str_split($val, 2));
+        }
     }
 }
 echo "</select></form>";

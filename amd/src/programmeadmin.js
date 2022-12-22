@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-define(['jquery', 'core/str'], function ($, str) {
+define(['jquery', 'core/str'], function($, str) {
 
     const strings = [
         {
@@ -91,37 +91,37 @@ define(['jquery', 'core/str'], function ($, str) {
     };
 
     return {
-        init: function () {
-            $(document).ready(function () {
+        init: function() {
+            $(document).ready(function() {
 
                 // Populate strings.
                 str.get_strings(strings).then(results => results.forEach((val, key) => {
                     const string = strings[key];
                     stringResults[string.key] = val;
-                }));
+                })).catch();
 
-                $('#deptSelect').change(function () {
+                $('#deptSelect').change(function() {
                     $('#prog_form_dept').submit();
                 });
-                $('#progSelect').change(function () {
+                $('#progSelect').change(function() {
                     $('#prog_form_prog').submit();
                 });
-                $('#progmodSelect').change(function () {
+                $('#progmodSelect').change(function() {
                     $('#prog_form_mod').submit();
                 });
-                $('.progmodClick').click(function () {
+                $('.progmodClick').click(function() {
                     $(this).closest('.permod').find('.prog_form_mod_click').submit();
                 });
 
-                $('.reportPrint').on('click', function () {
+                $('.reportPrint').on('click', function() {
                     print();
                 });
 
-                $('.x_port').on('click', function () {
+                $('.x_port').on('click', function() {
                     window.location.href = 'export.php';
                 });
 
-                $('.sToggle').click(function () {
+                $('.sToggle').click(function() {
                     $(this).closest('#selected-prog-container').find('.progtable').show();
                     $(this).closest('#selected-prog-container').find('.permod').hide();
                     $(this).closest('#selected-prog-container').find('.ptutor').hide();
@@ -148,7 +148,7 @@ define(['jquery', 'core/str'], function ($, str) {
                         'color': '#444'
                     });
                 });
-                $('.aToggle').click(function () {
+                $('.aToggle').click(function() {
                     $(this).closest('#selected-prog-container').find('.progtable').show();
                     $(this).closest('#selected-prog-container').find('tr.recordRow').hide();
                     $(this).closest('#selected-prog-container').find('.ptutor').hide();
@@ -172,7 +172,7 @@ define(['jquery', 'core/str'], function ($, str) {
                 setupStudentTable();
                 $('.modass').click(setupStudentTable);
 
-                $('.pToggle').click(function () {
+                $('.pToggle').click(function() {
                     $(this).closest('#selected-prog-container').find('.progtable').hide();
                     $(this).closest('#selected-prog-container').find('.ptutor').show();
                     $(this).closest('#selected-prog-container').find('span.pToggle').css({
@@ -189,7 +189,7 @@ define(['jquery', 'core/str'], function ($, str) {
                     });
                 });
 
-                $('.assess-br').click(function () {
+                $('.assess-br').click(function() {
                     var thisAs = $(this).closest('.assRec');
                     var rem = '.stuRec.' + $(thisAs).attr('data-aid');
                     if ($(rem).is(':visible')) {
@@ -205,7 +205,7 @@ define(['jquery', 'core/str'], function ($, str) {
                     }
                 });
 
-                $('u.hidetable').click(function () {
+                $('u.hidetable').click(function() {
                     var thisEl = $(this).closest('td.maintable').find('table.innertable');
                     if ($(thisEl).is(':visible')) {
                         $(thisEl).hide();
@@ -216,12 +216,12 @@ define(['jquery', 'core/str'], function ($, str) {
                     }
                 });
 
-                $('#selectall1').change(function () {
+                $('#selectall1').change(function() {
                     $('.chk2').prop('checked', $(this).prop('checked'));
                 });
-                $("#emailform1").click(function () {
+                $("#emailform1").click(function() {
                     var mylink1 = [];
-                    $("input:checked").each(function () {
+                    $("input:checked").each(function() {
                         if ($(this).val() != 'on') {
                             mylink1.push($(this).val());
                         }

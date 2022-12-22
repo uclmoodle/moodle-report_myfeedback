@@ -18,9 +18,10 @@
  * My Feedback Report.
  *
  * @package   report_myfeedback
+ * @copyright 2022 UCL
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk> or <jgramp@gmail.com>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which
+ *  credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which
  *            in turn is based on block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen.
  *            Also uses SQL originating from Richard Havinga <richard.havinga@ulcc.ac.uk>.
  *            The code for using an external database is taken from Juan leyva's

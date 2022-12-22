@@ -18,6 +18,7 @@
  * The report_myfeedback report viewed usage dashoboard event.
  *
  * @package    report_myfeedback
+ * @copyright  2022 UCL
  * @author     Jessica Gramp <j.gramp@ucl.ac.uk> and <jgramp@gmail.com>
  * @author     Delvon Forrester <delvon@esparanza.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,6 +26,15 @@
 
 namespace report_myfeedback\event;
 
+/**
+ * Viewed usagedash.
+ *
+ * @package    report_myfeedback
+ * @copyright  2022 UCL
+ * @author     Jessica Gramp <j.gramp@ucl.ac.uk> and <jgramp@gmail.com>
+ * @author     Delvon Forrester <delvon@esparanza.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class myfeedbackreport_viewed_usagedash extends \core\event\base {
 
     /**

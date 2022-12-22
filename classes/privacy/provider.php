@@ -36,7 +36,8 @@ use core_privacy\local\request\userlist;
  * @copyright  2019 Segun Babalola <segun@babalola.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\provider, \core_privacy\local\request\core_userlist_provider, \core_privacy\local\request\plugin\provider {
+class provider implements \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\core_userlist_provider, \core_privacy\local\request\plugin\provider {
 
     /**
      * Declare/define the scope of data this plugin is responsible for.
@@ -62,6 +63,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
     /**
      *  Returns the contexts that the report_myfeedback plugin stores data for the given userid.
+     *
      *  NOTE: From reviewing the code of this plugin, there is no explicit reference to contexts when storing data,
      *  this function there takes the view that since data is stored against userid, the user context is implicitly used.
      *  One consequence of this is that if a user has been deleted before the version of the plugin with this function is
@@ -93,6 +95,7 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      * the given user, hence the SQL.
      *
      * @param userlist $userlist
+     * @return void
      */
     public static function get_users_in_context (userlist $userlist) {
         $context = $userlist->get_context();
@@ -178,6 +181,9 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
      * Delete data for multiple (specified in $userlist) users in the single context specified.
      *
      * @param approved_userlist $userlist
+     * @return void
+     * @throws \coding_exception
+     * @throws \dml_exception
      */
     public static function delete_data_for_users(approved_userlist $userlist) {
         global $DB;
@@ -195,8 +201,11 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
     /**
      * Delete data for every (unspecified) user in a given single context.
+     *
      * Since this plugin stores data in the user context, this is equivalent to deleting all data for a single user.
      * @param \context $context
+     * @return void
+     * @throws \dml_exception
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
         if ($context->contextlevel == CONTEXT_USER) {
@@ -206,7 +215,10 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
 
     /**
      * Delete data for single (specified) user in a specified context.
+     *
      * @param approved_contextlist $contextlist
+     * @return void
+     * @throws \dml_exception
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         if ($contextlist->get_component() != 'report_myfeedback') {
@@ -221,6 +233,13 @@ class provider implements \core_privacy\local\metadata\provider, \core_privacy\l
         }
     }
 
+    /**
+     * Delete single user data.
+     *
+     * @param int $userid
+     * @return void
+     * @throws \dml_exception
+     */
     private static function delete_single_user_data(int $userid) {
         global $DB;
 

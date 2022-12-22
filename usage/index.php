@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * The main file for the Usage dashboard
  *
  * @package  report_myfeedback
+ * @copyright 2022 UCL
  * @author   Jessica Gramp <j.gramp@ucl.ac.uk> and <jgramp@gmail.com>
  * @author   Delvon Forrester <delvon@esparanza.co.uk>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
