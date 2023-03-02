@@ -27,6 +27,8 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
 use Behat\Gherkin\Node\TableNode as TableNode,
     Behat\Mink\Exception\ExpectationException as ExpectationException;
+use Facebook\WebDriver\WebDriverDimension;
+
 
 /**
  * Student-related steps definitions.
@@ -272,5 +274,21 @@ class behat_myfeedback extends behat_base {
         $searchbox->setValue($crieria);
         $submit = $this->find_button('Search');
         $submit->press();
+    }
+
+    /**
+     * Set the browser window to a given width and height.
+     *
+     * @When /^I set the browser window to "(?P<width>(?:[^"]|\\")*)" x "(?P<height>(?:[^"]|\\")*)"$/
+     *
+     * @param int $width
+     * @param int $height
+     * @return void
+     */
+    public function i_set_browser_window_to($width, $height) {
+        $driver = $this->getSession()->getDriver();
+        $webdriver = $driver->getWebDriver();
+
+        $webdriver->manage()->window()->setSize(new WebDriverDimension($width, $height));
     }
 }
