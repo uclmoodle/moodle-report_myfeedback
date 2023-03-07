@@ -104,7 +104,7 @@ class provider implements \core_privacy\local\metadata\provider,
             return;
         }
 
-        $params = ['useridfromcontext'    => $context->instanceid];
+        $params = ['useridfromcontext' => $context->instanceid];
 
         $sql = "SELECT DISTINCT userid FROM {report_myfeedback} WHERE userid = :useridfromcontext";
         $userlist->add_from_sql('userid', $sql, $params);
