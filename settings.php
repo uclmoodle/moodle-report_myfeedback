@@ -46,18 +46,33 @@ if ($ADMIN->fulltree) {
     // Archive Links.
     $settings->add(new admin_setting_heading('report_myfeedback_addheading_archivelinks',
         get_string('archivelinksheading', 'report_myfeedback'), ''));
-    $settings->add(new admin_setting_configtext('report_myfeedback/academicyear',
-        get_string('settingsacademicyear', 'report_myfeedback'),
-        get_string('academicyearinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
+
+    $settings->add(new admin_setting_configtext('report_myfeedback/academicyeartext',
+        get_string('settingsacademicyeartext', 'report_myfeedback'),
+        get_string('academicyeartextinfo', 'report_myfeedback'),
+        get_string('current_academic_year', 'report_myfeedback'), PARAM_RAW, 30));
+
     $settings->add(new admin_setting_configcheckbox('report_myfeedback/archivedinstance',
         get_string('archivedinstance', 'report_myfeedback'),
         get_string('archivedinstanceinfo', 'report_myfeedback'), '0'));
+
     $settings->add(new admin_setting_configselect('report_myfeedback/archivedyears',
         get_string('archiveyears', 'report_myfeedback'),
         get_string('archiveyearsinfo', 'report_myfeedback'), 0, $options));
+
+    $config = get_config('report_myfeedback');
+
+    // Loop through the archive links.
     for ($i = 1; $i <= $max; $i++) {
+        // A description field for the archive URL.
+        $settings->add(new admin_setting_configtext('report_myfeedback/archivelinktext' . $i,
+            get_string('archivelinktext', 'report_myfeedback', $i),
+            get_string('archivelinktextinfo', 'report_myfeedback', $i),
+            '', PARAM_RAW, 30));
+
+        // The archive URL.
         $settings->add(new admin_setting_configtext('report_myfeedback/archivelink' . $i,
-            get_string('archivelinktext', 'report_myfeedback'),
+            get_string('archivelink', 'report_myfeedback'),
             get_string('archivelinksettings' . $i, 'report_myfeedback'),
             '', PARAM_RAW, 50));
     }

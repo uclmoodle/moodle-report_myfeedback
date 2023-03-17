@@ -58,9 +58,9 @@ define([
                         }
                     });
                     if (mylink.length > 0) {
-                        // eslint-disable-next-line promise/always-return
                         str.get_string('email_tutee_subject', 'report_myfeedback').then((emailTuteeSubject) => {
-                            $("a#mail").attr("href", "mailto:?bcc=" + mylink.join(";") + "&Subject=" + emailTuteeSubject + "");
+                            return $("a#mail").
+                            attr("href", "mailto:?bcc=" + mylink.join(";") + "&Subject=" + emailTuteeSubject + "");
                         }).catch();
                     }
                 });

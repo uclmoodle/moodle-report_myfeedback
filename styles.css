@@ -1453,3 +1453,7 @@ a {
         margin-left: 10%;
     }
 }
+
+.userprofilebox .buttonswrapper {
+    padding-top: 10px;
+}

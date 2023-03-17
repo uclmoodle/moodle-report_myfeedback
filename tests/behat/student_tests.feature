@@ -107,7 +107,8 @@ Feature: View my own feedback and comment / add notes as a student
     And I should see "Very good"
     When I press the "back" button in the browser
     Then I should see "My feedback report for Student One"
-    When I click on "Add notes" "link"
+    When I change window size to "large"
+    And I click on "Add notes" "link"
     Then I should see "Add/Edit notes"
     When I set the field "notename" to "This is a test note."
     And I click on "Save notes and close" "button"

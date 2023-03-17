@@ -34,8 +34,8 @@ if (isset($_SESSION['viewyear'])) {
 }
 
 if (!$personaltutor && !$progadmin && !$siteadmin) {
-    if ($yrr->academicyear && $yrr->archivedinstance) {
-        $res = $yrr->academicyear;
+    if ($yrr->academicyeartext && $yrr->archivedinstance) {
+        $res = $yrr->academicyeartext;
         $archivedinstance = true;
     }
 }
@@ -52,46 +52,45 @@ $varprog = $progadmin ? 'yes' : 'no';
 $varsadmin = $siteadmin ? 'yes' : 'no';
 $vararchiveinst = $archivedinstance ? 'yes' : 'no';
 
-// Get the URLs for the archives from the config.
+// Get the config data.
 $config = get_config('report_myfeedback');
-$url = [];
-$i = 1;
-foreach ($acyears as $val) {
-    if ($val == 'current') {
-        $url[$val] = '';
-    } else {
-        $alink = "archivelink" . $i++;
-        $url[$val] = $config->$alink;
-    }
-}
 
 // Show the academic year menu.
-echo '<form method="POST" id="yearform" action="">'
+ $o = '<form method="POST" id="yearform" action="">'
         . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
         . "<input type=\"hidden\" name=\"archive\" value=\"no\">"
         . "<select id=\"mySelect\" value=$res name=\"myselect\">";
-
+$i = 0;
 foreach ($acyears as $val) {
-    echo "<option url='" . $url[$val] . "' value=" . $val;
-    if ($res == $val) {
-        echo ' selected';
-    }
     if ($val == 'current') {
-        echo ">" . $val;
+        $url = 'current';
+        $linktext = (isset($config->academicyeartext) && $config->academicyeartext != '' ? $config->academicyeartext :
+            get_string('current_academic_year', 'report_myfeedback'));
     } else {
-        if ($url[$val] != '') { // Show only archived years when there is a URL.
-            echo ">" . "20" . implode('/', str_split($val, 2));
-        }
+        $alink = "archivelink" . $i;
+        $url = $config->$alink;
+        $alt = 'archivelinktext' . $i;
+        $linktext = (isset($config->$alt) ? $config->$alt : '');
     }
+
+    if ($url != '' && $linktext != '') {
+        $o .= "<option url='" . $url . "' value=" . $val .
+            ($val == $res ? ' selected' : '') .
+            ">" . $linktext;
+    }
+    $i++;
 }
-echo "</select></form>";
+
+$o .= "</select></form>";
 
 // No support before academic year 1213.
 if ($res != 'current' && $res < 1213) {
-    echo get_string('noarchivesupporth1', 'report_myfeedback');
-    echo get_string('noarchivesupporth2', 'report_myfeedback');
+    $o .= get_string('noarchivesupporth1', 'report_myfeedback');
+    $o .= get_string('noarchivesupporth2', 'report_myfeedback');
     $_SESSION['viewyear'] = 'current';
 }
+
+echo $o;
 
 $PAGE->requires->js_call_amd('report_myfeedback/academicyear', 'init', [
     $archivedomain,

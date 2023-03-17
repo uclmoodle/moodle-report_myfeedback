@@ -18,7 +18,7 @@
  * My Feedback Report.
  *
  * @package   report_myfeedback
- * @copyright 2022 UCL
+ * @copyright 2022-23 UCL
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk> or <jgramp@gmail.com>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  *  credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which
@@ -37,8 +37,8 @@
 
  defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2022122100;
+$plugin->version = 2023040300;
 $plugin->component = 'report_myfeedback';
 $plugin->requires = 2020061515;
-$plugin->release = '2.16 (Build: 2022122100)';
+$plugin->release = '4.0 (Build: 2023040300)';
 $plugin->maturity = MATURITY_STABLE;
