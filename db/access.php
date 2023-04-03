@@ -17,9 +17,10 @@
 /**
  * Report capabilities
  *
- * @package    report_courseoverview
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   report_myfeedback
+ * @copyright 2022 UCL
+ * @author    Jessica Gramp <j.gramp@ucl.ac.uk> or <jgramp@gmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();

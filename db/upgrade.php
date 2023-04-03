@@ -14,12 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
+ * Upgrading the database.
+ *
+ * @package   report_myfeedback
+ * @copyright 2022 UCL
+ * @author    Jessica Gramp <j.gramp@ucl.ac.uk> or <jgramp@gmail.com>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
  * Upgrade this My feedback instance
+ *
  * @param int $oldversion The old version of the My feedback report
  * @return bool
  */
-
 function xmldb_report_myfeedback_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();

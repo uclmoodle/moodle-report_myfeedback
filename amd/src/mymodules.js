@@ -31,7 +31,7 @@ define([
     'datatables.net-colreorder',
     'datatables.net-fixedheader',
     'datatables.net-responsive',
-], function ($, str) {
+], function($, str) {
 
     const strings = [
         {
@@ -85,14 +85,14 @@ define([
     ];
 
     return {
-        init: function () {
-            $(document).ready(function () {
+        init: function() {
+            $(document).ready(function() {
                 // Populate strings.
                 const stringResults = {};
                 str.get_strings(strings).then(results => results.forEach((val, key) => {
                     const string = strings[key];
                     stringResults[string.key] = val;
-                }));
+                })).catch();
 
                 // Create the DataTable.
                 $('.modtable').DataTable({
@@ -116,11 +116,11 @@ define([
                 $('.studentimggraded').attr('title', stringResults.student_graded_info);
                 $('.studentimglow').attr('title', stringResults.student_low_info);
 
-                $('.ex_port').on('click', function () {
+                $('.ex_port').on('click', function() {
                     window.location.href = 'export.php';
                 });
 
-                $('.reportPrint').on('click', function () {
+                $('.reportPrint').on('click', function() {
                     print();
                 });
 
@@ -131,7 +131,7 @@ define([
                     'text-overflow': 'ellipsis'
                 });
 
-                $('.sToggle').click(function () {
+                $('.sToggle').click(function() {
                     $(this).closest('.fullRec').find('table.tutor-inner.assRec').hide();
                     $(this).closest('.fullRec').find('table.tutor-inner.stuRecP').hide();
                     $('.settableheight').hide();
@@ -153,7 +153,7 @@ define([
                         'color': '#fff'
                     });
                 });
-                $('.aToggle').click(function () {
+                $('.aToggle').click(function() {
                     $(this).closest('.fullRec').find('table.tutor-inner.stuRecM').hide();
                     $(this).closest('.fullRec').find('table.tutor-inner.assRec').show();
                     $('.settableheight').show();
@@ -175,7 +175,7 @@ define([
                     });
                 });
 
-                $('.assess-br').click(function () {
+                $('.assess-br').click(function() {
                     var thisAs = $(this).closest('.assRec');
                     var rem = '.stuRecP.' + $(thisAs).attr('data-aid');
                     if ($(rem).is(':visible')) {

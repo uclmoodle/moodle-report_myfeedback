@@ -18,9 +18,10 @@
  * My Feedback Report.
  *
  * @package   report_myfeedback
+ * @copyright 2022 UCL
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
+ * credits    Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
  *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga
  *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
@@ -45,8 +46,11 @@ function report_myfeedback_extend_navigation(global_navigation $navigation) {
  * This function extends the My settings >> activity with the My feedback report.
  *
  * @param global_navigation $navigation The navigation node to extend
- * @param stdClass $course The course object
  * @param stdClass $user The user object
+ * @param stdClass $course The course object
+ * @return void
+ * @throws coding_exception
+ * @throws moodle_exception
  */
 function report_myfeedback_extend_navigation_user($navigation, $user, $course) {
     // Backward compatibility to v2.8 and earlier versions.
@@ -93,10 +97,13 @@ function report_myfeedback_extend_navigation_course($navigation, $course, $conte
 /**
  * This function extends the navigation with the My feedback report to the user's profile.
  *
- * @param core_user\output\myprofile\tree $tree, The node to add to
+ * @param core_user\output\myprofile\tree $tree The node to add to
  * @param stdClass $user The user object
  * @param bool $iscurrentuser Whether the logged-in user is current user
  * @param stdClass $course The course object
+ * @return bool
+ * @throws coding_exception
+ * @throws moodle_exception
  */
 function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
     // For compatibility with v2.9 and later.

@@ -1,5 +1,5 @@
 # TODO: Investigate possibility of using language string variables in test steps.
-@mod @mod_feedback @report_myfeedback @javascript
+@mod @mod_feedback @report @report_myfeedback @javascript
 Feature: Tutors and administrators need access to grades and feedback to monitor student progress throughout the year
   In order to support students through the year
   As a tutor (i.e. personal, or module tutor) or administrator

@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * The included file for for to select modules on Mod tutor dashboard
  *
  * @package  report_myfeedback
+ * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

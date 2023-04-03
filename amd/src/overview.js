@@ -35,24 +35,24 @@ define([
     return {
         init: function() {
             /* Plugin API method to determine is a column is sortable */
-            $.fn.dataTable.Api.register( 'column().searchable()', function () {
+            $.fn.dataTable.Api.register('column().searchable()', function() {
                 var ctx = this.context[0];
                 return ctx.aoColumns[this[0]].bSearchable;
-            } );
+            });
 
-            $(document).ready( function () {
+            $(document).ready(function() {
 
                 // Before initializing Datatables get the cells in the second row of the header so you can reference them later on
                 var filterCells = $('thead tr:eq(1) td');
 
                 // Initialize the DataTable.
-                var table = $('#grades').DataTable( {
+                var table = $('#grades').DataTable({
                     dom: 'RlfBrtip',
                     fixedHeader: true,
                     pageLength: 25,
                     orderCellsTop: true,
                     columnDefs: [
-                        { targets: [ 5, 8 ],
+                        {targets: [5, 8],
                             searchable: false,
                             orderable:  false
                         }
@@ -60,67 +60,68 @@ define([
                     order: [[4, 'desc']],
                     buttons: ['colvis'],
                     stateSave: true,
-                    stateSaveCallback: function(settings,data) {
-                        localStorage.setItem( 'Overview', JSON.stringify(data) );
+                    stateSaveCallback: function(settings, data) {
+                        localStorage.setItem('Overview', JSON.stringify(data));
                     },
                     stateLoadCallback: function() {
-                        return JSON.parse( localStorage.getItem( 'Overview' ) );
+                        return JSON.parse(localStorage.getItem('Overview'));
                     },
                     responsive: true
-                } );
+                });
 
                 // Add filtering.
-                table.columns().every( function () {
-                    if ( this.searchable() ) {
+                table.columns().every(function() {
+                    if (this.searchable()) {
                         var that = this;
 
-                        // Create the `select` element
-                        var select = $('<select><option value=\"\"></option></select>')
+                        // Create the `select` element.
+                        var select = $('<select><option value=""></option></select>')
                             .appendTo(
-                                filterCells.eq( table.colReorder.transpose( this.index(), 'toOriginal' ) )
-                            )
-                            .on( 'change', function() {
+                                filterCells.eq(table.colReorder.transpose(this.index(), 'toOriginal'))
+                           )
+                            .on('change', function() {
                                 that
                                     .search($(this).val())
                                     .draw();
-                            } );
+                            });
 
                         // Add data.
                         this
                             .data()
                             .sort()
                             .unique()
-                            .each( function(d) {
+                            .each(function(d) {
                                 select.append($('<option>' + d + '</option>'));
-                            } );
+                            });
 
                         // Restore state saved values.
                         var state = this.state.loaded();
-                        if ( state ) {
+                        if (state) {
                             var val = state.columns[this.index()];
-                            select.val( val.search.search );
+                            select.val(val.search.search);
                         }
                     }
+                    return true;
                 });
 
                 // When button is clicked to reset table.
-                $('#tableDestroy').on('click', function () {
+                $('#tableDestroy').on('click', function() {
                     table.colReorder.reset();
                     table.destroy(false);
                     $('thead select').val('').change();
                     table.state.clear();
                     location.reload();
-                } );
-
-                $('#exportexcel').on('click', function() {
-                    window.location.href= 'export.php';
                 });
 
-                $('#reportPrint').on('click', function () {
+                $('#exportexcel').on('click', function() {
+                    window.location.href = 'export.php';
+                });
+
+                $('#reportPrint').on('click', function() {
                     print();
                 });
 
-                $('#toggle-grade').on('click', function () {
+                $('#toggle-grade').on('click', function() {
                     $('.t-rel').toggleClass('off');
                 });
 

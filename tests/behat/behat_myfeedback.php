@@ -27,6 +27,8 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
 use Behat\Gherkin\Node\TableNode as TableNode,
     Behat\Mink\Exception\ExpectationException as ExpectationException;
+use Facebook\WebDriver\WebDriverDimension;
+
 
 /**
  * Student-related steps definitions.
@@ -39,14 +41,26 @@ use Behat\Gherkin\Node\TableNode as TableNode,
 class behat_myfeedback extends behat_base {
 
     /**
+     * I have a moodle account with the following details
+     *
      * @Given /^I have a Moodle account with the following details:$/
+     *
+     * @param TableNode $table
+     * @return void
+     * @throws Exception
      */
     public function i_have_a_moodle_account_with_the_following_details(TableNode $table) {
         $this->execute("behat_data_generators::the_following_entities_exist", ['users', $table]);
     }
 
     /**
+     * Assign grades to students for assignments
+     *
      * @Given /^the following grades have been awarded to students for assignments:$/
+     *
+     * @param TableNode $table
+     * @return void
+     * @throws dml_exception
      */
     public function assign_grades_to_students_for_assignments(TableNode $table) {
         global $DB;
@@ -90,6 +104,12 @@ class behat_myfeedback extends behat_base {
 
     }
 
+    /**
+     * Extract column mappings
+     *
+     * @param object $table
+     * @return array
+     */
     private function extract_column_mappings($table) {
         $mappings = [];
         if (is_array($table) && count($table)) {
@@ -105,7 +125,14 @@ class behat_myfeedback extends behat_base {
     }
 
     /**
+     * Grade departmental admin rights.
+     *
      * @Given /^the user, "(?P<username_string>(?:[^"]|\\")*)", is granted departmental admin rights for the courses:$/
+     *
+     * @param string $username
+     * @param TableNode $courses
+     * @return void
+     * @throws Exception
      */
     public function user_is_granted_departmental_admin_rights($username, TableNode $courses) {
         // Create departmental admin role.
@@ -146,6 +173,8 @@ class behat_myfeedback extends behat_base {
     }
 
     /**
+     * Assign the following tutees to a personal tutor.
+     *
      * @Given /^the following personal tutors are assigned the following tutees:$/
      *
      * @param TableNode $table
@@ -169,6 +198,8 @@ class behat_myfeedback extends behat_base {
     }
 
     /**
+     * Check for listed students.
+     *
      * @Given /^I should see the following students listed:$/
      *
      * @param TableNode $table
@@ -204,6 +235,8 @@ class behat_myfeedback extends behat_base {
      *
      * @Then /^I should see a tab named "(?P<tab_name_string>(?:[^"]|\\")*)"$/
      *
+     * @param string $tabname
+     * @return void
      * @throws ExpectationException
      * @throws \Behat\Mink\Exception\DriverException
      * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
@@ -219,6 +252,10 @@ class behat_myfeedback extends behat_base {
      * Click through to a named tab
      *
      * @When /^I click the tab titled "(?P<tab_name_string>(?:[^"]|\\")*)"$/
+     *
+     * @param object $tabtitle
+     * @return void
+     * @throws Exception
      */
     public function i_click_tab_titled($tabtitle) {
         $this->execute("behat_general::click_link", $tabtitle);
@@ -228,11 +265,30 @@ class behat_myfeedback extends behat_base {
      * Submit "My Students" search form
      *
      * @When /^I search for tutees using "(?P<tab_name_string>(?:[^"]|\\")*)"$/
+     *
+     * @param object $crieria
+     * @return void
      */
     public function i_submit_search_form_for_students($crieria) {
         $searchbox = $this->find_field("searchu");
         $searchbox->setValue($crieria);
         $submit = $this->find_button('Search');
         $submit->press();
+    }
+
+    /**
+     * Set the browser window to a given width and height.
+     *
+     * @When /^I set the browser window to "(?P<width>(?:[^"]|\\")*)" x "(?P<height>(?:[^"]|\\")*)"$/
+     *
+     * @param int $width
+     * @param int $height
+     * @return void
+     */
+    public function i_set_browser_window_to($width, $height) {
+        $driver = $this->getSession()->getDriver();
+        $webdriver = $driver->getWebDriver();
+
+        $webdriver->manage()->window()->setSize(new WebDriverDimension($width, $height));
     }
 }

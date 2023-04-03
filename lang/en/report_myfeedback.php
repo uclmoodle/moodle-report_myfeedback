@@ -18,9 +18,10 @@
  * My Feedback Report.
  *
  * @package   report_myfeedback
+ * @copyright 2022 UCL
  * @author    Jessica Gramp <j.gramp@ucl.ac.uk>
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
- * @credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
+ *  credits   Based on original work report_mygrades by David Bezemer <david.bezemer@uplearning.nl> which in turn is based on
  *            block_myfeedback by Karen Holland, Mei Jin, Jiajia Chen. Also uses SQL originating from Richard Havinga
  *            <richard.havinga@ulcc.ac.uk>. The code for using an external database is taken from Juan leyva's
  *            <http://www.twitter.com/jleyvadelgado> configurable reports block.
@@ -129,8 +130,22 @@ $string['fullfeedback'] = 'view full feedback';
 $string['programme'] = 'Second level: ';
 $string['userprogramme'] = 'Programme: ';
 $string['faculty'] = 'Top level: ';
-$string['studentrecordsystem'] = 'Launch Student Record System';
+
+$string['archivelinksheading'] = 'Archive Links';
+$string['archivelink'] = 'Archive URL';
+$string['archivelinksettings1'] = 'URL for Archive last year';
+$string['archivelinksettings2'] = 'URL for Archive 2 years ago';
+$string['archivelinksettings3'] = 'URL for Archive 3 years ago';
+$string['archivelinksettings4'] = 'URL for Archive 4 years ago';
+$string['archivelinksettings5'] = 'URL for Archive 5 years ago';
+
+$string['studentrecordsystemlinkheading'] = 'Student Record System Link';
+$string['studentrecordsystemlinktext'] = 'Student Record System Link';
+$string['studentrecordsystemlinksettings'] = 'Set the link for the Student Record System';
 $string['studentrecordsystemlink'] = 'https://';
+$string['studentrecordsystemtext'] = 'Student Record System Button Text';
+$string['studentrecordsystemsettings'] = 'Text on Button to launch the Student Record System';
+$string['studentrecordsystem'] = 'Launch Student Record System';
 $string['provisional_grades'] = 'The marks shown here are provisional and may include marks for assessments that do not count towards your final grade. Please refer to the
     <a href="" title="Student Record System login" rel="tooltip">student record system</a> to see a formal record of your grade.';
 $string['archivedbnotexist'] = "This database does not exist or access details incorrect. Admin must configure My feedback report settings page correctly!";
@@ -153,12 +168,14 @@ $string['archivedbpass'] = "Archived DB Password";
 $string['archivedbpassinfo'] = "Archive database password (for above username).";
 $string['archivedbsettings'] = "Archived Database Settings (not recommended for production installations)";
 $string['archiveyears'] = "Archived years";
-$string['archiveyearsinfo'] = "How many years of archive do you want to make available?<br /> Recommend setting to 0 for production Moodle installations, due to issues with checking permissions on older versions of Moodle.";
+$string['archiveyearsinfo'] = "How many years of archive do you want to make available?<br /> Years with <i>no</i> URL or <i>no</i> description will not be shown.";
 $string['archivenamingconvention'] = "Archived DB naming convention";
 $string['archivenamingconventioninfo'] = 'What naming convention do you use before your academic year e.g."moodle_archive_xxxx" where xxxx is the two digit value for the academic years e.g."1415". <br>The current release only uses the default convention.';
 $string['archivenamingconventiondefault'] = "moodle_archive_";
 $string['settingsacademicyear'] = 'Academic year';
 $string['academicyearinfo'] = "The academic year this instance of Moodle relates to.";
+$string['settingsacademicyeartext'] = 'Academic year description';
+$string['academicyeartextinfo'] = "A text describing the academic year this instance of Moodle relates to.";
 $string['archivedinstance'] = "Archived instance";
 $string['archivedinstanceinfo'] = "Whether this instance of Moodle is an archived instance.";
 $string['livedomaindefault'] = 'https://';
@@ -412,3 +429,7 @@ $string['privacy:metadata:report_myfeedback:feedback'] = 'Turnitin feedback manu
 $string['privacy:metadata:report_myfeedback:coursefullname'] = 'Course that stored notes/feedback relate to';
 $string['privacy:metadata:report_myfeedback:timemodified'] = 'Last modified timestamp of notes/feedback';
 $string['privacy:metadata:report_myfeedback:gradeitemname'] = 'Grade item that stored notes/feedback relate to';
+
+$string['current_academic_year'] = 'Current';
+$string['archivelinktext'] = 'Description for archived year {$a}';
+$string['archivelinktextinfo'] = 'Description for archive URL {$a} to be used in report.';

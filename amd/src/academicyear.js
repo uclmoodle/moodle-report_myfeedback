@@ -13,16 +13,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-define(['jquery',], function($) {
+define(['jquery'], function($) {
     return {
         init: function(archivedomain, userid, currenttab, ptut, prog, siteadmin, livedomain, archiveinst) {
-            $(document).ready( function () {
-                $('#mySelect').change(function(){
-                    var t = this.value.toString();
-                    var archiveyear = t.substring(0,2)+'-'+t.substring(2);
-                    if (ptut == 'no' && prog == 'no' && siteadmin == 'no') {
+            $(document).ready(function() {
+                $('#mySelect').change(function() {
+
+                    let archivedomain = '';
+                    let t = this.value.toString();
+                    if (t === 'current') {
+                        $('#yearform').submit();
+                    } else {
+                        archivedomain = ($("#mySelect option:selected").attr('url'));
+                        window.open(archivedomain + '/report/myfeedback/index.php?userid=' + userid
+                            + '&currenttab=' + currenttab + M.cfg.sesskey, '_blank');
+                    }
+
+                    let archiveyear = t.substring(0, 2) + '-' + t.substring(2);
+                    if (ptut === 'no' && prog === 'no' && siteadmin === 'no') {
                         if (archiveinst) {
-                            if (t == 'current') {
+                            if (t === 'current') {
                                 location.replace(
                                     livedomain + '/report/myfeedback/index.php?userid=' + userid
                                     + '&currenttab=' + currenttab + M.cfg.sesskey
@@ -38,12 +48,12 @@ define(['jquery',], function($) {
                         }
                     } else {
                         // If personal tutor or dept admin or site admin.
-                        if (archiveinst == 'no') {
+                        if (archiveinst === 'no') {
                             // Only if not archive instance.
                             $('#yearform').submit();
                         } else {
                             // If not archive instance.
-                            if (t == 'current') {
+                            if (t === 'current') {
                                 location.replace(
                                     livedomain + '/report/myfeedback/index.php?userid=' + userid
                                     + '&currenttab=' + currenttab + M.cfg.sesskey

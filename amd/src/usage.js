@@ -34,13 +34,13 @@ define([
 
     return {
         init: function() {
-            $(document).ready( function () {
+            $(document).ready(function() {
 
-                $('#reportSelect').change(function(){
+                $('#reportSelect').change(function() {
                     $('#report_form_select').submit();
                 });
 
-                $('#categorySelect').change(function(){
+                $('#categorySelect').change(function() {
                     $('#report_category_select').submit();
                 });
 
@@ -53,7 +53,7 @@ define([
 
                 $('#userstable').DataTable({
                     'dom': 'rtip',
-                    'order': [[0, 'asc' ]]
+                    'order': [[0, 'asc']]
                 });
 
                 $('#usagetable').DataTable({
@@ -65,12 +65,12 @@ define([
                     order: [[1, 'desc']]
                 });
 
-                $('.reportPrint').on('click', function () {
+                $('.reportPrint').on('click', function() {
                     print();
                 });
 
                 $('.x_port').on('click', function() {
-                    window.location.href= 'export.php';
+                    window.location.href = 'export.php';
                 });
 
             });

@@ -18,6 +18,7 @@
  * Add/edit users reflective notes per grade item
  *
  * @package   report_myfeedback
+ * @copyright  2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +26,7 @@
 require('../../config.php');
 require_login();
 
-global $CFG, $remotedb;
+global $CFG, $currentdb;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $notename = optional_param('notename', '', PARAM_NOTAGS);
@@ -56,13 +57,13 @@ if (!empty($notename) && $gradeid && $userid) {
             array('context' => context_user::instance($userid), 'relateduserid' => $userid)
     );
     if ($usernotes) {
-        $remotedb->execute($sql1, $params1);
+        $currentdb->execute($sql1, $params1);
         echo get_string('updatesuccessful', 'report_myfeedback');
         $event = \report_myfeedback\event\myfeedbackreport_updatenotes::create(
                 array('context' => context_user::instance($userid), 'relateduserid' => $userid)
         );
     } else {
-        $remotedb->execute($sql2, $params2);
+        $currentdb->execute($sql2, $params2);
         echo get_string('insertsuccessful', 'report_myfeedback');
     }
 

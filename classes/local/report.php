@@ -55,28 +55,25 @@ class report {
     /**
      * Sets up global $DB moodle_database instance.
      *
-     * @params string|null $ext_db
-     * @return bool Returns true when finished setting up $DB or $remotedb. Returns void when $DB has already been set.
+     * @param string|null $extdb
+     * @return bool Returns true when finished setting up $DB or $currentdb. Returns void when $DB has already been set.
+     * @throws \coding_exception
+     * @throws \dml_connection_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function setup_external_db($extdb = null): bool {
-        global $CFG, $DB, $remotedb;
+        global $CFG, $DB, $currentdb;
 
-        // Use a custom $remotedb (and not current system's $DB) if set - code sourced from configurable
+        // Use a custom $currentdb (and not current system's $DB) if set - code sourced from configurable
         // Reports plugin.
-        $remotedbhost = get_config('report_myfeedback', 'dbhost');
-        $remotedbname = get_config('report_myfeedback', 'dbname');
-        $remotedbuser = get_config('report_myfeedback', 'dbuser');
-        $remotedbpass = get_config('report_myfeedback', 'dbpass');
+        $currentdbhost = get_config('report_myfeedback', 'dbhost');
+        $currentdbname = get_config('report_myfeedback', 'dbname');
+        $currentdbuser = get_config('report_myfeedback', 'dbuser');
+        $currentdbpass = get_config('report_myfeedback', 'dbpass');
 
-        if ($extdb && $extdb != 'current') {
-            $remotedbhost = get_config('report_myfeedback', 'dbhostarchive');
-            $remotedbname = get_config('report_myfeedback', 'namingconvention') . $extdb;
-            $remotedbuser = get_config('report_myfeedback', 'dbuserarchive');
-            $remotedbpass = get_config('report_myfeedback', 'dbpassarchive');
-        }
-
-        if (empty($remotedbhost) OR empty($remotedbname) OR empty($remotedbuser)) {
-            $remotedb = $DB;
+        if (empty($currentdbhost) || empty($currentdbname) || empty($currentdbuser)) {
+            $currentdb = $DB;
             setup_DB();
         } else {
             if (!isset($CFG->dblibrary)) {
@@ -109,14 +106,14 @@ class report {
                 $CFG->dboptions['dbpersist'] = $CFG->dbpersist;
             }
 
-            if (!$remotedb = moodle_database::get_driver_instance($CFG->dbtype, $CFG->dblibrary)) {
+            if (!$currentdb = moodle_database::get_driver_instance($CFG->dbtype, $CFG->dblibrary)) {
                 throw new dml_exception('dbdriverproblem', "Unknown driver $CFG->dblibrary/$CFG->dbtype");
             }
 
             try {
-                $remotedb->connect($remotedbhost, $remotedbuser, $remotedbpass, $remotedbname, $CFG->prefix, $CFG->dboptions);
+                $currentdb->connect($currentdbhost, $currentdbuser, $currentdbpass, $currentdbname, $CFG->prefix, $CFG->dboptions);
             } catch (moodle_exception $e) {
-                if (empty($CFG->noemailever) and !empty($CFG->emailconnectionerrorsto)) {
+                if (empty($CFG->noemailever) && !empty($CFG->emailconnectionerrorsto)) {
                     $body = "Connection error: " . $CFG->wwwroot .
                         "\n\nInfo:" .
                         "\n\tError code: " . $e->errorcode .
@@ -146,8 +143,8 @@ class report {
                     echo get_string('archivedbnotexist', 'report_myfeedback');
                 }
             }
-            $DB = $remotedb;
-            $CFG->dbfamily = $remotedb->get_dbfamily(); // TODO: BC only for now.
+            $DB = $currentdb;
+            $CFG->dbfamily = $currentdb->get_dbfamily(); // TODO: BC only for now.
 
             return true;
         }
@@ -162,12 +159,12 @@ class report {
      *         otherwise false
      */
     public function mod_is_available($modname) {
-        global $remotedb;
+        global $currentdb;
         $installedplugins = core_plugin_manager::instance()->get_plugins_of_type('mod');
         // Is the module installed?
         if (array_key_exists($modname, $installedplugins)) {
             // Is the module visible?
-            if ($remotedb->get_field('modules', 'visible', array('name' => $modname
+            if ($currentdb->get_field('modules', 'visible', array('name' => $modname
             ))) {
                 return true;
             } else {
@@ -189,12 +186,12 @@ class report {
      * or any feedback filed for the submission, otherwise false
      */
     public function has_pdf_feedback_file($iteminstance, $userid, $gradeid) {
-        global $remotedb;
+        global $currentdb;
         // Is there any online pdf annotation feedback or any feedback file?
-        if ($remotedb->get_record('assignfeedback_editpdf_annot', array('gradeid' => $gradeid), 'id', IGNORE_MULTIPLE)) {
+        if ($currentdb->get_record('assignfeedback_editpdf_annot', array('gradeid' => $gradeid), 'id', IGNORE_MULTIPLE)) {
             return true;
         }
-        if ($remotedb->get_record('assignfeedback_editpdf_cmnt', array('gradeid' => $gradeid), 'id', IGNORE_MULTIPLE)) {
+        if ($currentdb->get_record('assignfeedback_editpdf_cmnt', array('gradeid' => $gradeid), 'id', IGNORE_MULTIPLE)) {
             return true;
         }
 
@@ -203,7 +200,7 @@ class report {
                   JOIN {assignfeedback_file} af on ag.id=af.grade
                    AND ag.id=? AND ag.userid=? AND af.assignment=?";
         $params = array($gradeid, $userid, $iteminstance);
-        $feedbackfile = $remotedb->get_record_sql($sql, $params);
+        $feedbackfile = $currentdb->get_record_sql($sql, $params);
         if ($feedbackfile) {
             if ($feedbackfile->numfiles != 0) {
                 return true;
@@ -220,14 +217,14 @@ class report {
      * @return boolean true if there is a feedback file and false if there ain't
      */
     public function has_workshop_feedback_file($userid, $subid) {
-        global $remotedb;
+        global $currentdb;
         // Is there any feedback file?
         $sql = "SELECT DISTINCT max(wa.id) as id, wa.feedbackauthorattachment
                   FROM {workshop_assessments} wa
                   JOIN {workshop_submissions} ws ON wa.submissionid=ws.id
                    AND ws.authorid=? AND ws.id=? and ws.example = 0";
         $params = array($userid, $subid);
-        $feedbackfile = $remotedb->get_record_sql($sql, $params);
+        $feedbackfile = $currentdb->get_record_sql($sql, $params);
         if ($feedbackfile) {
             if ($feedbackfile->feedbackauthorattachment != 0) {
                 return true;
@@ -239,8 +236,6 @@ class report {
     /**
      * Gets and returns any workshop feedback
      *
-     * @global stdClass $remotedb The database object
-     * @global stdClass $CFG The global config
      * @param int $userid The user id
      * @param int $subid The workshop submission id
      * @param int $assignid The workshop id
@@ -249,7 +244,7 @@ class report {
      * @return string All the feedback information
      */
     public function has_workshop_feedback($userid, $subid, $assignid, $cid, $itemnumber) {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $feedback = '';
 
         // Get the other feedback that comes when graded so will have a grade id otherwise it is not unique.
@@ -261,7 +256,7 @@ class report {
               LEFT JOIN {workshop_grades} wg ON wg.assessmentid=wa.id AND wa.submissionid=?";
         $arr = array($cid, $userid, $assignid, $subid, $subid);
         // TODO: fix this! If won't work here, use: if ($rs->valid()) {}.
-        if ($assess = $remotedb->get_recordset_sql($peer, $arr)) {
+        if ($assess = $currentdb->get_recordset_sql($peer, $arr)) {
             if ($itemnumber == 1) {
                 foreach ($assess as $a) {
                     if ($a->feedbackreviewer && strlen($a->feedbackreviewer) > 0) {
@@ -283,7 +278,7 @@ class report {
                         AND ws.workshopid=? AND ws.example=0 AND wa.submissionid=?";
             $par = array($cid, $userid, $assignid, $subid);
             $self = $pfeed = false;
-            if ($asse = $remotedb->get_records_sql($auth, $par)) {
+            if ($asse = $currentdb->get_records_sql($auth, $par)) {
                 foreach ($asse as $cub) {
                     if ($cub->feedbackauthor && $cub->reviewerid != $userid) {
                         $pfeed = true;
@@ -325,7 +320,7 @@ class report {
                 ORDER BY wa.reviewerid";
         $paramsc = array($subid, $assignid, $userid);
         $c = 0;
-        if ($commentscheck = $remotedb->get_records_sql($sqlc, $paramsc)) {
+        if ($commentscheck = $currentdb->get_records_sql($sqlc, $paramsc)) {
             foreach ($commentscheck as $com) {
                 if (strip_tags($com->description)) {
                     $c = 1;
@@ -352,7 +347,7 @@ class report {
           ORDER BY wa.reviewerid";
         $paramsa = array($subid, $assignid, $userid);
         $a = 0;
-        if ($accumulativecheck = $remotedb->get_records_sql($sqla, $paramsa)) {
+        if ($accumulativecheck = $currentdb->get_records_sql($sqla, $paramsa)) {
             foreach ($accumulativecheck as $acc) {
                 if (strip_tags($acc->description && $acc->score)) {
                     $a = 1;
@@ -381,7 +376,7 @@ class report {
           ORDER BY wa.reviewerid";
         $params = array($assignid, $subid, $assignid, $userid);
         $r = 0;
-        if ($rubriccheck = $remotedb->get_records_sql($sql, $params)) {
+        if ($rubriccheck = $currentdb->get_records_sql($sql, $params)) {
             foreach ($rubriccheck as $rub) {
                 if (strip_tags($rub->description && $rub->definition)) {
                     $r = 1;
@@ -411,7 +406,7 @@ class report {
           ORDER BY wa.reviewerid";
         $paramsn = array($subid, $assignid, $userid);
         $n = 0;
-        if ($numerrorcheck = $remotedb->get_records_sql($sqln, $paramsn)) {
+        if ($numerrorcheck = $currentdb->get_records_sql($sqln, $paramsn)) {
             foreach ($numerrorcheck as $num) {
                 if ($num->gradeid) {
                     $n = 1;
@@ -440,12 +435,12 @@ class report {
      * @return int Due date of the extension or false if no extension
      */
     public function check_assign_extension($userid, $assignment) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT max(extensionduedate) as extensionduedate
                 FROM {assign_user_flags}
                 WHERE userid=? AND assignment=?";
         $params = array($userid, $assignment);
-        $extension = $remotedb->get_record_sql($sql, $params);
+        $extension = $currentdb->get_record_sql($sql, $params);
         if ($extension) {
             return $extension->extensionduedate;
         }
@@ -455,18 +450,17 @@ class report {
     /**
      * Check if the user got an override to extend completion date/time
      *
-     * @global stdClass $remotedb The database object
      * @param int $assignid The quiz id
      * @param int $userid The user id
      * @return int Datetime of the override or false if no override
      */
     public function check_quiz_extension($assignid, $userid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT max(timeclose) as timeclose
                 FROM {quiz_overrides}
                 WHERE quiz=? AND userid=?";
         $params = array($assignid, $userid);
-        $override = $remotedb->get_record_sql($sql, $params);
+        $override = $currentdb->get_record_sql($sql, $params);
         if ($override) {
             return $override->timeclose;
         }
@@ -477,19 +471,18 @@ class report {
      * Check if user got an override to extend completion date/time
      * as part of a group
      *
-     * @global stdClass $remotedb The database object
      * @param int $assignid The quiz id
      * @param int $userid The user id
      * @return int extension date or false if no extension
      */
     public function check_quiz_group_extension($assignid, $userid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT max(qo.timeclose) as timeclose
                 FROM {quiz_overrides} qo
                 JOIN {groups_members} gm ON qo.groupid=gm.groupid
                 AND qo.quiz=? AND gm.userid=?";
         $params = array($assignid, $userid);
-        $override = $remotedb->get_record_sql($sql, $params);
+        $override = $currentdb->get_record_sql($sql, $params);
         if ($override) {
             return $override->timeclose;
         }
@@ -499,7 +492,6 @@ class report {
     /**
      * Get the submitted date of the last attempt
      *
-     * @global stdClass $remotedb The database object
      * @param int $assignid The assignment id
      * @param int $userid The user id
      * @param int $grade The quiz grade of the user
@@ -508,13 +500,13 @@ class report {
      * @return int The date of the attempt or false if not attempted.
      */
     public function get_quiz_submissiondate($assignid, $userid, $grade, $availablegrade, $sumgrades) {
-        global $remotedb;
+        global $currentdb;
         $a = $grade / $availablegrade * $sumgrades;
         $sql = "SELECT id, timefinish, sumgrades
                 FROM {quiz_attempts}
                 WHERE quiz=? AND userid=?";
         $params = array($assignid, $userid);
-        $attempts = $remotedb->get_records_sql($sql, $params);
+        $attempts = $currentdb->get_records_sql($sql, $params);
         if ($attempts) {
             foreach ($attempts as $attempt) {
                 if ($a == $attempt->sumgrades) {
@@ -531,22 +523,23 @@ class report {
      * @param int $quizid The id of the quiz which comes from the gi.iteminstance
      * @param int $userid The id of the user
      * @param int $quizurlid The id of the quiz that can be used to access the quiz via the URL
-     * @param string $archivedomain_year The academic year eg (14-15)
+     * @param string $archivedomainyear The academic year eg (14-15)
      * @param bool $archive Whether it's an archived academic year
      * @param string  $newwindowicon An icon image with tooltip showing that it opens in another window
      * @param bool $reviewattempt whetehr the user can review the quiz attempt
      * @param bool $sameuser Whether the logged-in user is the user quiz being referred to
      * @return string Any comments left by a marker on a Turnitin Assignment via the Moodle Comments
      *         feature (not in Turnitin), each on a new line
+     * @throws \coding_exception
      */
     public function get_quiz_attempts_link($quizid, $userid, $quizurlid, $archivedomainyear, $archive, $newwindowicon,
                                            $reviewattempt, $sameuser): string {
-        global $CFG, $remotedb;
+        global $CFG, $currentdb;
         $sqlcount = "SELECT count(attempt) as attempts, max(id) as id
                         FROM {quiz_attempts} qa
                         WHERE quiz=? and userid=?";
         $params = array($quizid, $userid);
-        $attemptcount = $remotedb->get_records_sql($sqlcount, $params);
+        $attemptcount = $currentdb->get_records_sql($sqlcount, $params);
         $out = [];
         $url = '';
         if ($attemptcount) {
@@ -592,14 +585,14 @@ class report {
      * @return string submission dates, each on a new line if there are multiple
      */
     public function get_group_assign_submission_date($userid, $assignid): string {
-        global $remotedb;
+        global $currentdb;
         // Group submissions.
         $sql = "SELECT max(su.timemodified) as subdate
                 FROM {assign_submission} su
                 JOIN {groups_members} gm ON su.groupid = gm.groupid AND gm.userid = ?
                 AND su.assignment=?";
         $params = array($userid, $assignid);
-        $files = $remotedb->get_record_sql($sql, $params);
+        $files = $currentdb->get_record_sql($sql, $params);
         if ($files) {
             return $files->subdate;
         }
@@ -613,13 +606,13 @@ class report {
      * @return string the comments made on all parts of the work
      */
     public function get_workshop_comments($userid): string {
-        global $remotedb;
+        global $currentdb;
         // Group submissions.
         $sql = "SELECT wg.peercomment
                 FROM {workshop_grades} wg
                     LEFT JOIN {workshop_submissions} su ON wg.assessmentid = su.id and su.authorid=?";
         $params = array($userid);
-        $comments = $remotedb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
+        $comments = $currentdb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
         $out = [];
         foreach ($comments as $comment) {
             $out[] = $comment->peercomment;
@@ -641,7 +634,7 @@ class report {
      * @return string date viewed or no if not viewed
      */
     public function check_viewed_gradereport($contextid, $assignmentid, $userid, $courseid, $itemname): string {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT min(timecreated) as timecreated
                 FROM {logstore_standard_log}
                 WHERE contextid=? AND contextinstanceid=? AND userid=? AND courseid=?
@@ -657,16 +650,16 @@ class report {
                 JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND cm.course=?
                 AND cm.id=?";
         $paramstwo = array($userid, $courseid, $itemname, $courseid, $assignmentid);
-        $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo);
+        $gradeadded = $currentdb->get_record_sql($sqltwo, $paramstwo);
         if ($gradeadded) {
             $params = array($contextid, $assignmentid, $userid, $courseid, $gradeadded->timemodified);
-            $viewreport = $remotedb->get_record_sql($sql, $params);
+            $viewreport = $currentdb->get_record_sql($sql, $params);
             if ($viewreport && $viewreport->timecreated > $gradeadded->timemodified) {
                 return date('d-m-Y H:i', $viewreport->timecreated);
             }
 
             $paramsone = array('gradereport_user', 'viewed', $userid, $courseid, $gradeadded->timemodified);
-            $userreport = $remotedb->get_record_sql($sqlone, $paramsone);
+            $userreport = $currentdb->get_record_sql($sqlone, $paramsone);
             if ($userreport && $userreport->timecreated > $gradeadded->timemodified) {
                 return date('d-m-Y H:i', $userreport->timecreated);
             }
@@ -684,7 +677,7 @@ class report {
      * @return str date viewed or no if not viewed
      */
     public function check_viewed_manualitem($userid, $courseid, $gradeitemid) {
-        global $remotedb;
+        global $currentdb;
         $sqlone = "SELECT max(timecreated) as timecreated
                 FROM {logstore_standard_log}
                 WHERE component=? AND action=? AND userid=? AND courseid=?";
@@ -694,8 +687,8 @@ class report {
                 AND gi.courseid=? AND gi.id=?";
         $paramsone = array('gradereport_user', 'viewed', $userid, $courseid);
         $paramstwo = array($userid, $courseid, $gradeitemid);
-        $userreport = $remotedb->get_record_sql($sqlone, $paramsone);
-        $gradeadded = $remotedb->get_record_sql($sqltwo, $paramstwo);
+        $userreport = $currentdb->get_record_sql($sqlone, $paramsone);
+        $gradeadded = $currentdb->get_record_sql($sqltwo, $paramstwo);
         if ($userreport) {
             if ($gradeadded) {
                 $dateviewed = date('d-m-Y', $userreport->timecreated);
@@ -716,13 +709,13 @@ class report {
      * @return str the text for the overall feedback
      */
     public function overallfeedback($quizid, $grade) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT feedbacktext
                 FROM {quiz_feedback}
                 WHERE quizid=? and mingrade<=? and maxgrade>=?
                 limit 1";
         $params = array($quizid, $grade, $grade);
-        $feedback = $remotedb->get_record_sql($sql, $params);
+        $feedback = $currentdb->get_record_sql($sql, $params);
         return $feedback->feedbacktext;
     }
 
@@ -736,7 +729,7 @@ class report {
      * @return str the text for the Rubric
      */
     public function rubrictext($userid, $courseid, $iteminstance, $itemmodule) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT rc.id, rc.description,rl.definition
             FROM {gradingform_rubric_criteria} rc
             JOIN {gradingform_rubric_levels} rl
@@ -753,7 +746,7 @@ class report {
             ON gi.id=gg.itemid AND gi.itemmodule=?
             AND gi.courseid=? AND gg.userid=? AND gi.iteminstance=? AND status=?";
         $params = array($userid, $itemmodule, $courseid, $userid, $iteminstance, 1);
-        $rubrics = $remotedb->get_recordset_sql($sql, $params);
+        $rubrics = $currentdb->get_recordset_sql($sql, $params);
         $out = '';
         if ($rubrics) {
             foreach ($rubrics as $rubric) {
@@ -776,7 +769,7 @@ class report {
      * @return str the text for the Marking guide
      */
     public function marking_guide_text($userid, $courseid, $iteminstance, $itemmodule) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT gc.shortname,gf.remark
             FROM {gradingform_guide_criteria} gc
             JOIN {gradingform_guide_fillings} gf
@@ -791,7 +784,7 @@ class report {
             ON gi.id=gg.itemid AND gi.itemmodule=?
             AND gi.courseid=? AND gg.userid=? AND gi.iteminstance=?";
         $params = array($userid, $itemmodule, $courseid, $userid, $iteminstance);
-        $guides = $remotedb->get_recordset_sql($sql, $params);
+        $guides = $currentdb->get_recordset_sql($sql, $params);
         $out = '';
         if ($guides) {
             foreach ($guides as $guide) {
@@ -807,7 +800,6 @@ class report {
     /**
      * Get the scales for a manual item
      *
-     * @global stdClass $remotedb DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
      * @param int $courseid The course id
@@ -815,14 +807,14 @@ class report {
      * @return str The scale grade for the user
      */
     public function get_grade_scale($itemid, $userid, $courseid, $grade) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT gg.finalgrade, s.scale
             FROM {grade_grades} gg
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id limit 1";
         $params = array($itemid, $userid, $courseid);
-        $scales = $remotedb->get_record_sql($sql, $params);
+        $scales = $currentdb->get_record_sql($sql, $params);
         $num = 0;
         if ($scales) {
             $scale = explode(',', $scales->scale);
@@ -836,21 +828,20 @@ class report {
     /**
      * Get the lowest scale grade for the scale
      *
-     * @global stdClass $remotedb The DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
      * @param int $courseid The course id
      * @return str The lowest scale grade available
      */
     public function get_min_grade_scale($itemid, $userid, $courseid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT s.scale
             FROM {grade_grades} gg
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id limit 1";
         $params = array($itemid, $userid, $courseid);
-        $scales = $remotedb->get_record_sql($sql, $params);
+        $scales = $currentdb->get_record_sql($sql, $params);
         if ($scales) {
             $scale = explode(',', $scales->scale);
             $num = min(array_keys($scale));
@@ -863,21 +854,20 @@ class report {
     /**
      * Get the highest scale grade for the scale
      *
-     * @global stdClass $remotedb The DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
      * @param int $courseid The course id
      * @return str The highest scale grade available
      */
     public function get_available_grade_scale($itemid, $userid, $courseid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT s.scale
             FROM {grade_grades} gg
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id limit 1";
         $params = array($itemid, $userid, $courseid);
-        $scales = $remotedb->get_record_sql($sql, $params);
+        $scales = $currentdb->get_record_sql($sql, $params);
         if ($scales) {
             $scale = explode(',', $scales->scale);
             $num = max(array_keys($scale));
@@ -890,21 +880,20 @@ class report {
     /**
      * Get All scale grades for the scale
      *
-     * @global stdClass $remotedb The DB object
      * @param int $itemid The grade item id
      * @param int $userid The user id
      * @param int $courseid The course id
      * @return str All scale grade in the scale
      */
     public function get_all_grade_scale($itemid, $userid, $courseid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT s.scale
             FROM {grade_grades} gg
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id";
         $params = array($itemid, $userid, $courseid);
-        $scales = $remotedb->get_records_sql($sql, $params);
+        $scales = $currentdb->get_records_sql($sql, $params);
         $out = '';
         if ($scales) {
             foreach ($scales as $scale) {
@@ -919,20 +908,19 @@ class report {
     /**
      * Get the grade letter/word for a value grade set as letter
      *
-     * @global stdClass $remotedb DB object
      * @param int $courseid The course id
      * @param int $grade The final grade the user got
      * @return str The letter grade or word for the user
      */
     public function get_grade_letter($courseid, $grade) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT l.letter, con.id
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=? AND l.lowerboundary <=?
             ORDER BY l.lowerboundary DESC limit 1";
         $params = array($courseid, $grade);
-        $letters = $remotedb->get_record_sql($sql, $params);
+        $letters = $currentdb->get_record_sql($sql, $params);
         if ($letters) {
             $letter = $letters->letter;
         } else {
@@ -951,18 +939,17 @@ class report {
     /**
      * Return the lowest grade letter for the context or default letters
      *
-     * @global stdClass $remotedb The DB object
      * @param int $courseid The course id
      * @return string The lowest letter grade available
      */
     public function get_min_grade_letter($courseid): string {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT l.letter, con.id
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=? ORDER BY l.lowerboundary ASC limit 1";
         $params = array($courseid);
-        $letters = $remotedb->get_record_sql($sql, $params);
+        $letters = $currentdb->get_record_sql($sql, $params);
         if ($letters) {
             $letter = $letters->letter;
         } else {
@@ -976,18 +963,17 @@ class report {
     /**
      * Return the highest grade letter for the context or default letters
      *
-     * @global stdClass $remotedb The DB object
      * @param int $courseid The course id
      * @return str The highest letter grade available
      */
     public function get_available_grade_letter($courseid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT l.letter, con.id
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=? ORDER BY l.lowerboundary DESC limit 1";
         $params = array($courseid);
-        $letters = $remotedb->get_record_sql($sql, $params);
+        $letters = $currentdb->get_record_sql($sql, $params);
         if ($letters) {
             $letter = $letters->letter;
         } else {
@@ -1001,18 +987,17 @@ class report {
     /**
      * Return All grade letters for the context or default letters
      *
-     * @global stdClass $remotedb The DB object
      * @param int $courseid The course id
      * @return str All grade letters
      */
     public function get_all_grade_letters($courseid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT l.letter, con.id
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=?";
         $params = array($courseid);
-        $letters = $remotedb->get_records_sql($sql, $params);
+        $letters = $currentdb->get_records_sql($sql, $params);
         $out = '';
         if ($letters) {
             foreach ($letters as $letter) {
@@ -1056,15 +1041,13 @@ class report {
      * Returns the timezone of the user as the moodle functions caches this and this
      * should not be dependent on moodle's cached settings
      *
-     * @global type $USER The user object
-     * @global type $remotedb The db object
      * @return mixed The GMT/UTC+-offset
      */
     public function user_timezone() {
-        global $USER, $remotedb;
+        global $USER, $currentdb;
         $sql = "SELECT timezone FROM {user} WHERE id = ?";
         $params = array($USER->id);
-        $timezone = $remotedb->get_record_sql($sql, $params);
+        $timezone = $currentdb->get_record_sql($sql, $params);
         return $timezone ? $timezone->timezone : 99;
     }
 
@@ -1089,7 +1072,7 @@ class report {
     /**
      * Return BST or GMT for the duedate or submission date depending on when they were due or submitted
      *
-     * @param type $date Date to check for timezone name
+     * @param date $date Date to check for timezone name
      * @return string Return the correct timezone
      */
     public function bst_gmt($date) {
@@ -1103,27 +1086,26 @@ class report {
     /**
      * Return the correct id for the personal tutor role
      *
-     * @global stdClass $remotedb DB object
      * @return int Personal tutor role id
      */
     public function get_personal_tutor_id() {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT roleid FROM {role_context_levels} WHERE contextlevel = ? limit 1";
         $params = array(30);
-        $tutor = $remotedb->get_record_sql($sql, $params);
+        $tutor = $currentdb->get_record_sql($sql, $params);
         return $tutor ? $tutor->roleid : 0;
     }
 
     /**
      * Return whether the user has the capability in any context
      *
-     * @global stdClass $remotedb DB object
-     * @param int The user id
-     * @param string The capability to check for
-     * @return true or false
+     * @param int $uid The user id
+     * @param string $cap  The capability to check for
+     * @param context $context
+     * @return bool
      */
     public function get_dashboard_capability($uid, $cap, $context = null): bool {
-        global $remotedb;
+        global $currentdb;
         $params = [$uid, $cap];
         $sql = "SELECT DISTINCT min(c.id) as id, r.roleid FROM {role_capabilities} c
             JOIN {role_assignments} r ON r.roleid=c.roleid ";
@@ -1132,7 +1114,7 @@ class report {
             array_unshift($params, $context);
         }
         $sql .= "AND userid = ? AND capability = ? GROUP BY c.id, r.roleid";
-        $capy = $remotedb->get_records_sql($sql, $params);
+        $capy = $currentdb->get_records_sql($sql, $params);
         return count($capy) ? true : false;
     }
 
@@ -1152,14 +1134,14 @@ class report {
     /**
      * Return all categories relevant to the search category name
      *
-     * @global stdClass $remotedb The DB object.
-     * @global stdClass $CFG The global configuration instance.
      * @param string $search The user input entered to search on.
      * @param string $reporttype The report type where the search is being used
+     * @param bool $hideor
      * @return string Table with the list of categories with names containing the search term.
+     * @throws \coding_exception
      */
     public function search_all_categories($search, $reporttype, $hideor = false): string {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         $mycategories = [];
@@ -1183,11 +1165,11 @@ class report {
         if ($search != "" && $search != get_string("searchcategory", "report_myfeedback")) {
             $searchu = addslashes(strip_tags($search)); // We escape the quotes etc and strip all html tags.
 
-            $sqllike = $remotedb->sql_like('name', '?');
+            $sqllike = $currentdb->sql_like('name', '?');
             $sql = "SELECT id, name, parent FROM {course_categories}
                      WHERE visible = 1
                            AND " . $sqllike;
-            $result = $remotedb->get_records_sql($sql, array('%' . $searchu . '%'));
+            $result = $currentdb->get_records_sql($sql, array('%' . $searchu . '%'));
             if ($result) {
                 foreach ($result as $a) {
                     if ($a->id) {
@@ -1242,32 +1224,29 @@ class report {
     /**
      * Return all courses within a category and its subcategories
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $catid The category id.
      * @return array of courses within that category and its subcategories
      */
     public function get_category_courses($catid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT c.id, c.shortname, c.fullname, c.summary, c.visible, c.sortorder, cat.sortorder
                   FROM {course} c, {course_categories} cat ";
         if ($catid > 0) {
             $sql .= "WHERE c.category = cat.id AND cat.path LIKE '%/".$catid."' OR cat.path LIKE '%/".$catid."/%' ";
         }
         $sql .= "ORDER BY cat.sortorder, c.sortorder";
-        return $remotedb->get_records_sql($sql);
+        return $currentdb->get_records_sql($sql);
     }
 
     /**
      * Return all courses relevant to the search name / email address (max 10)
      *
-     * @global stdClass $remotedb The DB object.
-     * @global stdClass $CFG The global configuration instance.
      * @param string $search The user input entered to search on.
      * @param string $reporttype The report type where the search is being used
      * @return string Table with the list of course shortnames and fullnames containing the search term.
      */
     public function search_all_courses($search, $reporttype) {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         $mycourses = [];
@@ -1288,13 +1267,13 @@ class report {
         if ($search != "" && $search != get_string("searchcourses", "report_myfeedback")) {
             $searchu = addslashes(strip_tags($search)); // We escape the quotes etc and strip all html tags.
             $result = [];
-            $sqllikefullname = $remotedb->sql_like('fullname', '?');
-            $sqllikeshortname = $remotedb->sql_like('shortname', '?');
+            $sqllikefullname = $currentdb->sql_like('fullname', '?');
+            $sqllikeshortname = $currentdb->sql_like('shortname', '?');
             $sql = "SELECT id,shortname, fullname, category
                       FROM {course}
                      WHERE " . $sqllikefullname . "
                         OR " . $sqllikeshortname;
-            $result = $remotedb->get_records_sql($sql, array(
+            $result = $currentdb->get_records_sql($sql, array(
                 '%' . $searchu . '%',
                 '%' . $searchu . '%'
             ));
@@ -1353,14 +1332,12 @@ class report {
     /**
      * Return all users relevant to the search name / email address (max 10)
      *
-     * @global stdClass $remotedb The DB object.
-     * @global stdClass $CFG The global configuration instance.
      * @param string $search The user input entered to search on.
      * @param string $reporttype The report type where the search is being used
      * @return string Table with the list of users matching the search term.
      */
     public function search_all_users($search, $reporttype = "student") {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         $myusers = [];
@@ -1384,7 +1361,7 @@ class report {
             $userresult = [];
             if (strpos($searchu, '@')) {
                 // If it is an email address search for the full input.
-                $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email,department FROM {user}
+                $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email,department FROM {user}
                     WHERE deleted = 0 AND email = ?", array($searchu));
             } else {
                 // If not an email address then search on first word or last word.
@@ -1393,7 +1370,7 @@ class report {
                 // Suggest this checks to see how many words are entered in the search box.
                 // Suggest the query then CHANGE from OR to AND for 2 word entries,
                 // as otherwise you get back a lot of inaccurate results.
-                $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email, department FROM {user}
+                $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email, department FROM {user}
                     WHERE deleted = 0 AND (firstname LIKE ('$namef[0]%') OR lastname LIKE ('$namel[0]%')) limit 10", []);
             }
             if ($userresult) {
@@ -1446,17 +1423,14 @@ class report {
     /**
      * Return all users the current user (tutor/admin) has access to
      *
-     * @global stdClass $remotedb The DB object
-     * @global stdClass $COURSE The course object
-     * @global stdClass $USER The user object
      * @param bool $ptutor If user is a personal tutor
-     * @param string $search The user input entered to search on
      * @param bool $modt Is the user a module tutor
      * @param bool $proga Is the user a Dept admin
+     * @param string $search The user input entered to search on
      * @return string Table with the list of users they have access to
      */
-    public function get_all_accessible_users($ptutor, $search = null, $modt, $proga) {
-        global $remotedb, $USER, $CFG;
+    public function get_all_accessible_users($ptutor, $modt, $proga, $search = null) {
+        global $currentdb, $USER, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         $helpiconusername = ' <img src="' . 'pix/info.png' . '" ' .
@@ -1492,7 +1466,7 @@ class report {
 
             if (strpos($searchu, '@')) {
                 // If it is an email address search for the full input.
-                $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
+                $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
                     WHERE deleted = 0 AND email = ?", array($searchu));
             } else {
                 // If not an email address then search on first word or last word.
@@ -1501,7 +1475,7 @@ class report {
                 // Suggest this checks to see how many words are entered in the search box.
                 // Suggest the query then CHANGE from OR to AND for 2 word entries,
                 // as otherwise you get back a lot of inaccurate results.
-                $userresult = $remotedb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
+                $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
                     WHERE deleted = 0 AND (firstname LIKE ('$namef[0]%') OR lastname LIKE ('$namel[0]%')) limit 10", []);
             }
             $progs = [];
@@ -1584,7 +1558,7 @@ class report {
 
         // Get all the mentees, i.e. users you have a direct assignment to and add them to the table if you are a personal tutor.
         if ($ptutor) {
-            if ($usercontexts = $remotedb->get_records_sql("SELECT c.instanceid, u.id as id, firstname, lastname, email
+            if ($usercontexts = $currentdb->get_records_sql("SELECT c.instanceid, u.id as id, firstname, lastname, email
                                                     FROM {role_assignments} ra, {context} c, {user} u
                                                    WHERE ra.userid = ?
                                                          AND ra.contextid = c.id
@@ -1629,18 +1603,16 @@ class report {
     /**
      * Return all users for the dept admin personal tutors
      *
-     * @global stdClass $remotedb The DB object
-     * @global stdClass $CFG The global config
      * @param int $uid The user id
      * @return string Table with the list of users
      */
     public function get_tutees_for_prog_ptutors($uid) {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         $myusers = [];
         // Get all the mentees, i.e. users you have a direct assignment to.
-        if ($usercontexts = $remotedb->get_records_sql("SELECT u.id as id, firstname, lastname, email
+        if ($usercontexts = $currentdb->get_records_sql("SELECT u.id as id, firstname, lastname, email
                                                     FROM {role_assignments} ra, {context} c, {user} u
                                                    WHERE ra.userid = ?
                                                          AND ra.contextid = c.id
@@ -1681,18 +1653,17 @@ class report {
     /**
      * Return all users for the dept admin mod tutor groups
      *
-     * @global stdClass $remotedb The DB object
      * @param int $uid The user id
      * @param int $cid The course id
      * @param array $tutgroup An array of members in the tutors group
      * @return string Table with the list of users
      */
     public function get_tutees_for_prog_tutor_groups($uid, $cid, $tutgroup) {
-        global $remotedb;
+        global $currentdb;
         $myusers = [];
 
         // Get all the users in each tutor group and add their stats.
-        if ($tutorgroups = $remotedb->get_records_sql("SELECT distinct u.id as userid, g.name, g.id as id
+        if ($tutorgroups = $currentdb->get_records_sql("SELECT distinct u.id as userid, g.name, g.id as id
                                                     FROM {groups} g
                                                     JOIN {groups_members} gm ON g.id=gm.groupid AND g.courseid = ?
                                                     JOIN {user} u ON u.id=gm.userid AND userid != ?
@@ -1761,46 +1732,43 @@ class report {
     /**
      * This returns the id of the personal tutor
      *
-     * @global stdClass $remotedb DB object
-     * @param int $p_tutor_roleid Personal tutor role id
+     * @param int $ptutorroleid Personal tutor role id
      * @param int $contextid The context id
      * @return int The id of the personal tutor or 0 if none
      */
     public function get_my_personal_tutor($ptutorroleid, $contextid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT userid FROM {role_assignments}
                 WHERE roleid = ? AND contextid = ?
                 ORDER BY timemodified DESC limit 1";
         $params = array($ptutorroleid, $contextid);
-        $tutor = $remotedb->get_record_sql($sql, $params);
+        $tutor = $currentdb->get_record_sql($sql, $params);
         return $tutor ? $tutor->userid : 0;
     }
 
     /**
      * Returns a course id given the course shortname
      *
-     * @global stdClass $remotedb DB object
      * @param text $shortname Course shortname
      * @return int The course id
      */
     public function get_course_id_from_shortname($shortname) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT max(id) as id, fullname FROM {course}
                 WHERE shortname = ?";
         $params = array($shortname);
-        $cid = $remotedb->get_record_sql($sql, $params);
+        $cid = $currentdb->get_record_sql($sql, $params);
         return $cid ?: 0;
     }
 
     /**
      * Returns all assessments in the course
      *
-     * @global stdClass $remotedb DB object
      * @param int $cid The course id
      * @return array The assmessments id, name, type and module
      */
     public function get_all_assessments($cid) {
-        global $remotedb;
+        global $currentdb;
         $now = time();
         $items = array('turnitintool', 'turnitintooltwo', 'workshop', 'quiz', 'assign');
         foreach ($items as $key => $item) {
@@ -1814,7 +1782,7 @@ class report {
                 WHERE (hidden != 1 AND hidden < ?) AND courseid = ?
                 AND (itemmodule IN ($items) OR (itemtype = 'manual'))";
         $params = array($now, $cid);
-        $assess = $remotedb->get_records_sql($sql, $params);
+        $assess = $currentdb->get_records_sql($sql, $params);
 
         return $assess;
     }
@@ -1823,9 +1791,10 @@ class report {
      * Returns a canvas graph of stats
      *
      * @param int $cid The course id
-     * @param array $grades_totals Grades totals
+     * @param array $gradestotals Grades totals
      * @param int $enrolled The number of students enrolled in the course
-     * @return Canvas image The graph as an image on canvas
+     * @return string Canvas image The graph as an image on canvas
+     * @throws \coding_exception
      */
     public function get_module_graph($cid, $gradestotals, $enrolled = null) {
         $ctotal = 0;
@@ -2001,13 +1970,13 @@ class report {
      * @return link The link to the assessment
      */
     public function get_assessment_link_from_type($type, $cid, $gid = null) {
-        global $CFG, $remotedb;
+        global $CFG, $currentdb;
         $sql = "SELECT cm.id FROM {course_modules} cm
             JOIN {grade_items} gi ON gi.iteminstance=cm.instance
             JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name
             AND cm.course = ? AND gi.id = ? AND gi.itemmodule = ?";
         $params = array($cid, $gid, $type);
-        $link = $remotedb->get_record_sql($sql, $params);
+        $link = $currentdb->get_record_sql($sql, $params);
         switch ($type) {
             case 'quiz':
                 $link = $CFG->wwwroot . "/mod/quiz/view.php?id=$link->id";
@@ -2031,7 +2000,6 @@ class report {
     /**
      * Returns a table with the analytics for all assessments of the user
      *
-     * @global stdClass $OUTPUT The global output object
      * @param array $assess The array with the assessments and their stats
      * @param int $uidnum The id for the table
      * @param string $display The CSS class that is added
@@ -2128,12 +2096,9 @@ class report {
         return $as;
     }
 
-
     /**
      * Returns a table with the analytics for all users in the given subset requested
      *
-     * @global stdClass $remotedb The DB object
-     * @global stdClass $CFG The global config object
      * @param array $users The array with the users and their stats
      * @param int $cid The course id
      * @param string $display The CSS class that is added
@@ -2142,10 +2107,24 @@ class report {
      * @param bool $fromassess Whether the function call is from user assessment
      * @param bool $tutgroup Whether these are users for the tutor group
      * @return stdClass A table with the users and their stats
+     * @throws \coding_exception
+     */
+    /**
+     * Returns a table with the analytics for all users in the given subset requested
+     *
+     * @param array $users The array with the users and their stats
+     * @param int $cid The course id
+     * @param string $display The CSS class that is added
+     * @param string $style The CSS style to be added
+     * @param string $breakdodwn Whether to add the breakdown text
+     * @param bool $fromassess Whether the function call is from user assessment
+     * @param bool $tutgroup Whether these are users for the tutor group
+     * @return stdClass A table with the users and their stats
+     * @throws \coding_exception
      */
     public function get_user_analytics($users, $cid, $display = null, $style = null, $breakdodwn = null,
                                        $fromassess = null, $tutgroup = false): stdClass {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         $userassess = [];
@@ -2174,7 +2153,7 @@ class report {
             foreach ($users as $usid => $usr) {
                 $scol1 = $scol2 = $scol3 = '';
                 if (!isset($usr['name']) || !$usr['name']) {
-                    $getname = $remotedb->get_record('user', array('id' => $usid), $list = 'firstname,lastname,email');
+                    $getname = $currentdb->get_record('user', array('id' => $usid), $list = 'firstname,lastname,email');
                     if ($getname) {
                         $uname = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $usid
                             . $sesskeyqs
@@ -2254,6 +2233,7 @@ class report {
      * Returns the head of the table, with all the titles for each column
      *
      * @param array $headertitles The list of header titles as strings.
+     * @param array $headerhelptext
      * @return string Table head, with titles above each column.
      */
     public function get_table_headers($headertitles, $headerhelptext) {
@@ -2270,14 +2250,13 @@ class report {
     /**
      * Returns subcategories of a parent category only 1 level deep.
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $parentcatid The parent category id
      * @return array Subcategory objects containing their ids
      */
     public function get_subcategories($parentcatid) {
-        global $remotedb;
+        global $currentdb;
 
-        return $remotedb->get_records_sql("SELECT id, visible
+        return $currentdb->get_records_sql("SELECT id, visible
                                                     FROM {course_categories}
                                                    WHERE parent = ? ORDER BY visible desc, sortorder", array($parentcatid));
     }
@@ -2288,7 +2267,9 @@ class report {
      *
      * @param int $parentcatid The parent category id
      * @param int $categoryid The currently selected category id
-     * @return array Form menu of subcategories of a parent category
+     * @param bool $parent
+     * @return string  Form menu of subcategories of a parent category
+     * @throws \coding_exception
      */
     public function get_subcategory_menu($parentcatid=0, $categoryid=0, $parent=true) {
         global $SITE;
@@ -2323,13 +2304,12 @@ class report {
     /**
      * Returns unique list of users within a category and its subcategories
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $catid The parent category id
      * @param string $capability The capability that defines the role of the returned users. E.g. student or modtutor.
      * @return array Subcategory objects containing their ids
      */
     public function get_unique_category_users($catid, $capability = 'report/myfeedback:student') {
-        global $remotedb;
+        global $currentdb;
 
         // Get all roles that are assigned the My Feedback capability passed to the function.
         $roleids = $this->get_roles($capability);
@@ -2369,7 +2349,7 @@ class report {
         }
         $sql .= ')';
 
-        $rs = $remotedb->get_recordset_sql($sql, $params);
+        $rs = $currentdb->get_recordset_sql($sql, $params);
 
         // The recordset contains records.
         if ($rs->valid()) {
@@ -2385,13 +2365,12 @@ class report {
     /**
      * Returns unique list of users within a course
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $catid The courseid
      * @param string $capability The capability that defines the role of the returned users. E.g. student or modtutor.
      * @return array User objects containing their ids
      */
     public function get_unique_course_users($catid, $capability = 'report/myfeedback:student') {
-        global $remotedb;
+        global $currentdb;
 
         // Get all roles that are assigned the My Feedback capability passed to the function.
         $roleids = $this->get_roles($capability);
@@ -2406,7 +2385,7 @@ class report {
         $coursesql = "SELECT DISTINCT c.id
                                  FROM {course} c, {course_categories} cat
                                 WHERE c.category = cat.id AND cat.path LIKE ? OR cat.path LIKE ?";
-        $courses = $remotedb->get_recordset_sql($coursesql, $courseparams);
+        $courses = $currentdb->get_recordset_sql($coursesql, $courseparams);
 
         // The recordset contains records.
         if ($courses->valid()) {
@@ -2431,7 +2410,7 @@ class report {
                 // Prepend the course id to the front of the role ids already in the array.
                 array_unshift($params, $course->id);
 
-                $rs = $remotedb->get_recordset_sql($sql, $params);
+                $rs = $currentdb->get_recordset_sql($sql, $params);
 
                 $userids = [];
                 if ($rs->valid()) {
@@ -2440,53 +2419,49 @@ class report {
                         $userids[] = $record->userid;
                     }
                     $rs->close();
-
                 }
                 return $userids;
+                $rs->close();
             }
-            $rs->close();
         }
     }
 
     /**
      * Returns the roles that have a particular capability
      *
-     * @global stdClass $remotedb The DB object.
      * @param string $capability The capability that defines the role of the returned users. E.g. student or modtutor.
      * @return array An array of roleids.
      */
     public function get_roles($capability): array {
-        global $remotedb;
+        global $currentdb;
 
-        return $remotedb->get_fieldset_select('role_capabilities', 'roleid', 'capability = ?', [$capability]);
+        return $currentdb->get_fieldset_select('role_capabilities', 'roleid', 'capability = ?', [$capability]);
     }
 
     /**
      * Returns the first name and surname of a particular user
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $ui The user id
      * @return string The firstname and lastname of the user, separated by a space.
      */
     public function get_names($ui): string {
-        global $remotedb;
+        global $currentdb;
 
-        $unames = $remotedb->get_record_sql("SELECT firstname,lastname FROM {user} where id=?", [$ui]);
+        $unames = $currentdb->get_record_sql("SELECT firstname,lastname FROM {user} where id=?", [$ui]);
         return $unames->firstname . " " . $unames->lastname;
     }
 
     /**
      * Returns the course fullname or shortname
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $id The course id
      * @param bool $fullname Whether to return the fullname or the shortname.
      * @return string The firstname and lastname of the user, separated by a space.
      */
     public function get_course_name($id, $fullname = true): string {
-        global $remotedb;
+        global $currentdb;
 
-        $coursename = $remotedb->get_record_sql("SELECT c.fullname, c.shortname
+        $coursename = $currentdb->get_record_sql("SELECT c.fullname, c.shortname
                                                     FROM {course} c
                                                    WHERE c.id = ?", array($id));
         if ($fullname == true) {
@@ -2499,14 +2474,13 @@ class report {
     /**
      * Returns the category name.
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $id The category id
      * @return string|null The category name.
      */
     public function get_category_name($id): ?string {
-        global $remotedb;
+        global $currentdb;
 
-        $catname = $remotedb->get_record_sql("SELECT cat.name
+        $catname = $currentdb->get_record_sql("SELECT cat.name
                                                     FROM {course_categories} cat
                                                    WHERE cat.id = ?", array($id));
         if (!empty($catname->name)) {
@@ -2519,17 +2493,15 @@ class report {
     /**
      * Returns the up a category button
      *
-     * @global stdClass $remotedb The DB object.
-     * @global stdClass $CFG The global configuration instance.
      * @param int $categoryid The category id
-     * @param string $url The type of report for inserting into the URL.
+     * @param string $reporttype The type of report for inserting into the URL.
      * @return string The go up a category button as html.
      */
     public function get_parent_category_link($categoryid, $reporttype): string {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
-        $category = $remotedb->get_record_sql("SELECT cat.parent
+        $category = $currentdb->get_record_sql("SELECT cat.parent
                                                     FROM {course_categories} cat
                                                    WHERE cat.id = ?", array($categoryid));
         if (!empty($category->parent) && $category->parent > 0) {
@@ -2545,17 +2517,15 @@ class report {
     /**
      * Returns the up to category button for the course reports
      *
-     * @global stdClass $remotedb The DB object.
-     * @global stdClass $CFG The global configuration instance.
      * @param int $courseid The course id.
-     * @param string $url The type of report for inserting into the URL.
+     * @param string $reporttype The type of report for inserting into the URL.
      * @return string The go up to category button as html.
      */
     public function get_course_category_link($courseid, $reporttype): string {
-        global $remotedb, $CFG;
+        global $currentdb, $CFG;
         $sesskeyqs = '&sesskey=' . sesskey();
 
-        $course = $remotedb->get_record_sql("SELECT c.category
+        $course = $currentdb->get_record_sql("SELECT c.category
                                                     FROM {course} c
                                                    WHERE c.id = ?", array($courseid));
         if (!empty($course->category) && $course->category > 0) {
@@ -2571,14 +2541,13 @@ class report {
     /**
      * Returns whether a user is suspended and deleted or not
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $id The user id
      * @return bool True if the user is active (not suspended or deleted), otherwise false.
      */
     public function is_active_user($id): bool {
-        global $remotedb;
+        global $currentdb;
 
-        $user = $remotedb->get_record_sql("SELECT deleted, suspended
+        $user = $currentdb->get_record_sql("SELECT deleted, suspended
                                                    FROM {user}
                                                    WHERE id = ?", array($id));
         if ($user->suspended == 0 && $user->deleted == 0) {
@@ -2593,14 +2562,13 @@ class report {
     /**
      * Returns the context id of the category
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $id The category id
      * @return int The context id of the category.
      */
     public function get_categorycontextid($id): int {
-        global $remotedb;
+        global $currentdb;
 
-        $contextid = $remotedb->get_record_sql("SELECT id
+        $contextid = $currentdb->get_record_sql("SELECT id
                                                     FROM {context}
                                                    WHERE contextlevel = 40 AND instanceid = ?", array($id));
         return $contextid->id;
@@ -2609,14 +2577,13 @@ class report {
     /**
      * Returns the personal tutees of a personal tutor
      *
-     * @global stdClass $remotedb The DB object.
      * @param int $personaltutorid The user id of the personal tutor
      * @return array The list of user objects containing the ids of personal tutees.
      */
     public function get_personal_tutees($personaltutorid) {
-        global $remotedb;
+        global $currentdb;
         // Get all the mentees, i.e. users you have a direct assignment to as their personal tutor.
-        return $remotedb->get_records_sql("SELECT u.id
+        return $currentdb->get_records_sql("SELECT u.id
                                                     FROM {role_assignments} ra, {context} c, {user} u
                                                    WHERE ra.userid = ?
 												   		 AND u.deleted = 0
@@ -2630,12 +2597,11 @@ class report {
     /**
      * Returns the usage statistics for the staff passed to the function
      *
-     * @global stdClass $remotedb The DB object.
-     * @param array $users The array of user ids.
+     * @param array $uids The array of user ids.
      * @return array The list of staff and their usage statistics.
      */
     public function get_overall_staff_usage_statistics($uids): array {
-        global $remotedb;
+        global $currentdb;
 
         $users = [];
         $usertotalviews = [];
@@ -2732,7 +2698,7 @@ class report {
     /**
      * Returns usage statistics for the students passed to the function
      *
-     * @param array $users The array of user ids
+     * @param array $uids The array of user ids
      * @return array The list of students and their usage statistics.
      */
     public function get_overall_student_usage_statistics($uids): array {
@@ -2798,7 +2764,6 @@ class report {
     /**
      * Returns a table with the usage statistics for the staff passed to the function
      *
-     * @global stdClass $CFG The global configuration instance.
      * @param array $uids The array of staff user ids.
      * @param bool $showptutees Whether or not to display personal tutees.
      * @param bool $overview Whether or not to display just an overview with aggregated data only and no
@@ -3127,8 +3092,8 @@ class report {
     /**
      * Returns a table with the usage statistics for the students passed to the function.
      *
-     * @global stdClass $CFG The global configuration instance.
      * @param array $uids The array of students user ids.
+     * @param string $reporttype
      * @param bool $overview Whether or not to display just an overview with aggregated data only and no user
      *                       data or closing table tags.
      * @param string $overviewname The name of the overview (e.g. category or course).
@@ -3136,6 +3101,7 @@ class report {
      * @param bool $printheader Whether to print the headers or not, so overviews can show aggregated data for
      *                          subcategories in a single table.
      * @return string Table containing the student statistics (missing the </tbody></table> tag if an overview).
+     * @throws \coding_exception
      */
     public function get_student_statistics_table($uids, $reporttype, $overview=false, $overviewname = "",
                                                  $overviewlink = "", $printheader=true): string {
@@ -3426,32 +3392,28 @@ class report {
         return $usagetable;
     }
 
-
-
     /**
      * Return the array of My feedback usage logs.
      *
-     * @global stdClass $remotedb DB object
-     * @param array $dept_prog Array with users dept courses user has progadmin capability in
+     * @param int $userid
      * @return array
      */
     public function get_user_usage_logs($userid): array {
-        global $remotedb;
+        global $currentdb;
 
-        return $remotedb->get_records('logstore_standard_log', ['component' => 'report_myfeedback', 'userid' => $userid]);
+        return $currentdb->get_records('logstore_standard_log', ['component' => 'report_myfeedback', 'userid' => $userid]);
     }
 
     /**
      * Return the array of My feedback usage logs
      *
-     * @global stdClass $remotedb DB object
-     * @param array $dept_prog Arry with users dept courses user has progadmin capability in
+     * @param int $userid
      * @return array
      */
     public function get_notes_and_feedback($userid): array {
-        global $remotedb;
+        global $currentdb;
 
-        return $remotedb->get_records('report_myfeedback', ['userid' => $userid]);
+        return $currentdb->get_records('report_myfeedback', ['userid' => $userid]);
     }
 
     /**
@@ -3610,12 +3572,13 @@ class report {
     /**
      * Get table for progadmin page.
      *
-     * @param $ptutors
-     * @param $ptutorid
-     * @param $modtut
-     * @param $tutgroup
-     * @param $currentmod
+     * @param object $ptutors
+     * @param int $ptutorid
+     * @param object $modtut
+     * @param object $tutgroup
+     * @param object $currentmod
      * @return string
+     * @throws \coding_exception
      */
     public function get_progadmin_ptutor($ptutors, $ptutorid, $modtut = null, $tutgroup = null, $currentmod = null) {
 
@@ -3667,17 +3630,16 @@ class report {
     /**
      * Return the position the user's grade falls into for the bar graph
      *
-     * @global obj $remotedb The DB object
      * @param int $itemid Grade item id
      * @param int $grade The grade
      * @return string  The relative graph with the sections that should be shaded
      */
     public function get_activity_min_and_max_grade($itemid, $grade): string {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT min(finalgrade) as min, max(finalgrade) as max FROM {grade_grades}
                 WHERE itemid = ?";
         $params = array($itemid);
-        $activity = $remotedb->get_record_sql($sql, $params);
+        $activity = $currentdb->get_record_sql($sql, $params);
         $loc = 100;
         if ($activity) {
             $res = (int) $activity->max - (int) $activity->min;
@@ -3742,21 +3704,21 @@ class report {
     }
 
     /**
-     * get the self-reflective notes for each grade item added by the user
+     * Get the self-reflective notes for each grade item added by the user
      *
-     * @global obj $remotedb The DB object
      * @param int $userid The user id who the notes relate to
      * @param int $gradeitemid The id of the specific grade item
+     * @param object $instn
      * @return string The self-reflective notes
      */
     public function get_notes($userid, $gradeitemid, $instn): string {
-        global $remotedb;
+        global $currentdb;
 
         $sql = "SELECT DISTINCT notes
                  FROM {report_myfeedback}
                  WHERE userid=? AND gradeitemid=? AND iteminstance=?";
         $params = array($userid, $gradeitemid, $instn);
-        $usernotes = $remotedb->get_record_sql($sql, $params);
+        $usernotes = $currentdb->get_record_sql($sql, $params);
         $displaynotes = '';
         if ($usernotes) {
             $displaynotes = $usernotes->notes;
@@ -3767,23 +3729,23 @@ class report {
     /**
      * get the non-Moodle feedback for each grade item added by the user
      *
-     * @global obj $remotedb The DB object
      * @param int $userid The user id who the notes relate to
      * @param int $gradeitemid The id of the specific grade item
+     * @param object $inst
      * @return string The non-Moodle feedback
      */
     public function get_turnitin_feedback($userid, $gradeitemid, $inst): string {
-        global $remotedb;
+        global $currentdb;
 
         $sql = "SELECT DISTINCT modifierid, feedback
                  FROM {report_myfeedback}
                  WHERE userid=? AND gradeitemid=? AND iteminstance=?";
         $params = array($userid, $gradeitemid, $inst);
-        $turnitinfeedback = $remotedb->get_record_sql($sql, $params);
+        $turnitinfeedback = $currentdb->get_record_sql($sql, $params);
         if ($turnitinfeedback) {
             return $turnitinfeedback;
         }
-        return null;
+        return "";
     }
 
     /**
@@ -3794,7 +3756,7 @@ class report {
      */
     public function get_archived_dbs(): array {
         $dbs = get_config('report_myfeedback');
-        $acyear = array('current');
+        $acyears = array('current');
         $archivedyears = 0;
         if (isset($dbs->archivedyears)) {
             if ($dbs->archivedyears) {
@@ -3804,11 +3766,32 @@ class report {
         if (isset($dbs->dbhostarchive)) {
             if ($dbs->dbhostarchive) {
                 for ($i = 1; $i <= $archivedyears; $i++) {
-                    $acyear[] = $this->get_academic_years($i);
+                    $acyears[] = $this->get_academic_years($i);
                 }
             }
         }
-        return $acyear;
+        return $acyears;
+    }
+
+    /**
+     * Get the number of archived years set in the report settings and return the
+     * years (1415) as an array including the current year ('current')
+     *
+     * @return array mixed The archived years
+     */
+    public function get_archived_years(): array {
+        $dbs = get_config('report_myfeedback');
+        $acyears = array('current');
+        $archivedyears = 0;
+        if (isset($dbs->archivedyears)) {
+            if ($dbs->archivedyears) {
+                $archivedyears = $dbs->archivedyears;
+            }
+        }
+        for ($i = 1; $i <= $archivedyears; $i++) {
+            $acyears[] = $this->get_academic_years($i);
+        }
+        return $acyears;
     }
 
     /**
@@ -3826,7 +3809,7 @@ class report {
     /**
      * Return the academic years based on the current month
      *
-     * @param int $ac_year How many years from today's date
+     * @param int $acyear How many years from today's date
      * @return string The academic year in the form of 1415, 1314
      */
     public function get_academic_years($acyear = null): string {
@@ -3842,14 +3825,12 @@ class report {
     /**
      * Return the personal tutees and their stats
      *
-     * @global stdClass $remotedb The current DB object
-     * @global stdClass $CFG The global config settings
-     * @global stdClass $USER The logged in user global properties
-     * @global stdClass $OUTPUT The global output properties
+     * @param int $personaltutorid
      * @return array Return the name and other details of the personal tutees
+     * @throws \coding_exception
      */
     public function get_dashboard_tutees($personaltutorid = 0): array {
-        global $remotedb, $CFG, $USER, $OUTPUT;
+        global $currentdb, $CFG, $USER, $OUTPUT;
         $sesskeyqs = '&sesskey=' . sesskey();
 
         if ($personaltutorid == 0) {
@@ -3863,9 +3844,9 @@ class report {
                    AND ra.contextid = c.id
                    AND c.instanceid = u.id
                    AND c.contextlevel = " . CONTEXT_USER;
-        if ($usercontexts = $remotedb->get_records_sql($sql, [$personaltutorid])) {
+        if ($usercontexts = $currentdb->get_records_sql($sql, [$personaltutorid])) {
             foreach ($usercontexts as $u) {
-                $user = $remotedb->get_record('user', array('id' => $u->id, 'deleted' => 0));
+                $user = $currentdb->get_record('user', array('id' => $u->id, 'deleted' => 0));
                 $year = null;
                 profile_load_data($user);
 
@@ -3892,13 +3873,14 @@ class report {
     /**
      * Get the number of graded assessments and low grades of the tutees
      *
-     * @global stdClass $remotedb The current DB object
      * @param int $userid The id of the user who's details are being retrieved
      * @param int $courseid The id of the course
-     * @return array int Retun the int value fo the graded assessments and low grades.
+     * @param object $modtutor
+     * @return array|int[] Retun the int value fo the graded assessments and low grades.
+     * @throws moodle_exception
      */
     public function get_eachcourse_dashboard_grades($userid, $courseid, $modtutor = null) {
-        global $remotedb;
+        global $currentdb;
         $checkdb = 'current';
         $archive = false;
         if (isset($_SESSION['viewyear'])) {
@@ -3914,7 +3896,7 @@ class report {
                 unset($items[$key]);
             }
         }
-        list($itemsql, $params) = $remotedb->get_in_or_equal($items, SQL_PARAMS_NAMED);
+        list($itemsql, $params) = $currentdb->get_in_or_equal($items, SQL_PARAMS_NAMED);
         $sql = "SELECT DISTINCT c.id AS cid, gg.id as tid, finalgrade, gg.timemodified as feed_date, gi.id as gid, grademax,
                     cm.id AS cmid
                 FROM {course} c
@@ -3932,7 +3914,7 @@ class report {
         $params['userid'] = $userid;
         $params['courseid1'] = $courseid;
         $params['courseid2'] = $courseid;
-        $gr = $remotedb->get_recordset_sql($sql, $params);
+        $gr = $currentdb->get_recordset_sql($sql, $params);
         $grades = [];
         if ($gr->valid()) {
             foreach ($gr as $rec) {
@@ -3984,15 +3966,19 @@ class report {
 
     /**
      * Get all the due assessments, non-submissions and late submission
+     *
      * from the assign mod type, quiz, workshop and turnitin v1 and v2
      *
-     * @global stdClass $remotedb The current DB object
      * @param int $userid The id of the user you getting the details for
      * @param int $courseid The id of the course
-     * @return array int Return the int value for the assessment due, non and late submissions
+     * @param object $modtutor
+     * @return array|int[] Return the int value for the assessment due, non and late submissions
+     * @throws dml_exception
+     * @throws moodle_exception
+     *
      */
     public function get_eachcourse_dashboard_submissions($userid, $courseid, $modtutor = null) {
-        global $remotedb;
+        global $currentdb;
         $checkdb = 'current';
         $archive = false;
         if (isset($_SESSION['viewyear'])) {
@@ -4103,7 +4089,7 @@ class report {
                  WHERE c.visible=1 AND c.showgrades = 1 AND tp.dtpost < ? ";
             array_push($params, $now, $userid, $now, $courseid, $courseid, $userid, $now);
         }
-        $r = $remotedb->get_recordset_sql($sql, $params);
+        $r = $currentdb->get_recordset_sql($sql, $params);
         $all = [];
         if ($r->valid()) {
             foreach ($r as $rec) {//
@@ -4198,15 +4184,15 @@ class report {
     /**
      * Here we calculate the zscore of the tutee and also the module breakdown
      *
-     * @global stdClass $remotedb The current DB object
      * @param int $userid The id of the tutees whos graph you are returning
      * @param array $tutor stats from mod tutor tab
-     * @param string An id for the canvas image
-     * @param string An id for the assessment table
-     * @return mixed The canvas images of the overall position and the module breakdown images
+     * @param string $coid An id for the canvas image
+     * @param string $asid An id for the assessment table
+     * @return stdClass|string The canvas images of the overall position and the module breakdown images
+     * @throws \coding_exception
      */
     public function get_dashboard_zscore($userid, $tutor = null, $coid = null, $asid = null) {
-        global $remotedb;
+        global $currentdb;
         $eachavg = [];
         $allcourses = [];
         $eachmodule = [];
@@ -4588,11 +4574,13 @@ class report {
     /**
      * Return the arry of dept admin categories and courses
      *
-     * @param array $dept_prog Arry with users dept courses user has progadmin capability in
-     * @return array
+     * @param object $deptprog Arry with users dept courses user has progadmin capability in
+     * @param object $frommod
+     * @return array|string[]
+     * @throws \coding_exception
+     * @throws moodle_exception
      */
     public function get_prog_admin_dept_prog($deptprog, $frommod = null): array {
-
         $prog = [];
         $tomod = array('dept' => '', 'prog' => '');
         foreach ($deptprog as $dp) {
@@ -4664,12 +4652,12 @@ class report {
      * @return mixed The overridden grade or false
      */
     public function is_grade_overridden($itemid, $userid) {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT id, finalgrade, overridden
                 FROM {grade_grades}
                 WHERE itemid=? AND userid=?";
         $params = array($itemid, $userid);
-        $overridden = $remotedb->get_record_sql($sql, $params);
+        $overridden = $currentdb->get_record_sql($sql, $params);
         if ($overridden && $overridden->overridden > 0) {
             return $overridden->finalgrade;
         }
@@ -4683,12 +4671,12 @@ class report {
      * @return string The display type numeric value for letter, percentage, number etc.
      */
     public function get_course_grade_displaytype($cid): string {
-        global $remotedb;
+        global $currentdb;
         $sql = "SELECT DISTINCT id, value
                 FROM {grade_settings}
                 WHERE courseid=? AND name='displaytype'";
         $param = array($cid);
-        $displaytype = $remotedb->get_record_sql($sql, $param);
+        $displaytype = $currentdb->get_record_sql($sql, $param);
         return $displaytype ? $displaytype->value : '';
     }
 
@@ -4701,7 +4689,7 @@ class report {
      *         userid=
      */
     public function get_data($archive, $checkdb) {
-        global $remotedb, $USER;
+        global $currentdb, $USER;
         $userid = optional_param('userid', 0, PARAM_INT); // User id.
         if (empty($userid)) {
             $userid = $USER->id;
@@ -5100,16 +5088,13 @@ class report {
         }
 
         // Get a number of records as a moodle_recordset using a SQL statement.
-        $rs = $remotedb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
+        $rs = $currentdb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
         return $rs;
     }
 
     /**
      * Return the overview and feedback comments tab tables with user information
      *
-     * @global stdClass $CFG The global config object
-     * @global stdClass $OUTPUT The global OUTPUT object
-     * @global stdClass $USER The logged-in user object
      * @param string $tab The current tab/dashboard we are viewing
      * @param bool $ptutor Whether the user is a personal atutor
      * @param bool $padmin Whether the user is a Dept admin

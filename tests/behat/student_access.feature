@@ -1,5 +1,5 @@
 # TODO: Investigate possibility of using language string variables in test steps.
-@mod @mod_feedback @report_myfeedback @javascript
+@mod @mod_feedback @report @report_myfeedback @javascript
 Feature: Students checking their own academic progress throughout the year
   In order to give me an accurate and holistic view of my strengths, weaknesses, academic performance and progress
   As a student

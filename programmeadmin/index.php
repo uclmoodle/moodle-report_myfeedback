@@ -14,10 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * The main file for the Dept admin dashboard
  *
- * @package  report_myfeedback
+ * @package   report_myfeedback
+ * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -32,10 +33,17 @@ if (!$report->get_dashboard_capability($USER->id, 'report/myfeedback:progadmin')
 }
 
 echo "<p>" . get_string('overview_text_dept', 'report_myfeedback') . "</p>";
+$config = get_config('report_myfeedback');
+$studentrecordsystemlink = $config->studentrecordsystemlink;
+$studentrecordsystemlaunchtext = (isset($config->studentrecordsystem) && $config->studentrecordsystem ?
+    $config->studentrecordsystem :
+    get_string('studentrecordsystem', 'report_myfeedback'));
+
 echo '<div style="float:right">
             <p><span class="personaltutoremail">
-            <a href="' . get_string('studentrecordsystemlink', 'report_myfeedback') . '" target="_blank">' . get_string('studentrecordsystem', 'report_myfeedback') . '</a></span>  
-            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg', 'report_myfeedback').'" rel="tooltip">
+            <a href="' . $studentrecordsystemlink . '" target="_blank">' . $studentrecordsystemlaunchtext . '</a></span>
+            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg',
+        'report_myfeedback').'" rel="tooltip">
                 <a href="#">' . get_string('print_report', 'report_myfeedback') .
         '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
             <span class="personaltutoremail x_port">
@@ -347,7 +355,7 @@ if ($curdept && $curprog) {
 
     // Users for the export table on department level.
     foreach ($pgusers as $k4 => $eachu) {
-        $getname = $remotedb->get_record('user', array('id' => $k4), $list = 'firstname,lastname');
+        $getname = $currentdb->get_record('user', array('id' => $k4), $list = 'firstname,lastname');
         $fname = ($getname ? $getname->firstname : '');
         $lname = ($getname ? $getname->lastname : '');
         $exceltable[$x]['Name'] = $fname;

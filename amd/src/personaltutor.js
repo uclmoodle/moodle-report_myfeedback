@@ -40,41 +40,42 @@ define([
                 $('#tutortable').DataTable({
                     'dom': 'lfBrtip',
                     fixedHeader: true,
-                    'order': [1, 'asc' ],
+                    'order': [1, 'asc'],
                     'columnDefs': [
-                        {'orderable': false, 'targets': 0 }],
-                    buttons: [ 'colvis' ],
+                        {'orderable': false, 'targets': 0}],
+                    buttons: ['colvis'],
                     responsive: true
                 });
 
-                $('#selectall').change(function(){
+                $('#selectall').change(function() {
                     $('.chk1').prop('checked', $(this).prop('checked'));
                 });
                 $("#emailform").click(function() {
                     var mylink = [];
-                    $("input:checked").each(function(){
+                    $("input:checked").each(function() {
                         if ($(this).val() != 'on') {
                             mylink.push($(this).val());
                         }
                     });
                     if (mylink.length > 0) {
-                        str.get_string('email_tutee_subject', 'report_myfeedback').then((email_tutee_subject) => {
-                            $("a#mail").attr("href", "mailto:?bcc=" + mylink.join(";") + "&Subject=" + email_tutee_subject + "");
-                        });
+                        str.get_string('email_tutee_subject', 'report_myfeedback').then((emailTuteeSubject) => {
+                            return $("a#mail").
+                            attr("href", "mailto:?bcc=" + mylink.join(";") + "&Subject=" + emailTuteeSubject + "");
+                        }).catch();
                     }
                 });
 
-                $('.reportPrint').on( 'click', function () {
+                $('.reportPrint').on('click', function() {
                     print();
                 });
 
-                $('.ex_port').on( 'click', function() {
-                    window.location.href= 'export.php';
+                $('.ex_port').on('click', function() {
+                    window.location.href = 'export.php';
                 });
 
-                $('.tutorCanvas').click(function(){
+                $('.tutorCanvas').click(function() {
                     var thisEl = $(this).closest('tr.recordRow ').find('table.accord');
-                    if($(thisEl).is(':visible')) {
+                    if ($(thisEl).is(':visible')) {
                         $(this).closest('.recordRow').find('table.accord').hide();
                         $(this).closest('.recordRow').find('.tangle').text('\u25bc');
                     } else if ($(thisEl).is(':hidden')) {

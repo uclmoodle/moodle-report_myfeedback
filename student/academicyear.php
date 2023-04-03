@@ -14,17 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * An included file for getting the academic year for archive functionality
  *
  * @package  report_myfeedback
+ * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die;
 
-$acyears = $report->get_archived_dbs();
+$acyears = $report->get_archived_years();
 $res = 'current';
 $siteadmin = is_siteadmin() ? 1 : 0;
 $archivedinstance = $archive = false;
@@ -33,8 +34,8 @@ if (isset($_SESSION['viewyear'])) {
 }
 
 if (!$personaltutor && !$progadmin && !$siteadmin) {
-    if ($yrr->academicyear && $yrr->archivedinstance) {
-        $res = $yrr->academicyear;
+    if ($yrr->academicyeartext && $yrr->archivedinstance) {
+        $res = $yrr->academicyeartext;
         $archivedinstance = true;
     }
 }
@@ -51,28 +52,45 @@ $varprog = $progadmin ? 'yes' : 'no';
 $varsadmin = $siteadmin ? 'yes' : 'no';
 $vararchiveinst = $archivedinstance ? 'yes' : 'no';
 
-echo '<form method="POST" id="yearform" action="">'
+// Get the config data.
+$config = get_config('report_myfeedback');
+
+// Show the academic year menu.
+ $o = '<form method="POST" id="yearform" action="">'
         . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
-        . "<input type=\"hidden\" name=\"archive\" value=\"no\"><select id=\"mySelect\" value=$res name=\"myselect\">";
+        . "<input type=\"hidden\" name=\"archive\" value=\"no\">"
+        . "<select id=\"mySelect\" value=$res name=\"myselect\">";
+$i = 0;
 foreach ($acyears as $val) {
-    echo "<option value=" . $val;
-    if ($res == $val) {
-        echo ' selected';
-    }
     if ($val == 'current') {
-        echo ">" . $val;
+        $url = 'current';
+        $linktext = (isset($config->academicyeartext) && $config->academicyeartext != '' ? $config->academicyeartext :
+            get_string('current_academic_year', 'report_myfeedback'));
     } else {
-        echo ">" . "20" . implode('/', str_split($val, 2));
+        $alink = "archivelink" . $i;
+        $url = $config->$alink;
+        $alt = 'archivelinktext' . $i;
+        $linktext = (isset($config->$alt) ? $config->$alt : '');
     }
+
+    if ($url != '' && $linktext != '') {
+        $o .= "<option url='" . $url . "' value=" . $val .
+            ($val == $res ? ' selected' : '') .
+            ">" . $linktext;
+    }
+    $i++;
 }
-echo "</select></form>";
+
+$o .= "</select></form>";
 
 // No support before academic year 1213.
 if ($res != 'current' && $res < 1213) {
-    echo get_string('noarchivesupporth1', 'report_myfeedback');
-    echo get_string('noarchivesupporth2', 'report_myfeedback');
+    $o .= get_string('noarchivesupporth1', 'report_myfeedback');
+    $o .= get_string('noarchivesupporth2', 'report_myfeedback');
     $_SESSION['viewyear'] = 'current';
 }
+
+echo $o;
 
 $PAGE->requires->js_call_amd('report_myfeedback/academicyear', 'init', [
     $archivedomain,

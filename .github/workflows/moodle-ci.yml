@@ -8,7 +8,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12
+        image: postgres:13
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         php: ['7.4', '8.0']
-        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_401_STABLE']
+        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_401_STABLE', 'master']
         database: [pgsql, mariadb]
 
     steps:
@@ -98,7 +98,9 @@ jobs:
         run: moodle-plugin-ci mustache
 
       - name: Grunt
-        if: ${{ always() }}
+        # Only test grunt against branches other than MOODLE_311_STABLE
+        # as it will mark files grunted with latest version of npm and grunt as stale.
+        if: ${{ matrix.moodle-branch != 'MOODLE_311_STABLE' }}
         run: moodle-plugin-ci grunt --max-lint-warnings 0
 
       - name: PHPUnit tests
