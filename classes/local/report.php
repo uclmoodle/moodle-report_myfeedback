@@ -593,7 +593,7 @@ class report {
                 AND su.assignment=?";
         $params = array($userid, $assignid);
         $files = $currentdb->get_record_sql($sql, $params);
-        if ($files) {
+        if (isset($files->subdate)) {
             return $files->subdate;
         }
         return get_string('no_submission', 'report_myfeedback');
