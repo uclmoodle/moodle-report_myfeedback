@@ -49,7 +49,7 @@ $PAGE->navigation->add(get_string('pluginname', 'report_myfeedback'), $url);
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->set_title(get_string('pluginname', 'report_myfeedback'));
 
-$PAGE->requires->css(new moodle_url('/report/myfeedback/vendor/css/tooltip.css'));
+$PAGE->requires->css(new moodle_url('/report/myfeedback/style/tooltip.css'));
 $PAGE->requires->js_call_amd('report_myfeedback/tooltip', 'init');
 
 require_login();
