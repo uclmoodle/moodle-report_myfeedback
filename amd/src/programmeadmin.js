@@ -98,7 +98,8 @@ define(['jquery', 'core/str'], function($, str) {
                 str.get_strings(strings).then(results => results.forEach((val, key) => {
                     const string = strings[key];
                     stringResults[string.key] = val;
-                })).catch();
+                    // eslint-disable-next-line no-console
+                })).catch(failure => console.log(failure));
 
                 $('#deptSelect').change(function() {
                     $('#prog_form_dept').submit();

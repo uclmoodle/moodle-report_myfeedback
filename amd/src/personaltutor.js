@@ -53,7 +53,7 @@ define([
                 $("#emailform").click(function() {
                     var mylink = [];
                     $("input:checked").each(function() {
-                        if ($(this).val() != 'on') {
+                        if ($(this).val() !== 'on') {
                             mylink.push($(this).val());
                         }
                     });
@@ -61,7 +61,8 @@ define([
                         str.get_string('email_tutee_subject', 'report_myfeedback').then((emailTuteeSubject) => {
                             return $("a#mail").
                             attr("href", "mailto:?bcc=" + mylink.join(";") + "&Subject=" + emailTuteeSubject + "");
-                        }).catch();
+                            // eslint-disable-next-line no-console
+                        }).catch(failure => console.log(failure));
                     }
                 });
 

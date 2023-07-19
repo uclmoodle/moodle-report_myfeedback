@@ -4958,7 +4958,7 @@ class report {
                 $sql .= "LEFT JOIN {grading_areas} ga ON con.id = ga.contextid ";
             }
             $sql .= "WHERE c.visible=1 AND c.showgrades = 1 AND cm.visible=1 ";
-            array_push($params, $now, $userid, $now, $userid, $userid);
+            array_push($params, $now, $userid, $now, $userid);
         }
         if ($this->mod_is_available("turnitintool")) {
             $sql .= "UNION SELECT DISTINCT c.id AS courseid,
