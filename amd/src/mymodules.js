@@ -92,7 +92,8 @@ define([
                 str.get_strings(strings).then(results => results.forEach((val, key) => {
                     const string = strings[key];
                     stringResults[string.key] = val;
-                })).catch();
+                    // eslint-disable-next-line no-console
+                })).catch(failure => console.log(failure));
 
                 // Create the DataTable.
                 $('.modtable').DataTable({
