@@ -97,7 +97,7 @@ class provider implements \core_privacy\local\metadata\provider,
      * @param userlist $userlist
      * @return void
      */
-    public static function get_users_in_context (userlist $userlist) {
+    public static function get_users_in_context(userlist $userlist) {
         $context = $userlist->get_context();
 
         if (!$context instanceof \context_user) {

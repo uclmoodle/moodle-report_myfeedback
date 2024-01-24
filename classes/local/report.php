@@ -24,6 +24,7 @@
 
 namespace report_myfeedback\local;
 
+use assign;
 use context;
 use context_course;
 use context_user;
@@ -1025,7 +1026,7 @@ class report {
         global $CFG;
         // TODO: use my own function other than grade_get_setting because when we start using multiple DBs
         // then $DB would be the incorrect database or we need to set $DB to the database being used.
-        if (fmod($grade, 1)) {
+        if (isset($grade) && fmod($grade, 1)) {
             if (is_null($decimals)) {
                 $decima = grade_get_setting($cid, 'decimalpoints', $CFG->grade_decimalpoints);
                 if ($decima) {
@@ -1034,7 +1035,7 @@ class report {
             }
             return number_format($grade, $decimals);
         }
-        return number_format($grade, 0);
+        return isset($grade) ? number_format($grade, 0) : 0;
     }
 
     /**
@@ -5103,7 +5104,7 @@ class report {
      *         userid=
      */
     public function get_content($tab = null, $ptutor = null, $padmin = null, $arch = null): stdClass {
-        global $CFG, $OUTPUT, $USER;
+        global $CFG, $DB, $OUTPUT, $USER;
 
         $userid = optional_param('userid', 0, PARAM_INT); // User id.
         if (empty($userid)) {
@@ -5389,9 +5390,22 @@ class report {
                                     }
                                 }
 
-                                // If there are any comments or other feedback (such as online PDF
-                                // files, rubrics or marking guides).
-                                if ($record->feedbacklink || $onlinepdffeedback || $feedbacktext) {
+                                // If there is a feedbackstatus or user is progadmin or modtutor
+                                // and any comments or other feedback
+                                // (such as online PDF files, rubrics or marking guides).
+                                require_once($CFG->dirroot . '/mod/assign/locallib.php');
+                                $libcoursecontext = context_course::instance($record->courseid);
+
+                                $modcontext = \context_module::instance($cm->id);
+                                $assignment = new \assign($modcontext, $cm, $record->userid);
+                                $feedbackstatus = $assignment->get_assign_feedback_status_renderable($USER);
+
+                                if (($feedbackstatus ||
+                                        has_capability('moodle/user:viewdetails', $usercontext) ||
+                                        has_capability('report/myfeedback:progadmin', $libcoursecontext, $USER->id, false) ||
+                                        has_capability('report/myfeedback:modtutor', $libcoursecontext, $USER->id, false)
+                                    ) &&
+                                    ($record->feedbacklink || $onlinepdffeedback || $feedbacktext)) {
                                     $feedbacktextlink = "<a href=\"" . $CFG->wwwroot .
                                         "/mod/assign/view.php?id=" . $record->assignmentid . $assignsingle . "\">" .
                                         get_string('feedback', 'report_myfeedback') . "</a>";
