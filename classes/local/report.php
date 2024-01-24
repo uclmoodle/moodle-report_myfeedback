@@ -24,7 +24,6 @@
 
 namespace report_myfeedback\local;
 
-use assign;
 use context;
 use context_course;
 use context_user;
@@ -5104,7 +5103,7 @@ class report {
      *         userid=
      */
     public function get_content($tab = null, $ptutor = null, $padmin = null, $arch = null): stdClass {
-        global $CFG, $DB, $OUTPUT, $USER;
+        global $CFG, $OUTPUT, $USER;
 
         $userid = optional_param('userid', 0, PARAM_INT); // User id.
         if (empty($userid)) {
@@ -5390,17 +5389,12 @@ class report {
                                     }
                                 }
 
-                                // If there is a feedbackstatus or user is progadmin or modtutor
+                                // If there is a student grade or user is progadmin or modtutor
                                 // and any comments or other feedback
                                 // (such as online PDF files, rubrics or marking guides).
-                                require_once($CFG->dirroot . '/mod/assign/locallib.php');
                                 $libcoursecontext = context_course::instance($record->courseid);
 
-                                $modcontext = \context_module::instance($cm->id);
-                                $assignment = new \assign($modcontext, $cm, $record->userid);
-                                $feedbackstatus = $assignment->get_assign_feedback_status_renderable($USER);
-
-                                if (($feedbackstatus ||
+                                if (($record->grade ||
                                         has_capability('moodle/user:viewdetails', $usercontext) ||
                                         has_capability('report/myfeedback:progadmin', $libcoursecontext, $USER->id, false) ||
                                         has_capability('report/myfeedback:modtutor', $libcoursecontext, $USER->id, false)
