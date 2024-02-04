@@ -47,19 +47,19 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
     $sql2 = "INSERT INTO {report_myfeedback}
                     (userid, gradeitemid, modifierid, iteminstance, feedback, timemodified)
                     VALUES (?, ?, ?, ?, ?, ?)";
-    $params = array($userid, $gradeid, $instance);
-    $params1 = array($USER->id, $feednotes, $now, $userid, $gradeid, $instance);
-    $params2 = array($userid, $gradeid, $USER->id, $instance, $feednotes, $now);
+    $params = [$userid, $gradeid, $instance];
+    $params1 = [$USER->id, $feednotes, $now, $userid, $gradeid, $instance];
+    $params2 = [$userid, $gradeid, $USER->id, $instance, $feednotes, $now];
     $userfeedback = $DB->get_record_sql($sql, $params);
 
     $event = \report_myfeedback\event\myfeedbackreport_addfeedback::create(
-            array('context' => context_user::instance($userid), 'relateduserid' => $userid)
+            ['context' => context_user::instance($userid), 'relateduserid' => $userid]
     );
     if ($userfeedback) {
         $currentdb->execute($sql1, $params1);
         echo get_string('updatesuccessful', 'report_myfeedback');
         $event = \report_myfeedback\event\myfeedbackreport_updatefeedback::create(
-                array('context' => context_user::instance($userid), 'relateduserid' => $userid)
+                ['context' => context_user::instance($userid), 'relateduserid' => $userid]
         );
     } else {
         $currentdb->execute($sql2, $params2);
@@ -71,7 +71,7 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
     redirect(new \moodle_url('/report/myfeedback/index.php',
         [
             'userid' => $userid,
-            'currenttab' => 'feedback'
+            'currenttab' => 'feedback',
         ]
     ));
 }

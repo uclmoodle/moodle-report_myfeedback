@@ -37,7 +37,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configpasswordunmask('report_myfeedback/dbpass', get_string('dbpass', 'report_myfeedback'),
                     get_string('dbpassinfo', 'report_myfeedback'), '', PARAM_RAW, 30));
 
-    $options = array();
+    $options = [];
     $max = 5;
     for ($i = 0; $i <= $max; $i++) {
         $options[$i] = $i;

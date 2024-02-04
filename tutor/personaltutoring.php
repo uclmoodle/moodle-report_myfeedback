@@ -45,7 +45,7 @@ echo "<p>" . get_string('overview_text_ptutor', 'report_myfeedback') . "</p>";
 echo '<div class="userprofilebox clearfix" style="margin-bottom: 10px;">
             <div class="profilepicture">';
 if ($userid != $USER->id && !$viewtutee) {
-    echo $OUTPUT->user_picture($USER, array('size' => 80));
+    echo $OUTPUT->user_picture($USER, ['size' => 80]);
 }
 echo '</div>';
 
@@ -111,10 +111,10 @@ $nonsub = 0;
 $latesub = 0;
 $graded = 0;
 $lowgrades = 0;
-$exceltable = array();
+$exceltable = [];
 $x = 0;
 $modnames = '';
-$useremail = array();
+$useremail = [];
 if ($tutees = $report->get_dashboard_tutees()) {
     // Get all personal tutees for the user.
     echo "<div class=\"ac-year-right\"><p>" . get_string('academicyear', 'report_myfeedback') . ":</p>";
@@ -192,7 +192,7 @@ $_SESSION['user_name'] = 'nil';
 
 // Log the event that the user viewed the dashboard.
 $event = \report_myfeedback\event\myfeedbackreport_viewed_ptutordash::create(
-    array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+    ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
 );
 $event->trigger();
 $config = get_config('report_myfeedback');

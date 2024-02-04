@@ -100,5 +100,5 @@ $PAGE->requires->js_call_amd('report_myfeedback/academicyear', 'init', [
     $varprog,
     $varsadmin,
     $livedomain,
-    $vararchiveinst
+    $vararchiveinst,
 ]);

@@ -47,7 +47,7 @@ echo '<div class="fullhundred clearfix">
         <div class="mymods-container">
           <div class="userprofilebox clearfix">
             <div class="profilepicture">';
-echo $OUTPUT->user_picture($USER, array('size' => 100));
+echo $OUTPUT->user_picture($USER, ['size' => 100]);
 echo '</div>';
 
 echo '<div class="descriptionbox">
@@ -62,7 +62,7 @@ echo '</div>';
 
 $courselist = '';
 $num = 0;
-$mytutormods = array();
+$mytutormods = [];
 // Get all courses the logged-in user has modtutor capability in.
 // Used this function as it gets courses added at category level as well -
 // so courses they may have the capability in under other users.
@@ -134,14 +134,14 @@ $grademsg = get_string('tutortblheader_graded_info', 'report_myfeedback');
 $gradeicon = '<img  class="studentimggraded" src="' . 'pix/info.png' . '" ' .
         ' alt="-" title="' . $grademsg . '" rel="tooltip"/>';
 
-$exceltable = array();
+$exceltable = [];
 $x = 0;
 $zscore = new stdClass();
-$zscore->users = array();
-$zscore->assess = array();
+$zscore->users = [];
+$zscore->assess = [];
 
 $report->setup_external_db();
-$mytutormods = array();
+$mytutormods = [];
 $archivemods = get_user_capability_course(
     'report/myfeedback:modtutor',
     $USER->id,
@@ -193,7 +193,7 @@ if ($mytutormods) {
                 $myid = $t->category;
                 $sname = $t->shortname;
                 $modname = $t->fullname;
-                if ($getcat = $report->get_prog_admin_dept_prog(array($t), true)) {
+                if ($getcat = $report->get_prog_admin_dept_prog([$t], true)) {
                     $dept = $getcat['dept'];
                     $prog = $getcat['prog'];
                 }
@@ -203,7 +203,7 @@ if ($mytutormods) {
                 $csename .= ($dept ? get_string('faculty', 'report_myfeedback') . $dept . '<br>' : '');
                 $csename .= ($prog ? get_string('programme', 'report_myfeedback') . $prog . '<br>' : '');
 
-                $uids = array();
+                $uids = [];
                 $allenrolledusers = get_enrolled_users(
                     $modcontext,
                     $cap = 'report/myfeedback:student',
@@ -299,6 +299,6 @@ $_SESSION['tutor'] = 'm';
 $_SESSION['user_name'] = 'nil';
 
 $event = \report_myfeedback\event\myfeedbackreport_viewed_mtutordash::create(
-    array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+    ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
 );
 $event->trigger();

@@ -27,12 +27,12 @@ defined('MOODLE_INTERNAL') || die;
 
 $programme = '';
 if ($mytutorid) {
-    $mytutorobj = $currentdb->get_record('user', array('id' => $mytutorid));
+    $mytutorobj = $currentdb->get_record('user', ['id' => $mytutorid]);
     profile_load_data($mytutorobj);
     echo "<p>" . get_string('overview_text_ptutor_tab', 'report_myfeedback') . "</p>";
     echo '<div class="userprofilebox clearfix">';
     echo '<div class="profilepicture">';
-    echo $OUTPUT->user_picture($mytutorobj, array('size' => 100));
+    echo $OUTPUT->user_picture($mytutorobj, ['size' => 100]);
     echo '</div>';
 
     echo '<div class="descriptionbox"><div class="description">';

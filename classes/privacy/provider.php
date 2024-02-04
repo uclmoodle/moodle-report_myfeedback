@@ -24,7 +24,7 @@
 
 namespace report_myfeedback\privacy;
 
-use \core_privacy\local\metadata\collection;
+use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
@@ -81,7 +81,7 @@ class provider implements \core_privacy\local\metadata\provider,
 
         $contextlist = new \core_privacy\local\request\contextlist();
 
-        $user = $DB->get_record('user', array('id' => $userid), 'id');
+        $user = $DB->get_record('user', ['id' => $userid], 'id');
         if ($usercontext = \context_user::instance($user->id, IGNORE_MISSING)) {
             $contextlist->add_user_context($userid);
         }
@@ -164,7 +164,7 @@ class provider implements \core_privacy\local\metadata\provider,
                 'feedback' => $record->feedback,
                 'coursefullname' => format_string($record->fullname, true, ['context' => $context]),
                 'timemodified' => \core_privacy\local\request\transform::datetime($record->timemodified),
-                'gradeitemname' => $record->gradeitemname
+                'gradeitemname' => $record->gradeitemname,
             ];
         }
 

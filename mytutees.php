@@ -39,6 +39,6 @@ echo '<p>'.get_string('studentsaccessto', 'report_myfeedback').'</p>';
 $tutees = $report->get_all_accessible_users($personaltutor, $moduletutor, $prog, $searchuser);
 echo $tutees;
 $event = \report_myfeedback\event\myfeedbackreport_viewed_mystudents::create(
-    array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+    ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
 );
 $event->trigger();
