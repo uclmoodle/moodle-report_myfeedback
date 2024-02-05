@@ -164,8 +164,8 @@ class report {
         // Is the module installed?
         if (array_key_exists($modname, $installedplugins)) {
             // Is the module visible?
-            if ($currentdb->get_field('modules', 'visible', array('name' => $modname
-            ))) {
+            if ($currentdb->get_field('modules', 'visible', ['name' => $modname,
+            ])) {
                 return true;
             } else {
                 return false;
@@ -188,10 +188,10 @@ class report {
     public function has_pdf_feedback_file($iteminstance, $userid, $gradeid) {
         global $currentdb;
         // Is there any online pdf annotation feedback or any feedback file?
-        if ($currentdb->get_record('assignfeedback_editpdf_annot', array('gradeid' => $gradeid), 'id', IGNORE_MULTIPLE)) {
+        if ($currentdb->get_record('assignfeedback_editpdf_annot', ['gradeid' => $gradeid], 'id', IGNORE_MULTIPLE)) {
             return true;
         }
-        if ($currentdb->get_record('assignfeedback_editpdf_cmnt', array('gradeid' => $gradeid), 'id', IGNORE_MULTIPLE)) {
+        if ($currentdb->get_record('assignfeedback_editpdf_cmnt', ['gradeid' => $gradeid], 'id', IGNORE_MULTIPLE)) {
             return true;
         }
 
@@ -199,7 +199,7 @@ class report {
                   FROM {assign_grades} ag
                   JOIN {assignfeedback_file} af on ag.id=af.grade
                    AND ag.id=? AND ag.userid=? AND af.assignment=?";
-        $params = array($gradeid, $userid, $iteminstance);
+        $params = [$gradeid, $userid, $iteminstance];
         $feedbackfile = $currentdb->get_record_sql($sql, $params);
         if ($feedbackfile) {
             if ($feedbackfile->numfiles != 0) {
@@ -223,7 +223,7 @@ class report {
                   FROM {workshop_assessments} wa
                   JOIN {workshop_submissions} ws ON wa.submissionid=ws.id
                    AND ws.authorid=? AND ws.id=? and ws.example = 0";
-        $params = array($userid, $subid);
+        $params = [$userid, $subid];
         $feedbackfile = $currentdb->get_record_sql($sql, $params);
         if ($feedbackfile) {
             if ($feedbackfile->feedbackauthorattachment != 0) {
@@ -254,7 +254,7 @@ class report {
                    JOIN {workshop_assessments} wa ON wa.submissionid=ws.id AND ws.authorid=?
                     AND ws.workshopid=? AND ws.example=0 AND wa.submissionid=?
               LEFT JOIN {workshop_grades} wg ON wg.assessmentid=wa.id AND wa.submissionid=?";
-        $arr = array($cid, $userid, $assignid, $subid, $subid);
+        $arr = [$cid, $userid, $assignid, $subid, $subid];
         // TODO: fix this! If won't work here, use: if ($rs->valid()) {}.
         if ($assess = $currentdb->get_recordset_sql($peer, $arr)) {
             if ($itemnumber == 1) {
@@ -276,7 +276,7 @@ class report {
                        JOIN {workshop_submissions} ws ON ws.workshopid=w.id AND w.course=? AND w.useexamples=0
                        JOIN {workshop_assessments} wa ON wa.submissionid=ws.id AND ws.authorid=?
                         AND ws.workshopid=? AND ws.example=0 AND wa.submissionid=?";
-            $par = array($cid, $userid, $assignid, $subid);
+            $par = [$cid, $userid, $assignid, $subid];
             $self = $pfeed = false;
             if ($asse = $currentdb->get_records_sql($auth, $par)) {
                 foreach ($asse as $cub) {
@@ -318,7 +318,7 @@ class report {
                     JOIN {workshop_submissions} ws ON wa.submissionid=ws.id
                      AND ws.workshopid=? AND ws.example=0 AND ws.authorid = ?
                 ORDER BY wa.reviewerid";
-        $paramsc = array($subid, $assignid, $userid);
+        $paramsc = [$subid, $assignid, $userid];
         $c = 0;
         if ($commentscheck = $currentdb->get_records_sql($sqlc, $paramsc)) {
             foreach ($commentscheck as $com) {
@@ -345,7 +345,7 @@ class report {
           JOIN {workshop_submissions} ws ON wa.submissionid=ws.id
           AND ws.workshopid=? AND ws.example=0 AND ws.authorid = ?
           ORDER BY wa.reviewerid";
-        $paramsa = array($subid, $assignid, $userid);
+        $paramsa = [$subid, $assignid, $userid];
         $a = 0;
         if ($accumulativecheck = $currentdb->get_records_sql($sqla, $paramsa)) {
             foreach ($accumulativecheck as $acc) {
@@ -374,7 +374,7 @@ class report {
           JOIN {workshop_submissions} ws ON wa.submissionid=ws.id
           AND ws.workshopid=? AND ws.example=0 AND ws.authorid = ?
           ORDER BY wa.reviewerid";
-        $params = array($assignid, $subid, $assignid, $userid);
+        $params = [$assignid, $subid, $assignid, $userid];
         $r = 0;
         if ($rubriccheck = $currentdb->get_records_sql($sql, $params)) {
             foreach ($rubriccheck as $rub) {
@@ -404,7 +404,7 @@ class report {
           JOIN {workshop_submissions} ws ON wa.submissionid=ws.id
           AND ws.workshopid=? AND ws.example=0 AND ws.authorid = ?
           ORDER BY wa.reviewerid";
-        $paramsn = array($subid, $assignid, $userid);
+        $paramsn = [$subid, $assignid, $userid];
         $n = 0;
         if ($numerrorcheck = $currentdb->get_records_sql($sqln, $paramsn)) {
             foreach ($numerrorcheck as $num) {
@@ -439,7 +439,7 @@ class report {
         $sql = "SELECT max(extensionduedate) as extensionduedate
                 FROM {assign_user_flags}
                 WHERE userid=? AND assignment=?";
-        $params = array($userid, $assignment);
+        $params = [$userid, $assignment];
         $extension = $currentdb->get_record_sql($sql, $params);
         if ($extension) {
             return $extension->extensionduedate;
@@ -459,7 +459,7 @@ class report {
         $sql = "SELECT max(timeclose) as timeclose
                 FROM {quiz_overrides}
                 WHERE quiz=? AND userid=?";
-        $params = array($assignid, $userid);
+        $params = [$assignid, $userid];
         $override = $currentdb->get_record_sql($sql, $params);
         if ($override) {
             return $override->timeclose;
@@ -481,7 +481,7 @@ class report {
                 FROM {quiz_overrides} qo
                 JOIN {groups_members} gm ON qo.groupid=gm.groupid
                 AND qo.quiz=? AND gm.userid=?";
-        $params = array($assignid, $userid);
+        $params = [$assignid, $userid];
         $override = $currentdb->get_record_sql($sql, $params);
         if ($override) {
             return $override->timeclose;
@@ -505,7 +505,7 @@ class report {
         $sql = "SELECT id, timefinish, sumgrades
                 FROM {quiz_attempts}
                 WHERE quiz=? AND userid=?";
-        $params = array($assignid, $userid);
+        $params = [$assignid, $userid];
         $attempts = $currentdb->get_records_sql($sql, $params);
         if ($attempts) {
             foreach ($attempts as $attempt) {
@@ -538,7 +538,7 @@ class report {
         $sqlcount = "SELECT count(attempt) as attempts, max(id) as id
                         FROM {quiz_attempts} qa
                         WHERE quiz=? and userid=?";
-        $params = array($quizid, $userid);
+        $params = [$quizid, $userid];
         $attemptcount = $currentdb->get_records_sql($sqlcount, $params);
         $out = [];
         $url = '';
@@ -552,7 +552,7 @@ class report {
                     if ($archive) {
                         // If an archive year then change the domain.
                         $url = $archivedomainyear . "/mod/quiz/review.php?attempt=" . $attempt->id;
-                        $attr = array("target" => "_blank");
+                        $attr = ["target" => "_blank"];
                         $newicon = $newwindowicon;
                     }
 
@@ -591,7 +591,7 @@ class report {
                 FROM {assign_submission} su
                 JOIN {groups_members} gm ON su.groupid = gm.groupid AND gm.userid = ?
                 AND su.assignment=?";
-        $params = array($userid, $assignid);
+        $params = [$userid, $assignid];
         $files = $currentdb->get_record_sql($sql, $params);
         if (isset($files->subdate)) {
             return $files->subdate;
@@ -611,7 +611,7 @@ class report {
         $sql = "SELECT wg.peercomment
                 FROM {workshop_grades} wg
                     LEFT JOIN {workshop_submissions} su ON wg.assessmentid = su.id and su.authorid=?";
-        $params = array($userid);
+        $params = [$userid];
         $comments = $currentdb->get_recordset_sql($sql, $params, $limitfrom = 0, $limitnum = 0);
         $out = [];
         foreach ($comments as $comment) {
@@ -649,16 +649,16 @@ class report {
                 AND gi.courseid=? AND gi.itemname=?
                 JOIN {course_modules} cm ON gi.iteminstance=cm.instance AND cm.course=?
                 AND cm.id=?";
-        $paramstwo = array($userid, $courseid, $itemname, $courseid, $assignmentid);
+        $paramstwo = [$userid, $courseid, $itemname, $courseid, $assignmentid];
         $gradeadded = $currentdb->get_record_sql($sqltwo, $paramstwo);
         if ($gradeadded) {
-            $params = array($contextid, $assignmentid, $userid, $courseid, $gradeadded->timemodified);
+            $params = [$contextid, $assignmentid, $userid, $courseid, $gradeadded->timemodified];
             $viewreport = $currentdb->get_record_sql($sql, $params);
             if ($viewreport && $viewreport->timecreated > $gradeadded->timemodified) {
                 return date('d-m-Y H:i', $viewreport->timecreated);
             }
 
-            $paramsone = array('gradereport_user', 'viewed', $userid, $courseid, $gradeadded->timemodified);
+            $paramsone = ['gradereport_user', 'viewed', $userid, $courseid, $gradeadded->timemodified];
             $userreport = $currentdb->get_record_sql($sqlone, $paramsone);
             if ($userreport && $userreport->timecreated > $gradeadded->timemodified) {
                 return date('d-m-Y H:i', $userreport->timecreated);
@@ -685,8 +685,8 @@ class report {
                 FROM {grade_grades} g
                 JOIN {grade_items} gi ON g.itemid=gi.id AND g.userid=?
                 AND gi.courseid=? AND gi.id=?";
-        $paramsone = array('gradereport_user', 'viewed', $userid, $courseid);
-        $paramstwo = array($userid, $courseid, $gradeitemid);
+        $paramsone = ['gradereport_user', 'viewed', $userid, $courseid];
+        $paramstwo = [$userid, $courseid, $gradeitemid];
         $userreport = $currentdb->get_record_sql($sqlone, $paramsone);
         $gradeadded = $currentdb->get_record_sql($sqltwo, $paramstwo);
         if ($userreport) {
@@ -714,7 +714,7 @@ class report {
                 FROM {quiz_feedback}
                 WHERE quizid=? and mingrade<=? and maxgrade>=?
                 limit 1";
-        $params = array($quizid, $grade, $grade);
+        $params = [$quizid, $grade, $grade];
         $feedback = $currentdb->get_record_sql($sql, $params);
         return $feedback->feedbacktext;
     }
@@ -745,7 +745,7 @@ class report {
             JOIN {grade_grades} gg
             ON gi.id=gg.itemid AND gi.itemmodule=?
             AND gi.courseid=? AND gg.userid=? AND gi.iteminstance=? AND status=?";
-        $params = array($userid, $itemmodule, $courseid, $userid, $iteminstance, 1);
+        $params = [$userid, $itemmodule, $courseid, $userid, $iteminstance, 1];
         $rubrics = $currentdb->get_recordset_sql($sql, $params);
         $out = '';
         if ($rubrics) {
@@ -783,7 +783,7 @@ class report {
             JOIN {grade_grades} gg
             ON gi.id=gg.itemid AND gi.itemmodule=?
             AND gi.courseid=? AND gg.userid=? AND gi.iteminstance=?";
-        $params = array($userid, $itemmodule, $courseid, $userid, $iteminstance);
+        $params = [$userid, $itemmodule, $courseid, $userid, $iteminstance];
         $guides = $currentdb->get_recordset_sql($sql, $params);
         $out = '';
         if ($guides) {
@@ -813,7 +813,7 @@ class report {
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id limit 1";
-        $params = array($itemid, $userid, $courseid);
+        $params = [$itemid, $userid, $courseid];
         $scales = $currentdb->get_record_sql($sql, $params);
         $num = 0;
         if ($scales) {
@@ -840,7 +840,7 @@ class report {
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id limit 1";
-        $params = array($itemid, $userid, $courseid);
+        $params = [$itemid, $userid, $courseid];
         $scales = $currentdb->get_record_sql($sql, $params);
         if ($scales) {
             $scale = explode(',', $scales->scale);
@@ -866,7 +866,7 @@ class report {
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id limit 1";
-        $params = array($itemid, $userid, $courseid);
+        $params = [$itemid, $userid, $courseid];
         $scales = $currentdb->get_record_sql($sql, $params);
         if ($scales) {
             $scale = explode(',', $scales->scale);
@@ -892,7 +892,7 @@ class report {
             JOIN {grade_items} gi ON gg.itemid=gi.id AND gi.id=?
             AND gg.userid=? AND gi.courseid=? AND gi.gradetype = 2
             JOIN {scale} s ON gi.scaleid=s.id";
-        $params = array($itemid, $userid, $courseid);
+        $params = [$itemid, $userid, $courseid];
         $scales = $currentdb->get_records_sql($sql, $params);
         $out = '';
         if ($scales) {
@@ -919,7 +919,7 @@ class report {
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=? AND l.lowerboundary <=?
             ORDER BY l.lowerboundary DESC limit 1";
-        $params = array($courseid, $grade);
+        $params = [$courseid, $grade];
         $letters = $currentdb->get_record_sql($sql, $params);
         if ($letters) {
             $letter = $letters->letter;
@@ -948,7 +948,7 @@ class report {
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=? ORDER BY l.lowerboundary ASC limit 1";
-        $params = array($courseid);
+        $params = [$courseid];
         $letters = $currentdb->get_record_sql($sql, $params);
         if ($letters) {
             $letter = $letters->letter;
@@ -972,7 +972,7 @@ class report {
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=? ORDER BY l.lowerboundary DESC limit 1";
-        $params = array($courseid);
+        $params = [$courseid];
         $letters = $currentdb->get_record_sql($sql, $params);
         if ($letters) {
             $letter = $letters->letter;
@@ -996,7 +996,7 @@ class report {
             FROM {grade_letters} l
             JOIN {context} con ON l.contextid = con.id AND con.contextlevel=50
             AND con.instanceid=?";
-        $params = array($courseid);
+        $params = [$courseid];
         $letters = $currentdb->get_records_sql($sql, $params);
         $out = '';
         if ($letters) {
@@ -1046,7 +1046,7 @@ class report {
     public function user_timezone() {
         global $USER, $currentdb;
         $sql = "SELECT timezone FROM {user} WHERE id = ?";
-        $params = array($USER->id);
+        $params = [$USER->id];
         $timezone = $currentdb->get_record_sql($sql, $params);
         return $timezone ? $timezone->timezone : 99;
     }
@@ -1091,7 +1091,7 @@ class report {
     public function get_personal_tutor_id() {
         global $currentdb;
         $sql = "SELECT roleid FROM {role_context_levels} WHERE contextlevel = ? limit 1";
-        $params = array(30);
+        $params = [30];
         $tutor = $currentdb->get_record_sql($sql, $params);
         return $tutor ? $tutor->roleid : 0;
     }
@@ -1169,7 +1169,7 @@ class report {
             $sql = "SELECT id, name, parent FROM {course_categories}
                      WHERE visible = 1
                            AND " . $sqllike;
-            $result = $currentdb->get_records_sql($sql, array('%' . $searchu . '%'));
+            $result = $currentdb->get_records_sql($sql, ['%' . $searchu . '%']);
             if ($result) {
                 foreach ($result as $a) {
                     if ($a->id) {
@@ -1273,10 +1273,10 @@ class report {
                       FROM {course}
                      WHERE " . $sqllikefullname . "
                         OR " . $sqllikeshortname;
-            $result = $currentdb->get_records_sql($sql, array(
+            $result = $currentdb->get_records_sql($sql, [
                 '%' . $searchu . '%',
-                '%' . $searchu . '%'
-            ));
+                '%' . $searchu . '%',
+            ]);
             if ($result) {
                 foreach ($result as $a) {
                     if ($a->id) {
@@ -1362,7 +1362,7 @@ class report {
             if (strpos($searchu, '@')) {
                 // If it is an email address search for the full input.
                 $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email,department FROM {user}
-                    WHERE deleted = 0 AND email = ?", array($searchu));
+                    WHERE deleted = 0 AND email = ?", [$searchu]);
             } else {
                 // If not an email address then search on first word or last word.
                 $namef = explode(" ", $searchu); // Make string into array if multiple words.
@@ -1467,7 +1467,7 @@ class report {
             if (strpos($searchu, '@')) {
                 // If it is an email address search for the full input.
                 $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
-                    WHERE deleted = 0 AND email = ?", array($searchu));
+                    WHERE deleted = 0 AND email = ?", [$searchu]);
             } else {
                 // If not an email address then search on first word or last word.
                 $namef = explode(" ", $searchu); // Make string into array if multiple words.
@@ -1563,7 +1563,7 @@ class report {
                                                    WHERE ra.userid = ?
                                                          AND ra.contextid = c.id
                                                          AND c.instanceid = u.id
-                                                         AND c.contextlevel = " . CONTEXT_USER, array($USER->id))) {
+                                                         AND c.contextlevel = " . CONTEXT_USER, [$USER->id])) {
                 foreach ($usercontexts as $u) {
                     if ($u->id && ($u->firstname || $u->lastname)) {
                         $myusers[$u->id][0] = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id
@@ -1617,7 +1617,7 @@ class report {
                                                    WHERE ra.userid = ?
                                                          AND ra.contextid = c.id
                                                          AND c.instanceid = u.id
-                                                         AND c.contextlevel = " . CONTEXT_USER, array($uid))) {
+                                                         AND c.contextlevel = " . CONTEXT_USER, [$uid])) {
             foreach ($usercontexts as $u) {
                 $myusers[$u->id]['prog'] = '';
                 $myusers[$u->id]['year'] = '';
@@ -1668,7 +1668,7 @@ class report {
                                                     JOIN {groups_members} gm ON g.id=gm.groupid AND g.courseid = ?
                                                     JOIN {user} u ON u.id=gm.userid AND userid != ?
                                                     AND groupid IN ( SELECT groupid FROM {groups_members}, {groups}
-                                                    WHERE userid = ? AND courseid = ?)", array($cid, $uid, $uid, $cid))) {
+                                                    WHERE userid = ? AND courseid = ?)", [$cid, $uid, $uid, $cid])) {
             foreach ($tutorgroups as $tgroup) {
                 $myusers[$tgroup->id]['due'] = 0;
                 $myusers[$tgroup->id]['non'] = 0;
@@ -1741,7 +1741,7 @@ class report {
         $sql = "SELECT userid FROM {role_assignments}
                 WHERE roleid = ? AND contextid = ?
                 ORDER BY timemodified DESC limit 1";
-        $params = array($ptutorroleid, $contextid);
+        $params = [$ptutorroleid, $contextid];
         $tutor = $currentdb->get_record_sql($sql, $params);
         return $tutor ? $tutor->userid : 0;
     }
@@ -1756,7 +1756,7 @@ class report {
         global $currentdb;
         $sql = "SELECT max(id) as id, fullname FROM {course}
                 WHERE shortname = ?";
-        $params = array($shortname);
+        $params = [$shortname];
         $cid = $currentdb->get_record_sql($sql, $params);
         return $cid ?: 0;
     }
@@ -1770,7 +1770,7 @@ class report {
     public function get_all_assessments($cid) {
         global $currentdb;
         $now = time();
-        $items = array('turnitintool', 'turnitintooltwo', 'workshop', 'quiz', 'assign');
+        $items = ['turnitintool', 'turnitintooltwo', 'workshop', 'quiz', 'assign'];
         foreach ($items as $key => $item) {
             if (!$this->mod_is_available($item)) {
                 unset($items[$key]);
@@ -1781,7 +1781,7 @@ class report {
                 FROM {grade_items} gi
                 WHERE (hidden != 1 AND hidden < ?) AND courseid = ?
                 AND (itemmodule IN ($items) OR (itemtype = 'manual'))";
-        $params = array($now, $cid);
+        $params = [$now, $cid];
         $assess = $currentdb->get_records_sql($sql, $params);
 
         return $assess;
@@ -1975,7 +1975,7 @@ class report {
             JOIN {grade_items} gi ON gi.iteminstance=cm.instance
             JOIN {modules} m ON cm.module = m.id AND gi.itemmodule = m.name
             AND cm.course = ? AND gi.id = ? AND gi.itemmodule = ?";
-        $params = array($cid, $gid, $type);
+        $params = [$cid, $gid, $type];
         $link = $currentdb->get_record_sql($sql, $params);
         switch ($type) {
             case 'quiz':
@@ -2153,7 +2153,7 @@ class report {
             foreach ($users as $usid => $usr) {
                 $scol1 = $scol2 = $scol3 = '';
                 if (!isset($usr['name']) || !$usr['name']) {
-                    $getname = $currentdb->get_record('user', array('id' => $usid), $list = 'firstname,lastname,email');
+                    $getname = $currentdb->get_record('user', ['id' => $usid], $list = 'firstname,lastname,email');
                     if ($getname) {
                         $uname = "<a href=\"" . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $usid
                             . $sesskeyqs
@@ -2258,7 +2258,7 @@ class report {
 
         return $currentdb->get_records_sql("SELECT id, visible
                                                     FROM {course_categories}
-                                                   WHERE parent = ? ORDER BY visible desc, sortorder", array($parentcatid));
+                                                   WHERE parent = ? ORDER BY visible desc, sortorder", [$parentcatid]);
     }
 
 
@@ -2330,7 +2330,7 @@ class report {
         if ($catid > 0) {
             // If this category isn't the root, get its contextid.
             $contextid = $this->get_categorycontextid($catid);
-            $params = array("%/".$contextid, "%/".$contextid."/%");
+            $params = ["%/".$contextid, "%/".$contextid."/%"];
             $sql .= ' AND (con.path LIKE ? OR con.path LIKE ? )';
         }
         $sql .= ' AND (roleid = ?';
@@ -2380,7 +2380,7 @@ class report {
             return null;
         }
         // Get courses in a category and iterate though each enrolled user on that course.
-        $courseparams = array("%/".$catid, "%/".$catid."/%");
+        $courseparams = ["%/".$catid, "%/".$catid."/%"];
 
         $coursesql = "SELECT DISTINCT c.id
                                  FROM {course} c, {course_categories} cat
@@ -2463,7 +2463,7 @@ class report {
 
         $coursename = $currentdb->get_record_sql("SELECT c.fullname, c.shortname
                                                     FROM {course} c
-                                                   WHERE c.id = ?", array($id));
+                                                   WHERE c.id = ?", [$id]);
         if ($fullname == true) {
             return $coursename->fullname;
         } else {
@@ -2482,7 +2482,7 @@ class report {
 
         $catname = $currentdb->get_record_sql("SELECT cat.name
                                                     FROM {course_categories} cat
-                                                   WHERE cat.id = ?", array($id));
+                                                   WHERE cat.id = ?", [$id]);
         if (!empty($catname->name)) {
             return $catname->name;
         }
@@ -2503,7 +2503,7 @@ class report {
 
         $category = $currentdb->get_record_sql("SELECT cat.parent
                                                     FROM {course_categories} cat
-                                                   WHERE cat.id = ?", array($categoryid));
+                                                   WHERE cat.id = ?", [$categoryid]);
         if (!empty($category->parent) && $category->parent > 0) {
             return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=" . $reporttype
                 . $sesskeyqs
@@ -2527,7 +2527,7 @@ class report {
 
         $course = $currentdb->get_record_sql("SELECT c.category
                                                     FROM {course} c
-                                                   WHERE c.id = ?", array($courseid));
+                                                   WHERE c.id = ?", [$courseid]);
         if (!empty($course->category) && $course->category > 0) {
             return " <a href=\"".$CFG->wwwroot ."/report/myfeedback/index.php?currenttab=usage&reporttype=" . $reporttype
                 . $sesskeyqs
@@ -2549,7 +2549,7 @@ class report {
 
         $user = $currentdb->get_record_sql("SELECT deleted, suspended
                                                    FROM {user}
-                                                   WHERE id = ?", array($id));
+                                                   WHERE id = ?", [$id]);
         if ($user->suspended == 0 && $user->deleted == 0) {
             return true;
         }
@@ -2570,7 +2570,7 @@ class report {
 
         $contextid = $currentdb->get_record_sql("SELECT id
                                                     FROM {context}
-                                                   WHERE contextlevel = 40 AND instanceid = ?", array($id));
+                                                   WHERE contextlevel = 40 AND instanceid = ?", [$id]);
         return $contextid->id;
     }
 
@@ -2590,7 +2590,7 @@ class report {
 														 AND u.suspended = 0
                                                          AND ra.contextid = c.id
                                                          AND c.instanceid = u.id
-                                                         AND c.contextlevel = " . CONTEXT_USER, array($personaltutorid));
+                                                         AND c.contextlevel = " . CONTEXT_USER, [$personaltutorid]);
     }
 
 
@@ -2792,8 +2792,8 @@ class report {
             $usagetable =
                 "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
             // Print the table headings.
-            $headers = array(get_string('tutortblheader_name', 'report_myfeedback'));
-            $headerhelptext = array(get_string('usagetblheader_name_info', 'report_myfeedback'));
+            $headers = [get_string('tutortblheader_name', 'report_myfeedback')];
+            $headerhelptext = [get_string('usagetblheader_name_info', 'report_myfeedback')];
 
             if ($overview == true) {
                 $headers[] = ucfirst(get_string('staff', 'report_myfeedback'));
@@ -3121,8 +3121,8 @@ class report {
             $usagetable =
                 "<table id=\"usagetable\" class=\"table table-striped table-bordered table-hover\" style=\"text-align:center\">";
             // Print the table headings.
-            $headers = array(get_string('tutortblheader_name', 'report_myfeedback'));
-            $headerhelptext = array(get_string('usagetblheader_name_info', 'report_myfeedback'));
+            $headers = [get_string('tutortblheader_name', 'report_myfeedback')];
+            $headerhelptext = [get_string('usagetblheader_name_info', 'report_myfeedback')];
 
             if ($overview == true) {
                 $headers[] = ucfirst(get_string('dashboard_students', 'report_myfeedback'));
@@ -3638,7 +3638,7 @@ class report {
         global $currentdb;
         $sql = "SELECT min(finalgrade) as min, max(finalgrade) as max FROM {grade_grades}
                 WHERE itemid = ?";
-        $params = array($itemid);
+        $params = [$itemid];
         $activity = $currentdb->get_record_sql($sql, $params);
         $loc = 100;
         if ($activity) {
@@ -3717,7 +3717,7 @@ class report {
         $sql = "SELECT DISTINCT notes
                  FROM {report_myfeedback}
                  WHERE userid=? AND gradeitemid=? AND iteminstance=?";
-        $params = array($userid, $gradeitemid, $instn);
+        $params = [$userid, $gradeitemid, $instn];
         $usernotes = $currentdb->get_record_sql($sql, $params);
         $displaynotes = '';
         if ($usernotes) {
@@ -3740,7 +3740,7 @@ class report {
         $sql = "SELECT DISTINCT modifierid, feedback
                  FROM {report_myfeedback}
                  WHERE userid=? AND gradeitemid=? AND iteminstance=?";
-        $params = array($userid, $gradeitemid, $inst);
+        $params = [$userid, $gradeitemid, $inst];
         $turnitinfeedback = $currentdb->get_record_sql($sql, $params);
         if ($turnitinfeedback) {
             return $turnitinfeedback;
@@ -3756,7 +3756,7 @@ class report {
      */
     public function get_archived_dbs(): array {
         $dbs = get_config('report_myfeedback');
-        $acyears = array('current');
+        $acyears = ['current'];
         $archivedyears = 0;
         if (isset($dbs->archivedyears)) {
             if ($dbs->archivedyears) {
@@ -3781,7 +3781,7 @@ class report {
      */
     public function get_archived_years(): array {
         $dbs = get_config('report_myfeedback');
-        $acyears = array('current');
+        $acyears = ['current'];
         $archivedyears = 0;
         if (isset($dbs->archivedyears)) {
             if ($dbs->archivedyears) {
@@ -3846,7 +3846,7 @@ class report {
                    AND c.contextlevel = " . CONTEXT_USER;
         if ($usercontexts = $currentdb->get_records_sql($sql, [$personaltutorid])) {
             foreach ($usercontexts as $u) {
-                $user = $currentdb->get_record('user', array('id' => $u->id, 'deleted' => 0));
+                $user = $currentdb->get_record('user', ['id' => $u->id, 'deleted' => 0]);
                 $year = null;
                 profile_load_data($user);
 
@@ -3855,7 +3855,7 @@ class report {
                     $year = $user->profile_field_courseyear;
                 }
                 $myusers[$u->id][0] = "<div><div style=\"float:left;margin-right:5px;\">" .
-                    $OUTPUT->user_picture($user, array('size' => 40)) . "</div><div style=\"float:left;\"><a href=\""
+                    $OUTPUT->user_picture($user, ['size' => 40]) . "</div><div style=\"float:left;\"><a href=\""
                     . $CFG->wwwroot . "/report/myfeedback/index.php?userid=" . $u->id
                     . $sesskeyqs
                     . "\">" . $u->firstname . " " . $u->lastname . "</a><br>" .
@@ -3890,7 +3890,7 @@ class report {
             $archive = true;
         }
         $now = time();
-        $items = array('turnitintool', 'turnitintooltwo', 'workshop', 'quiz', 'assign');
+        $items = ['turnitintool', 'turnitintooltwo', 'workshop', 'quiz', 'assign'];
         foreach ($items as $key => $item) {
             if (!$this->mod_is_available($item)) {
                 unset($items[$key]);
@@ -3939,7 +3939,7 @@ class report {
             }
             $gr->close();
         }
-        $result = array(0, 0);
+        $result = [0, 0];
         $result[0] = count($grades);
         $modresult = [];
         foreach ($grades as $b) {
@@ -3995,7 +3995,7 @@ class report {
                  JOIN {grade_grades} gg ON gi.id=gg.itemid AND gg.userid = ? AND gi.courseid = ?
                          AND (gg.hidden != 1 AND gg.hidden < ?)
                  WHERE c.visible=1 AND c.showgrades = 1 ";
-        $params = array($now, $userid, $courseid, $now);
+        $params = [$now, $userid, $courseid, $now];
         if ($this->mod_is_available('assign')) {
             $sql .= "UNION SELECT DISTINCT c.id AS cid, gi.id as tid, a.id, a.duedate as due, su.timemodified as sub,
                     gi.itemmodule as type, su.status AS status, a.nosubmissions AS nosubmissions, cm.id AS cmid,
@@ -4113,7 +4113,7 @@ class report {
             }
         }
         $r->close();
-        $result = array(0, 0, 0, 0);
+        $result = [0, 0, 0, 0];
         $modresult = [];
         foreach ($all as $b) {
             $modresult[$b->tid]['due'] = 0;
@@ -4582,7 +4582,7 @@ class report {
      */
     public function get_prog_admin_dept_prog($deptprog, $frommod = null): array {
         $prog = [];
-        $tomod = array('dept' => '', 'prog' => '');
+        $tomod = ['dept' => '', 'prog' => ''];
         foreach ($deptprog as $dp) {
             $catid = ($dp->category ? $dp->category : 0);
             if ($catid) {
@@ -4656,7 +4656,7 @@ class report {
         $sql = "SELECT DISTINCT id, finalgrade, overridden
                 FROM {grade_grades}
                 WHERE itemid=? AND userid=?";
-        $params = array($itemid, $userid);
+        $params = [$itemid, $userid];
         $overridden = $currentdb->get_record_sql($sql, $params);
         if ($overridden && $overridden->overridden > 0) {
             return $overridden->finalgrade;
@@ -4675,7 +4675,7 @@ class report {
         $sql = "SELECT DISTINCT id, value
                 FROM {grade_settings}
                 WHERE courseid=? AND name='displaytype'";
-        $param = array($cid);
+        $param = [$cid];
         $displaytype = $currentdb->get_record_sql($sql, $param);
         return $displaytype ? $displaytype->value : '';
     }

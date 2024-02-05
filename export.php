@@ -46,12 +46,12 @@ $username = $_SESSION['user_name'];
 $tutor = $_SESSION['tutor'];
 
 // Arrays to clean up the heading tags passed to the usage reports.
-$strfind = array(" ", ":", "\r", "\n");
-$strreplace = array("_", "", "", "");
+$strfind = [" ", ":", "\r", "\n"];
+$strreplace = ["_", "", "", ""];
 
 $headingtext = get_string('reportfor', 'report_myfeedback').$username."\r\n";
 $event = \report_myfeedback\event\myfeedbackreport_download::create(
-    array('context' => context_user::instance($userid), 'relateduserid' => $userid)
+    ['context' => context_user::instance($userid), 'relateduserid' => $userid]
 );
 $filename = get_string('filename', 'report_myfeedback') . date('YmdHis') . ".csv";
 $excelheader = get_string('exportheader', 'report_myfeedback') . " \r\n";
@@ -59,7 +59,7 @@ if ($tutor == 'p') {
     // Personal tutor dashboard.
     $headingtext = get_string('p_tutor_report', 'report_myfeedback') . " \r\n";
     $event = \report_myfeedback\event\myfeedbackreport_downloadptutor::create(
-        array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+        ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
     );
     $filename = get_string('p_tutor_filename', 'report_myfeedback') . date('YmdHis') . ".csv";
     $excelheader = get_string('p_tutor_exportheader', 'report_myfeedback') . " \r\n";
@@ -67,7 +67,7 @@ if ($tutor == 'p') {
     // Module tutor dashboard.
     $headingtext = get_string('mod_tutor_report', 'report_myfeedback') . " \r\n";
     $event = \report_myfeedback\event\myfeedbackreport_downloadmtutor::create(
-        array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+        ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
     );
     $filename = get_string('mod_tutor_filename', 'report_myfeedback') . date('YmdHis') . ".csv";
     $excelheader = get_string('mod_tutor_exportheader', 'report_myfeedback') . " \r\n";
@@ -75,7 +75,7 @@ if ($tutor == 'p') {
     // Departmental admin dashboard.
     $headingtext = get_string('dept_admin_report', 'report_myfeedback') . " \r\n";
     $event = \report_myfeedback\event\myfeedbackreport_downloaddeptadmin::create(
-        array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+        ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
     );
     $filename = get_string('dept_admin_filename', 'report_myfeedback') . date('YmdHis') . ".csv";
     $excelheader = get_string('dept_admin_exportheader', 'report_myfeedback') . " \r\n";

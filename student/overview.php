@@ -48,7 +48,7 @@ echo '<div class="userprofilebox clearfix">';
 
 if ($userid != $USER->id) {
     echo '<div class="profilepicture">';
-    echo $OUTPUT->user_picture($user, array('size' => 125));
+    echo $OUTPUT->user_picture($user, ['size' => 125]);
     echo '</div>';
 
     echo '<div class="descriptionbox"><div class="description">';
@@ -70,7 +70,7 @@ if ($userid != $USER->id) {
     // List of courses enrolled on.
     $courselist = '';
     $limitcourse = 1;
-    $allcourses = array();
+    $allcourses = [];
     $allcourse = get_user_capability_course(
         'report/myfeedback:student',
         $userid,

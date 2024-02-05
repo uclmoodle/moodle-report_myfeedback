@@ -145,7 +145,7 @@ class behat_myfeedback extends behat_base {
         $roleassigndata[] = ['role', 'contextlevel', 'user', 'reference'];
         $roleassigndata[] = ['departmental_admin', 'System', $username, ''];
         $this->execute("behat_data_generators::the_following_entities_exist", ['role assigns',
-            new TableNode($roleassigndata)
+            new TableNode($roleassigndata),
         ]);
 
         // Grant the departmental admin role permissions to the appropriate capability required by my feedback plugin.
@@ -161,12 +161,12 @@ class behat_myfeedback extends behat_base {
                     'Allow',
                     'departmental_admin',
                     'Course',
-                    $coursedata[$i][0]
+                    $coursedata[$i][0],
                 ];
             }
 
             $this->execute("behat_data_generators::the_following_entities_exist", ['permission overrides',
-                new TableNode($coursepermissions)
+                new TableNode($coursepermissions),
             ]);
         }
 
@@ -186,7 +186,7 @@ class behat_myfeedback extends behat_base {
         $coursepermissions[] = ['report/myfeedback:personaltutor', 'Allow', 'personal_tutor', 'System', ''];
 
         $this->execute("behat_data_generators::the_following_entities_exist", ['permission overrides',
-            new TableNode($coursepermissions)
+            new TableNode($coursepermissions),
         ]);
 
         // Grant listed user accounts the personal tutor role.

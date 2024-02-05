@@ -67,7 +67,7 @@ class myfeedbackreport_viewed extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/report/myfeedback/index.php', array('user' => $this->relateduserid));
+        return new \moodle_url('/report/myfeedback/index.php', ['user' => $this->relateduserid]);
     }
 
     /**

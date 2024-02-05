@@ -51,7 +51,7 @@ echo '<div style="float:right">
             </div>';
 
 $report->setup_external_db();
-$adminmods = array();
+$adminmods = [];
 
 $getmods = get_user_capability_course(
     'report/myfeedback:progadmin',
@@ -71,7 +71,7 @@ if ($getmods) {
 
 $padmin = $report->get_prog_admin_dept_prog($adminmods);
 $x = 0;
-$exceltable = array();
+$exceltable = [];
 $curdept = 0;
 $deptview = (isset($_COOKIE['curdept']) ? $_COOKIE['curdept'] : $deptview);
 if ($padmin) {
@@ -153,17 +153,17 @@ if ($curdept && $curprog) {
     echo "<div id='selected-prog-container'>";
     echo "<div id='selected-prog-buttons'>";
     $pgmods = $padmin;
-    $ptutoruids = array();
-    $ptutormod = array();
+    $ptutoruids = [];
+    $ptutormod = [];
     $dup = 0;
-    $pgtot = array();
-    $astot = array();
-    $pmtot = array();
-    $pgusers = array();
-    $pguserspermod = array();
-    $pgtutcontext = array();
-    $pgeach = array();
-    $pgeach1 = array();
+    $pgtot = [];
+    $astot = [];
+    $pmtot = [];
+    $pgusers = [];
+    $pguserspermod = [];
+    $pgtutcontext = [];
+    $pgeach = [];
+    $pgeach1 = [];
     if (count($pgmods[$curdept]['prog'][$curprog]['mod']) <= $report->get_course_limit() || $curmod) { // CATALYST CUSTOM.
         foreach ($pgmods[$curdept]['prog'][$curprog]['mod'] as $key1 => $pmod) {// All modules in the category.
             // CATALYST CUSTOM START - IF a course is selected, process just that selected course.
@@ -173,7 +173,7 @@ if ($curdept && $curprog) {
             // CATALYST CUSTOM END.
             $progmodcontext = context_course::instance($key1);
             $pgtutcontext[$key1] = $progmodcontext->id;
-            $puids = array();
+            $puids = [];
 
             $modenrolledusers = get_enrolled_users(
                 $progmodcontext,
@@ -282,7 +282,7 @@ if ($curdept && $curprog) {
     $modtut = null;
     if ($curmod) {
         // Get users with scores per module instead of the entire category.
-        $pgusers = (isset($pguserspermod[$curmod]) ? $pguserspermod[$curmod] : array());
+        $pgusers = (isset($pguserspermod[$curmod]) ? $pguserspermod[$curmod] : []);
         // Get user ids per module.
         $ptutoruids = (isset($ptutormod[$curmod]) ? $ptutormod[$curmod] : $ptutoruids);
         $modtut = (isset($ptutormod[$curmod]) ? $pgtutcontext[$curmod] : 0);
@@ -355,7 +355,7 @@ if ($curdept && $curprog) {
 
     // Users for the export table on department level.
     foreach ($pgusers as $k4 => $eachu) {
-        $getname = $currentdb->get_record('user', array('id' => $k4), $list = 'firstname,lastname');
+        $getname = $currentdb->get_record('user', ['id' => $k4], $list = 'firstname,lastname');
         $fname = ($getname ? $getname->firstname : '');
         $lname = ($getname ? $getname->lastname : '');
         $exceltable[$x]['Name'] = $fname;
@@ -369,7 +369,7 @@ if ($curdept && $curprog) {
     }
 
     $stu = $report->get_user_analytics($pgusers, $cid = 't', $display = 'stuRec', $style = 'display:none');
-    $progadminptutors = array();
+    $progadminptutors = [];
 
     $progtable .= "<tr class=\"recordRow\"><td>" . $stu->uname . "</td>";
     $progtable .= "<td  class='overallgrade'>" . $stu->u_vas . "</td>";
@@ -385,7 +385,7 @@ if ($curdept && $curprog) {
     }
     $progtable .= '</tbody></table>';
     $ptutorid = ($modtut ? 3 : $ptutorid); // Var $modtut is course context.
-    $tutgroup = ($modtut ? $pgusers : array()); // Array of users in course.
+    $tutgroup = ($modtut ? $pgusers : []); // Array of users in course.
     $activemod = ($modtut ? $curmod : 0); // Current module.
 
     echo $progtable;
@@ -401,6 +401,6 @@ if ($curdept && $curprog) {
 }
 
 $event = \report_myfeedback\event\myfeedbackreport_viewed_deptdash::create(
-    array('context' => context_user::instance($USER->id), 'relateduserid' => $userid)
+    ['context' => context_user::instance($USER->id), 'relateduserid' => $userid]
 );
 $event->trigger();

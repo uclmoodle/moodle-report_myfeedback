@@ -25,54 +25,54 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'report/myfeedback:view' => array(
+$capabilities = [
+    'report/myfeedback:view' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'manager' => CAP_ALLOW
-        )
-    ),
-    'report/myfeedback:progadmin' => array(
+        'legacy' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+    'report/myfeedback:progadmin' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
-            'manager' => CAP_ALLOW
-        )
-    ),
-    'report/myfeedback:personaltutor' => array(
+        'legacy' => [
+            'manager' => CAP_ALLOW,
+        ],
+    ],
+    'report/myfeedback:personaltutor' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_USER,
-        'legacy' => array(
-            'manager' => CAP_ALLOW
-        )
-    ),
-    'report/myfeedback:modtutor' => array(
-        'riskbitmask' => RISK_PERSONAL,
-        'captype' => 'read',
-        'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
+        'legacy' => [
             'manager' => CAP_ALLOW,
-            'teacher' => CAP_ALLOW
-        )
-    ),
-    'report/myfeedback:student' => array(
+        ],
+    ],
+    'report/myfeedback:modtutor' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_COURSE,
-        'legacy' => array(
-            'student' => CAP_ALLOW
-        )
-    ),
-    'report/myfeedback:usage' => array(
+        'legacy' => [
+            'manager' => CAP_ALLOW,
+            'teacher' => CAP_ALLOW,
+        ],
+    ],
+    'report/myfeedback:student' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_COURSE,
+        'legacy' => [
+            'student' => CAP_ALLOW,
+        ],
+    ],
+    'report/myfeedback:usage' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'manager' => CAP_PREVENT
-        )
-    )
-);
+        'legacy' => [
+            'manager' => CAP_PREVENT,
+        ],
+    ],
+];

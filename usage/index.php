@@ -61,7 +61,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
         "coursestaff" => get_string('coursestaff', 'report_myfeedback'),
         "student" => get_string('student', 'report_myfeedback'),
         "staffmember" => get_string('staffmember', 'report_myfeedback'),
-        "personaltutorstudents" => get_string('personaltutees', 'report_myfeedback')
+        "personaltutorstudents" => get_string('personaltutees', 'report_myfeedback'),
     ];
     // Display report type menu.
     echo "<form method=\"GET\" id=\"report_form_select\" class=\"report_form\" action=\"\">"
@@ -83,7 +83,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
     echo "</select>";
     echo "</form>";
     $reporttitle = "";
-    $uids = array();
+    $uids = [];
 
     // Table for students / staff.
     switch ($reporttype) {
@@ -250,7 +250,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
                 foreach ($courses as $course) {
                     // Get the course students.
-                    $uids = array();
+                    $uids = [];
                     // Note: active users refers to students who haven't had their enrolments suspended.
                     $coursecontext = context_course::instance($course->id);
                     $modenrolledusers = get_enrolled_users(
@@ -310,7 +310,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
                 foreach ($courses as $course) {
                     // Get the course staff.
-                    $uids = array();
+                    $uids = [];
                     // Note: active users refers to students who haven't had their enrolments suspended.
                     $coursecontext = context_course::instance($course->id);
                     $modenrolledusers = get_enrolled_users(
@@ -357,7 +357,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 // Get the course users.
                 // Note: active users refers to students who haven't had their enrolments suspended.
                 $coursecontext = context_course::instance($courseid);
-                $uids = array();
+                $uids = [];
                 $modenrolledusers = get_enrolled_users(
                     $coursecontext,
                     $cap = 'report/myfeedback:student',
@@ -395,7 +395,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 echo "<h3>" . $reporttitle . $report->get_course_category_link($courseid, "categorystaff") . "</h3>";
                 echo '<div class="report_info">' . get_string('usage_coursestaff_info', 'report_myfeedback') . '</div>';
 
-                $uids = array();
+                $uids = [];
                 // Get the course users.
                 // Note: active users refers to students who haven't had their enrolments suspended.
                 // Not sure it's quite accurate though.
@@ -455,7 +455,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
                 // Check the user is not suspended or deleted.
                 if ($report->is_active_user($reportuserid)) {
-                    echo $report->get_staff_statistics_table(array($reportuserid), true);
+                    echo $report->get_staff_statistics_table([$reportuserid], true);
                 } else {
                     echo "This user is suspended or deleted";
                 }
@@ -473,7 +473,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
                 // Check the user is not suspended or deleted.
                 if ($report->is_active_user($reportuserid)) {
-                    echo $report->get_student_statistics_table(array($reportuserid), $reporttype);
+                    echo $report->get_student_statistics_table([$reportuserid], $reporttype);
                 } else {
                     echo "This user is suspended or deleted";
                 }
@@ -488,7 +488,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
     $event = \report_myfeedback\event\myfeedbackreport_viewed_usagedash::create(
         [
             'context' => context_user::instance($USER->id),
-            'relateduserid' => $USER->id
+            'relateduserid' => $USER->id,
         ]
     );
     $event->trigger();

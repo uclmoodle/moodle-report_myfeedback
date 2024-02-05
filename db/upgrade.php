@@ -49,7 +49,7 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
 
         // Adding keys to table report_myfeedback.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         // Conditionally launch create table for report_myfeedback.
         if (!$dbman->table_exists($table)) {
@@ -67,7 +67,7 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
     // Optimise the log table.
     if ($oldversion < 2018031100) {
         $table = new xmldb_table('logstore_standard_log');
-        $index = new xmldb_index('logsstanlog_usecou_ix', XMLDB_INDEX_NOTUNIQUE, array('userid', 'courseid'));
+        $index = new xmldb_index('logsstanlog_usecou_ix', XMLDB_INDEX_NOTUNIQUE, ['userid', 'courseid']);
         if (!$dbman->index_exists($table, $index)) {
             $dbman->add_index($table, $index);
         }
