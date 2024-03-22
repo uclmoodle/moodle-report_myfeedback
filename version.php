@@ -37,8 +37,8 @@
 
  defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2023040300;
+$plugin->version = 2024032200;
 $plugin->component = 'report_myfeedback';
-$plugin->requires = 2020061515;
+$plugin->requires = 2022112800;
 $plugin->release = '4.0 (Build: 2023040300)';
 $plugin->maturity = MATURITY_STABLE;
