@@ -5304,6 +5304,7 @@ class report {
                     }
                     $duedate = ($record->duedate ? userdate($record->duedate) : "-");
                     $duedatesort = ($record->duedate ? $record->duedate : "-");
+                    $record->highestgrade = (float)$record->highestgrade; // Cast string to float to avoid division by zero error.
 
                     // Submission date.
                     $submissiondate = "-";
