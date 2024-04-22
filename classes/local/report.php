@@ -1032,7 +1032,7 @@ class report {
                     return number_format($grade, $decima);
                 }
             }
-            return number_format($grade, $decimals);
+            return number_format($grade, $decimals ?? 0);
         }
         return isset($grade) ? number_format($grade, 0) : 0;
     }
@@ -5364,7 +5364,7 @@ class report {
                                         $record->gi_iteminstance, $userid, $record->assigngradeid);
                                 }
 
-                                $feedbacktext = $record->feedbacklink;
+                                $feedbacktext = $record->feedbacklink ?? '';
                                 // Implementing the rubric guide.
                                 if ($record->activemethod == "rubric") {
                                     $getrubric = $this->rubrictext($userid, $record->courseid, $record->gi_iteminstance, 'assign');
