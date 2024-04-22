@@ -227,6 +227,24 @@ if ($progadmin || $moduletutor || $userid == $USER->id || has_capability('moodle
     die();
 }
 
+// Only log the action if the related user is changed in the session.
+if (array_key_exists('viewed', $_SESSION)) {
+    if ($_SESSION['viewed'] != $userid) {
+        // Trigger a viewed event.
+        $event = \report_myfeedback\event\myfeedbackreport_viewed::create(
+            ['context' => context_system::instance(0), 'relateduserid' => $userid]
+        );
+        $event->trigger();
+        $_SESSION['viewed'] = $userid;
+    }
+} else {
+    $event = \report_myfeedback\event\myfeedbackreport_viewed::create(
+        ['context' => context_system::instance(0), 'relateduserid' => $userid]
+    );
+    $event->trigger();
+    $_SESSION['viewed'] = $userid;
+}
+
 // Display the different tabs based on the logged-in user's roles.
 $thistab = optional_param('currenttab', '', PARAM_TEXT);
 if ((($thistab == 'overview' || $thistab == 'feedback' || $thistab == 'ptutor') && $userid == $USER->id) || $userid == $USER->id) {
@@ -404,21 +422,3 @@ switch ($currenttab) {
 }
 // End of tabs setup.
 echo $OUTPUT->footer();
-
-// Only log the action if the related user is changed in the session.
-if (array_key_exists('viewed', $_SESSION)) {
-    if ($_SESSION['viewed'] != $userid) {
-        // Trigger a viewed event.
-        $event = \report_myfeedback\event\myfeedbackreport_viewed::create(
-            ['context' => context_system::instance(0), 'relateduserid' => $userid]
-        );
-        $event->trigger();
-        $_SESSION['viewed'] = $userid;
-    }
-} else {
-    $event = \report_myfeedback\event\myfeedbackreport_viewed::create(
-        ['context' => context_system::instance(0), 'relateduserid' => $userid]
-    );
-    $event->trigger();
-    $_SESSION['viewed'] = $userid;
-}
