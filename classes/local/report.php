@@ -1032,7 +1032,7 @@ class report {
                     return number_format($grade, $decima);
                 }
             }
-            return number_format($grade, $decimals);
+            return number_format($grade, $decimals ?? 0);
         }
         return isset($grade) ? number_format($grade, 0) : 0;
     }
@@ -5304,6 +5304,7 @@ class report {
                     }
                     $duedate = ($record->duedate ? userdate($record->duedate) : "-");
                     $duedatesort = ($record->duedate ? $record->duedate : "-");
+                    $record->highestgrade = (float)$record->highestgrade; // Cast string to float to avoid division by zero error.
 
                     // Submission date.
                     $submissiondate = "-";
@@ -5363,7 +5364,7 @@ class report {
                                         $record->gi_iteminstance, $userid, $record->assigngradeid);
                                 }
 
-                                $feedbacktext = $record->feedbacklink;
+                                $feedbacktext = $record->feedbacklink ?? '';
                                 // Implementing the rubric guide.
                                 if ($record->activemethod == "rubric") {
                                     $getrubric = $this->rubrictext($userid, $record->courseid, $record->gi_iteminstance, 'assign');
