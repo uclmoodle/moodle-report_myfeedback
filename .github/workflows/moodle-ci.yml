@@ -38,17 +38,11 @@ jobs:
             moodle-branch: 'main'
             database: 'pgsql'
           - php: '8.1'
-            moodle-branch: 'main'
+            moodle-branch: 'MOODLE_404_STABLE'
             database: 'mariadb'
-          - php: '8.1'
-            moodle-branch: 'main'
-            database: 'pgsql'
           - php: '8.1'
             moodle-branch: 'MOODLE_403_STABLE'
             database: 'mariadb'
-          - php: '8.0'
-            moodle-branch: 'MOODLE_402_STABLE'
-            database: 'pgsql'
           - php: '8.0'
             moodle-branch: 'MOODLE_401_STABLE'
             database: 'mariadb'
@@ -89,11 +83,6 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci phplint
 
-      - name: PHP Copy/Paste Detector
-        continue-on-error: true # This step will show errors but will not fail
-        if: ${{ !cancelled() }}
-        run: moodle-plugin-ci phpcpd
-
       - name: PHP Mess Detector
         continue-on-error: true # This step will show errors but will not fail
         if: ${{ !cancelled() }}
@@ -128,8 +117,18 @@ jobs:
         run: moodle-plugin-ci phpunit --fail-on-warning
 
       - name: Behat features
+        id: behat
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci behat --profile chrome
+
+      - name: Upload Behat Faildump
+        if: ${{ failure() && steps.behat.outcome == 'failure' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: Behat Faildump (${{ join(matrix.*, ', ') }})
+          path: ${{ github.workspace }}/moodledata/behat_dump
+          retention-days: 7
+          if-no-files-found: ignore
 
       - name: Mark cancelled jobs as failed.
         if: ${{ cancelled() }}
