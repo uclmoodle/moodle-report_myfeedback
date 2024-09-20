@@ -25,7 +25,7 @@
 require('../../config.php');
 require_login();
 
-global $CFG, $currentdb;
+global $CFG, $DB;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $feedname = optional_param('feedname', '', PARAM_NOTAGS);
@@ -34,9 +34,9 @@ $userid = optional_param('userid2', 0, PARAM_INT);
 $instance = optional_param('instance', 0, PARAM_INT);
 
 $report = new report_myfeedback\local\report();
-$report->init();
-$report->setup_external_db();
-if (!empty($feedname) && $gradeid2 && $userid2) {
+//$report->init();
+//$report->setup_external_db();
+if (!empty($feedname) && $gradeid && $userid) {
     $feednotes = strip_tags($feedname, '<br>');
     $now = time();
     $sql = "SELECT feedback FROM {report_myfeedback}
@@ -55,14 +55,15 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
     $event = \report_myfeedback\event\myfeedbackreport_addfeedback::create(
             ['context' => context_user::instance($userid), 'relateduserid' => $userid]
     );
+
     if ($userfeedback) {
-        $currentdb->execute($sql1, $params1);
+        $DB->execute($sql1, $params1);
         echo get_string('updatesuccessful', 'report_myfeedback');
         $event = \report_myfeedback\event\myfeedbackreport_updatefeedback::create(
                 ['context' => context_user::instance($userid), 'relateduserid' => $userid]
         );
     } else {
-        $currentdb->execute($sql2, $params2);
+        $DB->execute($sql2, $params2);
         echo get_string('insertsuccessful', 'report_myfeedback');
     }
 
@@ -72,6 +73,7 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
         [
             'userid' => $userid,
             'currenttab' => 'feedback',
+            'sesskey' => sesskey()
         ]
     ));
 }

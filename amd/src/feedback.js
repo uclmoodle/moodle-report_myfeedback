@@ -138,6 +138,7 @@ define([
                     $('#instance').val(instn);
                     $('#user_id2').val($(this).data('uid'));
                     $('#feedname').val($('#feed-val' + gradeid2 + instn).text());
+                    $('#Abs1').modal('show');
                 });
             });
         }

@@ -3715,15 +3715,16 @@ class report {
         global $currentdb;
 
         $sql = "SELECT DISTINCT notes
-                 FROM {report_myfeedback}
-                 WHERE userid=? AND gradeitemid=? AND iteminstance=?";
+                FROM {report_myfeedback}
+                WHERE userid=? AND gradeitemid=? AND iteminstance=?";
         $params = [$userid, $gradeitemid, $instn];
         $usernotes = $currentdb->get_record_sql($sql, $params);
-        $displaynotes = '';
-        if ($usernotes) {
-            $displaynotes = $usernotes->notes;
+        
+        if ($usernotes && isset($usernotes->notes)) {
+            return $usernotes->notes;
+        } else {
+            return '';
         }
-        return $displaynotes;
     }
 
     /**
@@ -3734,7 +3735,7 @@ class report {
      * @param object $inst
      * @return string The non-Moodle feedback
      */
-    public function get_turnitin_feedback($userid, $gradeitemid, $inst): string {
+    public function get_turnitin_feedback($userid, $gradeitemid, $inst): stdClass {
         global $currentdb;
 
         $sql = "SELECT DISTINCT modifierid, feedback
