@@ -71,7 +71,7 @@ if (!empty($notename) && $gradeid && $userid) {
         [
             'userid' => $userid,
             'currenttab' => 'feedback',
-            'sesskey' => sesskey()
+            'sesskey' => sesskey(),
         ]
     ));
 }

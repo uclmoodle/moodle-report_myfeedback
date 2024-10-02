@@ -3719,7 +3719,7 @@ class report {
                 WHERE userid=? AND gradeitemid=? AND iteminstance=?";
         $params = [$userid, $gradeitemid, $instn];
         $usernotes = $currentdb->get_record_sql($sql, $params);
-        
+
         if ($usernotes && isset($usernotes->notes)) {
             return $usernotes->notes;
         } else {
