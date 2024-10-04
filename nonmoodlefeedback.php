@@ -17,11 +17,15 @@
 /**
  * Add/edit users non-Moodle(turnitin) feedback turnitin grade item
  *
+ * This file handles the addition and editing of non-Moodle (Turnitin) feedback
+ * for users' grade items in the My Feedback report.
+ *
  * @package   report_myfeedback
  * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require('../../config.php');
 require_login();
 
@@ -70,7 +74,7 @@ if (!empty($feedname) && $gradeid && $userid) {
         [
             'userid' => $userid,
             'currenttab' => 'feedback',
-            'sesskey' => sesskey()
+            'sesskey' => sesskey(),
         ]
     ));
 }
