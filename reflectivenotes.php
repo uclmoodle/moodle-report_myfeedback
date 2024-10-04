@@ -34,9 +34,6 @@ $gradeid = optional_param('gradeid', 0, PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
 $instance = optional_param('instance1', 0, PARAM_INT);
 
-$report = new report_myfeedback\local\report();
-// $report->init();
-// $report->setup_external_db();
 if (!empty($notename) && $gradeid && $userid) {
     $reflectivenotes = strip_tags($notename, '<br>');
     $now = time();
@@ -73,7 +70,6 @@ if (!empty($notename) && $gradeid && $userid) {
         [
             'userid' => $userid,
             'currenttab' => 'feedback',
-            'sesskey' => sesskey()
         ]
     ));
 }
