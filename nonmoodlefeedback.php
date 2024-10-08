@@ -37,6 +37,10 @@ $gradeid = optional_param('gradeid2', 0, PARAM_INT);
 $userid = optional_param('userid2', 0, PARAM_INT);
 $instance = optional_param('instance', 0, PARAM_INT);
 
+$usercontext = context_user::instance($userid);
+if (!has_capability('moodle/user:viewdetails', $usercontext)) {
+    throw new moodle_exception('nopermissions', 'error', '', get_string('viewuserdetails', 'role'));
+}
 if (!empty($feedname) && $gradeid && $userid) {
     $feednotes = strip_tags($feedname, '<br>');
     $now = time();

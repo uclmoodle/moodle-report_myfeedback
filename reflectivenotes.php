@@ -34,6 +34,10 @@ $gradeid = optional_param('gradeid', 0, PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
 $instance = optional_param('instance1', 0, PARAM_INT);
 
+$usercontext = context_user::instance($userid);
+if (!has_capability('moodle/user:viewdetails', $usercontext)) {
+    throw new moodle_exception('nopermissions', 'error', '', get_string('viewuserdetails', 'role'));
+}
 if (!empty($notename) && $gradeid && $userid) {
     $reflectivenotes = strip_tags($notename, '<br>');
     $now = time();
