@@ -34,9 +34,11 @@ $gradeid = optional_param('gradeid', 0, PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
 $instance = optional_param('instance1', 0, PARAM_INT);
 
-$usercontext = context_user::instance($userid);
-if (!has_capability('moodle/user:viewdetails', $usercontext)) {
-    throw new moodle_exception('nopermissions', 'error', '', get_string('viewuserdetails', 'role'));
+if ($USER->id != $userid) {
+    redirect(new moodle_url('/report/myfeedback/index.php', ['userid' => $USER->id]),
+             get_string('usernotavailable', 'report_myfeedback'),
+             null,
+             \core\output\notification::NOTIFY_ERROR);
 }
 if (!empty($notename) && $gradeid && $userid) {
     $reflectivenotes = strip_tags($notename, '<br>');

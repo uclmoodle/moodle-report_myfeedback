@@ -29,7 +29,7 @@
 require('../../config.php');
 require_login();
 
-global $CFG, $DB;
+global $CFG, $DB, $USER;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $feedname = optional_param('feedname', '', PARAM_NOTAGS);
@@ -37,9 +37,11 @@ $gradeid = optional_param('gradeid2', 0, PARAM_INT);
 $userid = optional_param('userid2', 0, PARAM_INT);
 $instance = optional_param('instance', 0, PARAM_INT);
 
-$usercontext = context_user::instance($userid);
-if (!has_capability('moodle/user:viewdetails', $usercontext)) {
-    throw new moodle_exception('nopermissions', 'error', '', get_string('viewuserdetails', 'role'));
+$report = new \report_myfeedback\local\report();
+$canaddnotes = $report->can_add_non_moodle_feedback($gradeid, $userid);
+
+if ($canaddnotes !== true) {
+    throw new moodle_exception($canaddnotes, 'report_myfeedback');
 }
 if (!empty($feedname) && $gradeid && $userid) {
     $feednotes = strip_tags($feedname, '<br>');

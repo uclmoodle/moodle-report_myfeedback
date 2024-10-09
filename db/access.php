@@ -75,4 +75,13 @@ $capabilities = [
             'manager' => CAP_PREVENT,
         ],
     ],
+    'report/myfeedback:addnonfeedback' => [
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+        ],
+    ],
 ];
