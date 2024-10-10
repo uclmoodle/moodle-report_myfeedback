@@ -433,3 +433,9 @@ $string['privacy:metadata:report_myfeedback:gradeitemname'] = 'Grade item that s
 $string['current_academic_year'] = 'Current';
 $string['archivelinktext'] = 'Description for archived year {$a}';
 $string['archivelinktextinfo'] = 'Description for archive URL {$a} to be used in report.';
+
+$string['usernotavailable'] = 'The details of this user are not available to you.';
+$string['teachernopermission'] = 'You do not have permission to add feedback for this student.';
+$string['studentnotincourse'] = 'This student is not enrolled in this course.';
+$string['addnonfeedback'] = 'Add Turnitin feedback';
+$string['myfeedback:addnonfeedback'] = 'Add/edit Turnitin feedback';

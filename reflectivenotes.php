@@ -26,7 +26,6 @@
 require('../../config.php');
 require_login();
 
-global $CFG, $currentdb;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $notename = optional_param('notename', '', PARAM_NOTAGS);
@@ -34,9 +33,12 @@ $gradeid = optional_param('gradeid', 0, PARAM_INT);
 $userid = optional_param('userid', 0, PARAM_INT);
 $instance = optional_param('instance1', 0, PARAM_INT);
 
-$report = new report_myfeedback\local\report();
-$report->init();
-$report->setup_external_db();
+if ($USER->id != $userid) {
+    redirect(new moodle_url('/report/myfeedback/index.php', ['userid' => $USER->id]),
+             get_string('usernotavailable', 'report_myfeedback'),
+             null,
+             \core\output\notification::NOTIFY_ERROR);
+}
 if (!empty($notename) && $gradeid && $userid) {
     $reflectivenotes = strip_tags($notename, '<br>');
     $now = time();
@@ -57,13 +59,13 @@ if (!empty($notename) && $gradeid && $userid) {
             ['context' => context_user::instance($userid), 'relateduserid' => $userid]
     );
     if ($usernotes) {
-        $currentdb->execute($sql1, $params1);
+        $DB->execute($sql1, $params1);
         echo get_string('updatesuccessful', 'report_myfeedback');
         $event = \report_myfeedback\event\myfeedbackreport_updatenotes::create(
                 ['context' => context_user::instance($userid), 'relateduserid' => $userid]
         );
     } else {
-        $currentdb->execute($sql2, $params2);
+        $DB->execute($sql2, $params2);
         echo get_string('insertsuccessful', 'report_myfeedback');
     }
 

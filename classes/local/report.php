@@ -3715,15 +3715,16 @@ class report {
         global $currentdb;
 
         $sql = "SELECT DISTINCT notes
-                 FROM {report_myfeedback}
-                 WHERE userid=? AND gradeitemid=? AND iteminstance=?";
+                  FROM {report_myfeedback}
+                 WHERE userid=? AND gradeitemid=? AND iteminstance=?
+                       AND notes IS NOT NULL";
         $params = [$userid, $gradeitemid, $instn];
-        $usernotes = $currentdb->get_record_sql($sql, $params);
-        $displaynotes = '';
-        if ($usernotes) {
-            $displaynotes = $usernotes->notes;
+
+        if ($usernotes = $currentdb->get_record_sql($sql, $params)) {
+            return $usernotes->notes;
+        } else {
+            return '';
         }
-        return $displaynotes;
     }
 
     /**
@@ -3738,14 +3739,15 @@ class report {
         global $currentdb;
 
         $sql = "SELECT DISTINCT modifierid, feedback
-                 FROM {report_myfeedback}
+                  FROM {report_myfeedback}
                  WHERE userid=? AND gradeitemid=? AND iteminstance=?";
         $params = [$userid, $gradeitemid, $inst];
-        $turnitinfeedback = $currentdb->get_record_sql($sql, $params);
-        if ($turnitinfeedback) {
+
+        if ($turnitinfeedback = $currentdb->get_record_sql($sql, $params)) {
             return $turnitinfeedback;
+        } else {
+            return "";
         }
-        return "";
     }
 
     /**

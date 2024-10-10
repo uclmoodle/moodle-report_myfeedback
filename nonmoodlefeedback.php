@@ -17,15 +17,18 @@
 /**
  * Add/edit users non-Moodle(turnitin) feedback turnitin grade item
  *
+ * This file handles the addition and editing of non-Moodle (Turnitin) feedback
+ * for users' grade items in the My Feedback report.
+ *
  * @package   report_myfeedback
  * @copyright 2022 UCL
  * @author    Delvon Forrester <delvon@esparanza.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require('../../config.php');
 require_login();
 
-global $CFG, $currentdb;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $feedname = optional_param('feedname', '', PARAM_NOTAGS);
@@ -33,10 +36,17 @@ $gradeid = optional_param('gradeid2', 0, PARAM_INT);
 $userid = optional_param('userid2', 0, PARAM_INT);
 $instance = optional_param('instance', 0, PARAM_INT);
 
-$report = new report_myfeedback\local\report();
-$report->init();
-$report->setup_external_db();
-if (!empty($feedname) && $gradeid2 && $userid2) {
+$report = new \report_myfeedback\local\report();
+// Check if the current user can add non-Moodle feedback for this user and
+// grade item.
+$gradeitem = $DB->get_record('grade_items', ['id' => $gradeid], '*', MUST_EXIST);
+$coursecontext = context_course::instance($gradeitem->courseid);
+require_capability('report/myfeedback:addnonfeedback', $coursecontext);
+
+if (!is_enrolled($coursecontext, $userid)) {
+    throw new moodle_exception('studentnotincourse', 'report_myfeedback');
+}
+if (!empty($feedname) && $gradeid && $userid) {
     $feednotes = strip_tags($feedname, '<br>');
     $now = time();
     $sql = "SELECT feedback FROM {report_myfeedback}
@@ -55,14 +65,15 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
     $event = \report_myfeedback\event\myfeedbackreport_addfeedback::create(
             ['context' => context_user::instance($userid), 'relateduserid' => $userid]
     );
+
     if ($userfeedback) {
-        $currentdb->execute($sql1, $params1);
+        $DB->execute($sql1, $params1);
         echo get_string('updatesuccessful', 'report_myfeedback');
         $event = \report_myfeedback\event\myfeedbackreport_updatefeedback::create(
                 ['context' => context_user::instance($userid), 'relateduserid' => $userid]
         );
     } else {
-        $currentdb->execute($sql2, $params2);
+        $DB->execute($sql2, $params2);
         echo get_string('insertsuccessful', 'report_myfeedback');
     }
 
@@ -72,6 +83,7 @@ if (!empty($feedname) && $gradeid2 && $userid2) {
         [
             'userid' => $userid,
             'currenttab' => 'feedback',
+            'sesskey' => sesskey(),
         ]
     ));
 }
