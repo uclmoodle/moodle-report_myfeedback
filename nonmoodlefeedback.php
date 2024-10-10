@@ -43,9 +43,7 @@ $gradeitem = $DB->get_record('grade_items', ['id' => $gradeid], '*', MUST_EXIST)
 $coursecontext = context_course::instance($gradeitem->courseid);
 require_capability('report/myfeedback:addnonfeedback', $coursecontext);
 
-if (!is_enrolled($coursecontext, $USER->id)) {
-    throw new moodle_exception('teachernopermission', 'report_myfeedback');
-} else if (!is_enrolled($coursecontext, $userid)) {
+if (!is_enrolled($coursecontext, $userid)) {
     throw new moodle_exception('studentnotincourse', 'report_myfeedback');
 }
 if (!empty($feedname) && $gradeid && $userid) {
