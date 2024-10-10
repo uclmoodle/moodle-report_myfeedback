@@ -26,7 +26,6 @@
 require('../../config.php');
 require_login();
 
-global $CFG, $DB;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $notename = optional_param('notename', '', PARAM_NOTAGS);

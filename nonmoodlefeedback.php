@@ -29,7 +29,6 @@
 require('../../config.php');
 require_login();
 
-global $CFG, $DB, $USER;
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
 $feedname = optional_param('feedname', '', PARAM_NOTAGS);
@@ -38,10 +37,16 @@ $userid = optional_param('userid2', 0, PARAM_INT);
 $instance = optional_param('instance', 0, PARAM_INT);
 
 $report = new \report_myfeedback\local\report();
-$canaddnotes = $report->can_add_non_moodle_feedback($gradeid, $userid);
+// Check if the current user can add non-Moodle feedback for this user and
+// grade item.
+$gradeitem = $DB->get_record('grade_items', ['id' => $gradeid], '*', MUST_EXIST);
+$coursecontext = context_course::instance($gradeitem->courseid);
+require_capability('report/myfeedback:addnonfeedback', $coursecontext);
 
-if ($canaddnotes !== true) {
-    throw new moodle_exception($canaddnotes, 'report_myfeedback');
+if (!is_enrolled($coursecontext, $USER->id)) {
+    throw new moodle_exception('teachernopermission', 'report_myfeedback');
+} else if (!is_enrolled($coursecontext, $userid)) {
+    throw new moodle_exception('studentnotincourse', 'report_myfeedback');
 }
 if (!empty($feedname) && $gradeid && $userid) {
     $feednotes = strip_tags($feedname, '<br>');

@@ -6516,37 +6516,4 @@ class report {
         return $this->content;
     }
 
-    /**
-     * Check if the current user can add non-Moodle feedback for a specific user in a specific grade item.
-     *
-     * @param int $gradeid The ID of the grade item
-     * @param int $userid The ID of the user receiving feedback
-     * @return bool|string Returns true if allowed, otherwise returns an error message
-     */
-    public function can_add_non_moodle_feedback($gradeid, $userid) {
-        global $DB, $USER;
-
-        // Get the grade item and its associated course
-        $gradeitem = $DB->get_record('grade_items', ['id' => $gradeid], '*', MUST_EXIST);
-        $courseid = $gradeitem->courseid;
-
-        $coursecontext = \context_course::instance($courseid);
-
-        if (!has_capability('report/myfeedback:addnonfeedback', $coursecontext)) {
-            return get_string('nopermissions', 'error', get_string('addnonfeedback', 'report_myfeedback'));
-        }
-
-        // Check if both the current user and the target user are enrolled in the course
-        $teachercheck = is_enrolled($coursecontext, $USER->id);
-        $studentcheck = is_enrolled($coursecontext, $userid);
-
-        if (!$teachercheck) {
-            return get_string('teachernopermission', 'report_myfeedback');
-        }
-
-        if (!$studentcheck) {
-            return get_string('studentnotincourse', 'report_myfeedback');
-        }
-        return true;
-    }
 }
