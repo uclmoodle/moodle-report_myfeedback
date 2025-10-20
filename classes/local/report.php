@@ -2151,7 +2151,7 @@ class report {
      * Returns a table with the analytics for all users in the given subset requested
      *
      * @param array $users The array with the users and their stats
-     * @param int $cid The course id
+     * @param int|string $cid The course id
      * @param ?string $display The CSS class that is added
      * @param ?string $style The CSS style to be added
      * @param ?string $breakdodwn Whether to add the breakdown text
@@ -2162,7 +2162,7 @@ class report {
      */
     public function get_user_analytics(
         array $users,
-        int $cid,
+        int|string $cid,
         ?string $display = null,
         ?string $style = null,
         ?string $breakdodwn = null,
