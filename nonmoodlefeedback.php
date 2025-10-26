@@ -63,14 +63,14 @@ if (!empty($feedname) && $gradeid && $userid) {
     $userfeedback = $DB->get_record_sql($sql, $params);
 
     $event = \report_myfeedback\event\myfeedbackreport_addfeedback::create(
-            ['context' => context_user::instance($userid), 'relateduserid' => $userid]
+        ['context' => context_user::instance($userid), 'relateduserid' => $userid]
     );
 
     if ($userfeedback) {
         $DB->execute($sql1, $params1);
         echo get_string('updatesuccessful', 'report_myfeedback');
         $event = \report_myfeedback\event\myfeedbackreport_updatefeedback::create(
-                ['context' => context_user::instance($userid), 'relateduserid' => $userid]
+            ['context' => context_user::instance($userid), 'relateduserid' => $userid]
         );
     } else {
         $DB->execute($sql2, $params2);
@@ -79,7 +79,8 @@ if (!empty($feedname) && $gradeid && $userid) {
 
     $event->trigger();
 
-    redirect(new \moodle_url('/report/myfeedback/index.php',
+    redirect(new \moodle_url(
+        '/report/myfeedback/index.php',
         [
             'userid' => $userid,
             'currenttab' => 'feedback',

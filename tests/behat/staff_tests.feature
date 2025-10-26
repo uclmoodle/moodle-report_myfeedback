@@ -138,6 +138,7 @@ Feature: View a student record to see grades and feedback
   Scenario: Department admin role.
     When I log in as "deptadmin"
     And I navigate to the my feedback plugin page
+    And I change window size to "large"
     Then I should see "Departmental admin dashboard"
     When I click the tab titled "Departmental admin dashboard"
     Then I should see "This dashboard shows an overview of assessments and students for all the Moodle courses within categories"

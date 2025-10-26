@@ -81,7 +81,7 @@ if ($tutormods) {
     }
 }
 // Sort the module in aplphabetic order but case-insensitive.
-uasort($mytutormods, function($a, $b) {
+uasort($mytutormods, function ($a, $b) {
             return strcasecmp($a->shortname, $b->shortname);
 });
 
@@ -105,8 +105,10 @@ $studentrecordsystemlaunchtext = (isset($config->studentrecordsystem) && $config
 echo '</div><div class="mymods-container-right">
             <p class="personaltutoremail">
             <a href="' . $studentrecordsystemlink . '" target="_blank">' . $studentrecordsystemlaunchtext . '</a></p>
-            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg',
-        'report_myfeedback').'" rel="tooltip">
+            <span class="personaltutoremail reportPrint"  title="' . get_string(
+                'print_msg',
+                'report_myfeedback'
+            ) . '" rel="tooltip">
                 <a href="#">' . get_string('print_report', 'report_myfeedback') . '</a>
                 <img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/>
             </span>
@@ -155,7 +157,7 @@ if ($archivemods) {
         }
     }
 }
-uasort($mytutormods, function($a, $b) {
+uasort($mytutormods, function ($a, $b) {
             return strcasecmp($a->shortname, $b->shortname);
 });
 if ($mytutormods) {

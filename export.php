@@ -49,7 +49,7 @@ $tutor = $_SESSION['tutor'];
 $strfind = [" ", ":", "\r", "\n"];
 $strreplace = ["_", "", "", ""];
 
-$headingtext = get_string('reportfor', 'report_myfeedback').$username."\r\n";
+$headingtext = get_string('reportfor', 'report_myfeedback') . $username . "\r\n";
 $event = \report_myfeedback\event\myfeedbackreport_download::create(
     ['context' => context_user::instance($userid), 'relateduserid' => $userid]
 );

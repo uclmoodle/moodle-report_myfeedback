@@ -25,8 +25,8 @@
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode,
-    Behat\Mink\Exception\ExpectationException as ExpectationException;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ExpectationException;
 use Facebook\WebDriver\WebDriverDimension;
 
 
@@ -39,7 +39,6 @@ use Facebook\WebDriver\WebDriverDimension;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_myfeedback extends behat_base {
-
     /**
      * I have a moodle account with the following details
      *
@@ -98,10 +97,8 @@ class behat_myfeedback extends behat_base {
                 $gradeitem->finalgrade = $assignedgrade;
                 $gradeitem->feedback = 'Behat test grade entry for ' . $assigmentname;
                 $DB->insert_record('grade_grades', $gradeitem);
-
             }
         }
-
     }
 
     /**
@@ -169,7 +166,6 @@ class behat_myfeedback extends behat_base {
                 new TableNode($coursepermissions),
             ]);
         }
-
     }
 
     /**

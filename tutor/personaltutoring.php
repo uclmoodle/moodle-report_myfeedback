@@ -204,7 +204,7 @@ $studentrecordsystemlaunchtext = (isset($config->studentrecordsystem) && $config
 echo '<div class="personaltutoremails"><span class="personaltutoremail ex_port"><a href="#">'
     . get_string('export_to_excel', 'report_myfeedback') . '</a></span>
     <span class="personaltutoremail reportPrint"  title="'
-    . get_string('print_msg', 'report_myfeedback').'" rel="tooltip"><a href="#">'
+    . get_string('print_msg', 'report_myfeedback') . '" rel="tooltip"><a href="#">'
     . get_string('print_report', 'report_myfeedback') .
         '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
         <p class="personaltutoremail"><a href="'

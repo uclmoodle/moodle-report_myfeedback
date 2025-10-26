@@ -40,15 +40,15 @@ $studentrecordsystemlaunchtext = (isset($config->studentrecordsystem) && $config
     get_string('studentrecordsystem', 'report_myfeedback'));
 
 echo '<div style="float:right">
-            <p><span class="personaltutoremail">
-            <a href="' . $studentrecordsystemlink . '" target="_blank">' . $studentrecordsystemlaunchtext . '</a></span>
-            <span class="personaltutoremail reportPrint"  title="'.get_string('print_msg',
-        'report_myfeedback').'" rel="tooltip">
-                <a href="#">' . get_string('print_report', 'report_myfeedback') .
-        '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
-            <span class="personaltutoremail x_port">
-            <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></span></p>
-            </div>';
+    <p><span class="personaltutoremail">
+    <a href="' . $studentrecordsystemlink . '" target="_blank">' . $studentrecordsystemlaunchtext . '</a></span>
+    <span class="personaltutoremail reportPrint"  title="' . get_string('print_msg', 'report_myfeedback') .
+    '" rel="tooltip">
+    <a href="#">' . get_string('print_report', 'report_myfeedback') .
+    '</a><img id="reportPrint" src="' . 'pix/info.png' . '" ' . ' alt="-"/></span>
+    <span class="personaltutoremail x_port">
+    <a href="#">' . get_string('export_to_excel', 'report_myfeedback') . '</a></span></p>
+    </div>';
 
 $report->setup_external_db();
 $adminmods = [];
@@ -97,7 +97,7 @@ if ($padmin) {
     }
     echo "</select></form>";
 } else {
-    echo '<h2><i style="color:#5A5A5A">' . get_string('nodataforyear', 'report_myfeedback'). '</i></h2>';
+    echo '<h2><i style="color:#5A5A5A">' . get_string('nodataforyear', 'report_myfeedback') . '</i></h2>';
 }
 
 // If top level category is selected.
@@ -110,7 +110,7 @@ if ($curdept) {
             . get_string('programme', 'report_myfeedback')
             . "</span>
     <input type=\"hidden\" name=\"deptselect\" value=$deptview />
-    <select id=\"progSelect\" value=$progview name=\"progselect\"><option>".get_string('choosedots')."</option>";
+    <select id=\"progSelect\" value=$progview name=\"progselect\"><option>" . get_string('choosedots') . "</option>";
     $pg = $padmin;
     foreach ($pg[$curdept]['prog'] as $tky => $tre) {
         $p1 = str_replace(' ', '%20', $tre['name']);
@@ -135,7 +135,7 @@ if ($curprog) {
             . "</span>
     <input type=\"hidden\" name=\"deptselect\" value=$deptview />
     <input type=\"hidden\" name=\"progselect\" value=$progview />
-    <select id=\"progmodSelect\" value=$progmodview name=\"progmodselect\"><option>".get_string('choosedots')."</option>";
+    <select id=\"progmodSelect\" value=$progmodview name=\"progmodselect\"><option>" . get_string('choosedots') . "</option>";
     $pg1 = $padmin;
     foreach ($pg1[$curdept]['prog'][$curprog]['mod'] as $cs1 => $cses) {
         $c1 = str_replace(' ', '%20', $cses);
@@ -286,22 +286,28 @@ if ($curdept && $curprog) {
         // Get user ids per module.
         $ptutoruids = (isset($ptutormod[$curmod]) ? $ptutormod[$curmod] : $ptutoruids);
         $modtut = (isset($ptutormod[$curmod]) ? $pgtutcontext[$curmod] : 0);
-        echo (isset($pgeach1[$curmod]) ? '<h3>'.get_string('coursecolon', 'report_myfeedback') . $pgeach1[$curmod] . '</h3>' .
+        echo (isset($pgeach1[$curmod]) ? '<h3>' . get_string('coursecolon', 'report_myfeedback') . $pgeach1[$curmod] . '</h3>' .
             '<span class="aToggle modass" style="background-color:#619eb6;color:#fff">'
-            . get_string('statsperassessment', 'report_myfeedback'). '</span>
-            <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback'). '</span><span class="pToggle">'
+            . get_string('statsperassessment', 'report_myfeedback') . '</span>
+            <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback') . '</span><span class="pToggle">'
             . get_string('modtutorstats', 'report_myfeedback') . '</span></p></div>' :
             '<h3>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$curdept]['prog'][$curprog]['name'] . '</h3>' .
             '<span class="aToggle" style="background-color:#619eb6;color:#fff">'
-            . get_string('statspercourse', 'report_myfeedback'). '</span>
-            <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback'). '</span></p></div>');
+            . get_string('statspercourse', 'report_myfeedback') . '</span>
+            <span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback') . '</span></p></div>');
 
         if (isset($pgeach[$curmod]->assess)) {
             $breakdown = '<p style="margin-top:10px"><span class="assess-br">'
                 . get_string('studentbreakdown', 'report_myfeedback')
                 . '</span><br><span class="assess-br modangle">&#9660;</span></p>';
-            $asse = $report->get_assessment_analytics($pgeach[$curmod]->assess, count($pgeach[$curmod]->assess),
-                        $display = 'assRec', $style = '', $breakdown, $astot[$curmod]);
+            $asse = $report->get_assessment_analytics(
+                $pgeach[$curmod]->assess,
+                count($pgeach[$curmod]->assess),
+                $display = 'assRec',
+                $style = '',
+                $breakdown,
+                $astot[$curmod]
+            );
             if ($asse->aname) {
                 $progtable .= '<tr class="permod"><td class="assign-td">' . $asse->aname . '</td><td  class="overallgrade">' .
                         $asse->a_vas . '</td><td>' . $asse->ad . '</td><td>' . $asse->an . '</td><td>' .
@@ -320,7 +326,7 @@ if ($curdept && $curprog) {
         echo '<h3><b>' . get_string('secondlevelcat', 'report_myfeedback') . $padmin[$curdept]['prog'][$curprog]['name']
             . '</b></h3>' . '<p style = "margin: 20px 0">
             <span class="aToggle" style="background-color:#619eb6;color:#fff">' . get_string('statspercourse', 'report_myfeedback')
-            . '</span><span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback'). '</span></p></div>';
+            . '</span><span class="sToggle">' . get_string('statsperstudent', 'report_myfeedback') . '</span></p></div>';
 
         foreach ($pgeach as $k1 => $each) {
             $scol1 = $scol2 = $scol3 = '';

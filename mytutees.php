@@ -34,7 +34,7 @@ if (!($canaccessuser && $tutorview)) {
     throw new moodle_exception('nopermissions', '', $PAGE->url->out(), get_string('viewtutorreports', 'report_myfeedback'));
 }
 
-echo '<p>'.get_string('studentsaccessto', 'report_myfeedback').'</p>';
+echo '<p>' . get_string('studentsaccessto', 'report_myfeedback') . '</p>';
 
 $tutees = $report->get_all_accessible_users($personaltutor, $moduletutor, $prog, $searchuser);
 echo $tutees;

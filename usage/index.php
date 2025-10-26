@@ -28,14 +28,13 @@ defined('MOODLE_INTERNAL') || die();
 
 $PAGE->requires->js_call_amd('report_myfeedback/usage', 'init');
 
-// TODO: turn off error reporting
+// Todo: turn off error reporting
 // Report all errors except E_NOTICE.
 error_reporting(E_ALL & E_NOTICE);
 
 // Check permission to view usage reports - must have a role with this permission.
-// TODO: Make the permission site wide only (if possible).
+// Todo: Make the permission site wide only (if possible).
 if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
-
     $report->setup_external_db();
 
     // Display the description for those who have permission.
@@ -72,13 +71,13 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
     echo "<input type=\"hidden\" name=\"courseid\" value=\"$courseid\" />";
     echo "<input type=\"hidden\" name=\"currenttab\" value=\"usage\" />";
     echo "<select id=\"reportSelect\" value=\"$reporttype\" name=\"reporttype\">";
-    echo "<option value=\"\">".get_string('choosedots')."</option>";
+    echo "<option value=\"\">" . get_string('choosedots') . "</option>";
     foreach ($reportmenu as $rvalue => $rname) {
-        echo "<option value=\"".$rvalue."\"";
+        echo "<option value=\"" . $rvalue . "\"";
         if ($reporttype == $rvalue) {
             echo " selected";
         }
-        echo ">".$rname."</option>";
+        echo ">" . $rname . "</option>";
     }
     echo "</select>";
     echo "</form>";
@@ -106,14 +105,18 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $reporttitle = get_string('category', 'report_myfeedback') . " "
                     . lcfirst(get_string('student', 'report_myfeedback'))
                     . " " . get_string('overview', 'report_myfeedback') . ": " . $categoryname;
-                echo "<h3>" . $reporttitle . $report->get_parent_category_link($categoryid, $reporttype) ."</h3>";
+                echo "<h3>" . $reporttitle . $report->get_parent_category_link($categoryid, $reporttype) . "</h3>";
                 echo '<div class="report_info">'
                     . get_string('usage_categorystudentsoverview_info', 'report_myfeedback') . '</div>';
 
                 $uids = $report->get_unique_category_users($categoryid);
 
                 // Currently the table says '0 students' if there are no students enrolled in the category, so it's not too bad.
-                echo $report->get_student_statistics_table($uids, $reporttype, true, $categoryname,
+                echo $report->get_student_statistics_table(
+                    $uids,
+                    $reporttype,
+                    true,
+                    $categoryname,
                     "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=$categoryid"
                     . $sesskeyqs
                 );
@@ -122,7 +125,10 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $subcategories = $report->get_subcategories($categoryid);
                 foreach ($subcategories as $subcat) {
                     $uids = $report->get_unique_category_users($subcat->id);
-                    echo $report->get_student_statistics_table($uids, $reporttype, true,
+                    echo $report->get_student_statistics_table(
+                        $uids,
+                        $reporttype,
+                        true,
                         $report->get_category_name($subcat->id),
                         "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=$subcat->id"
                         . $sesskeyqs,
@@ -159,7 +165,11 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $uids = $report->get_unique_category_users($categoryid, 'report/myfeedback:modtutor');
 
                 // Currently the table says '0 staff' if there are no staff enrolled in the category.
-                echo $report->get_staff_statistics_table($uids, true, true, $categoryname,
+                echo $report->get_staff_statistics_table(
+                    $uids,
+                    true,
+                    true,
+                    $categoryname,
                     "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=$categoryid"
                     . $sesskeyqs
                 );
@@ -168,7 +178,11 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $subcategories = $report->get_subcategories($categoryid);
                 foreach ($subcategories as $subcat) {
                     $uids = $report->get_unique_category_users($subcat->id, 'report/myfeedback:modtutor');
-                    echo $report->get_staff_statistics_table($uids, true, true, $report->get_category_name($subcat->id),
+                    echo $report->get_staff_statistics_table(
+                        $uids,
+                        true,
+                        true,
+                        $report->get_category_name($subcat->id),
                         "/report/myfeedback/index.php?currenttab=usage&reporttype=$reporttype&categoryid=$subcat->id"
                         . $sesskeyqs,
                         false
@@ -209,7 +223,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $reporttitle = get_string('category', 'report_myfeedback') . " "
                     . lcfirst(get_string('staff', 'report_myfeedback')) . ": " . $report->get_category_name($categoryid);
 
-                // TODO: get all the personal tutors attached to the students in this category?!?!
+                // Todo: get all the personal tutors attached to the students in this category?!?!
                 echo "<h3>" . $reporttitle . $report->get_parent_category_link($categoryid, $reporttype) . "</h3>";
                 echo '<div class="report_info">' . get_string('usage_categorystaff_info', 'report_myfeedback') . '</div>';
 
@@ -243,7 +257,11 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
                 // Print the category overview.
                 $uids = $report->get_unique_category_users($categoryid);
-                echo $report->get_student_statistics_table($uids, $reporttype, true, $categoryname,
+                echo $report->get_student_statistics_table(
+                    $uids,
+                    $reporttype,
+                    true,
+                    $categoryname,
                     "/report/myfeedback/index.php?currenttab=usage&reporttype=coursestudents&categoryid=$categoryid"
                     . $sesskeyqs
                 );
@@ -270,7 +288,11 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                     }
                     // Only print the overall stats for each course, not all students
                     // (but shows these as standard rows, not heading rows).
-                    echo $report->get_student_statistics_table($uids, $reporttype, true, $course->fullname,
+                    echo $report->get_student_statistics_table(
+                        $uids,
+                        $reporttype,
+                        true,
+                        $course->fullname,
                         "/report/myfeedback/index.php?currenttab=usage&reporttype=coursestudents&courseid=$course->id"
                         . $sesskeyqs,
                         false
@@ -303,10 +325,14 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
 
                 // Print the category overview.
                 $uids = $report->get_unique_category_users($categoryid, 'report/myfeedback:modtutor');
-                echo $report->get_staff_statistics_table($uids, $reporttype, true, $categoryname,
-                        "/report/myfeedback/index.php?currenttab=usage&reporttype=coursestaff&categoryid=$categoryid"
-                        . $sesskeyqs
-                     );
+                echo $report->get_staff_statistics_table(
+                    $uids,
+                    $reporttype,
+                    true,
+                    $categoryname,
+                    "/report/myfeedback/index.php?currenttab=usage&reporttype=coursestaff&categoryid=$categoryid"
+                    . $sesskeyqs
+                );
 
                 foreach ($courses as $course) {
                     // Get the course staff.
@@ -330,7 +356,11 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                     }
                     // Only print the overall stats for each course, not all students
                     // (but shows these as standard rows, not heading rows).
-                    echo $report->get_staff_statistics_table($uids, $reporttype, true, $course->fullname,
+                    echo $report->get_staff_statistics_table(
+                        $uids,
+                        $reporttype,
+                        true,
+                        $course->fullname,
                         "/report/myfeedback/index.php?currenttab=usage&reporttype=coursestaff&courseid=$course->id"
                         . $sesskeyqs,
                         false
@@ -349,7 +379,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $_SESSION['tutor'] = 'ustud';
                 $reporttitle = get_string('gradetblheader_course', 'report_myfeedback') . " "
                     . lcfirst(get_string('dashboard_students', 'report_myfeedback')) . ": " . $report->get_course_name($courseid)
-                    . " (".$report->get_course_name($courseid, false).")";
+                    . " (" . $report->get_course_name($courseid, false) . ")";
 
                 echo "<h3>" . $reporttitle . $report->get_course_category_link($courseid, "categorystudents") . "</h3>";
                 echo '<div class="report_info">' . get_string('usage_coursestudents_info', 'report_myfeedback') . '</div>';
@@ -389,9 +419,9 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 $_SESSION['tutor'] = 'ustaff';
                 $reporttitle = get_string('gradetblheader_course', 'report_myfeedback') . " "
                     . lcfirst(get_string('staff', 'report_myfeedback')) . ": " . $report->get_course_name($courseid)
-                    . " (".$report->get_course_name($courseid, false).")";
+                    . " (" . $report->get_course_name($courseid, false) . ")";
 
-                // TODO: get all the personal tutors attached to the students in this course?!?!
+                // Todo: get all the personal tutors attached to the students in this course?!?!
                 echo "<h3>" . $reporttitle . $report->get_course_category_link($courseid, "categorystaff") . "</h3>";
                 echo '<div class="report_info">' . get_string('usage_coursestaff_info', 'report_myfeedback') . '</div>';
 
@@ -468,7 +498,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
                 echo $report->export_print_buttons();
                 $_SESSION['tutor'] = 'ustud';
                 $reporttitle = get_string('student', 'report_myfeedback') . ": " . $report->get_names($reportuserid);
-                echo "<h3>" . $reporttitle. "</h3>";
+                echo "<h3>" . $reporttitle . "</h3>";
                 echo '<div class="report_info">' . get_string('usage_student_info', 'report_myfeedback') . '</div>';
 
                 // Check the user is not suspended or deleted.

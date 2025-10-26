@@ -28,7 +28,10 @@ use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
+use core_privacy\local\request\core_userlist_provider as userlistprovider;
 use core_privacy\local\request\userlist;
+use core_privacy\local\metadata\provider as metadataprovider;
+use core_privacy\local\request\plugin\provider as pluginprovider;
 
 /**
  * Privacy Subsystem for report_myfeedback providing metadata about user data stored by this plugin.
@@ -36,9 +39,10 @@ use core_privacy\local\request\userlist;
  * @copyright  2019 Segun Babalola <segun@babalola.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\core_userlist_provider, \core_privacy\local\request\plugin\provider {
-
+class provider implements
+    metadataprovider,
+    pluginprovider,
+    userlistprovider {
     /**
      * Declare/define the scope of data this plugin is responsible for.
      * @param collection $collection
@@ -126,20 +130,20 @@ class provider implements \core_privacy\local\metadata\provider,
         }
 
         // This plugin only handles user context data, so filter out anything else.
-        $validcontexts = array_filter($contextlist->get_contexts(), function($context) {
+        $validcontexts = array_filter($contextlist->get_contexts(), function ($context) {
             if ($context->contextlevel == CONTEXT_USER) {
                 return $context;
             }
         });
 
         // Get user Ids.
-        $userids = array_map(function($context) {
+        $userids = array_map(function ($context) {
             return $context->instanceid;
         }, $validcontexts);
 
         // Contruct SQL. Intentionally filtering on userid from two independent sources!
         // Note, we could also use "fb.userid = :userid" as record a filter here.
-        list($insql, $params) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
         $sql = "SELECT
             (SELECT fullname from {course} WHERE id=(SELECT courseid from {grade_items} WHERE id = fb.gradeitemid)) as fullname,
             (SELECT itemname from {grade_items} WHERE id = fb.gradeitemid) as gradeitemname,
@@ -174,7 +178,6 @@ class provider implements \core_privacy\local\metadata\provider,
                 (object) $r->entries
             );
         }
-
     }
 
     /**
@@ -191,7 +194,7 @@ class provider implements \core_privacy\local\metadata\provider,
         $context = $userlist->get_context();
 
         if ($context instanceof \context_user) {
-            list($usersql, $userparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
+            [$usersql, $userparams] = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
             $select = "userid = :userid OR userid {$usersql}";
             $params = ['userid' => $context->instanceid] + $userparams;
 
@@ -247,5 +250,4 @@ class provider implements \core_privacy\local\metadata\provider,
             $DB->delete_records('report_myfeedback', ['userid' => $userid]);
         }
     }
-
 }

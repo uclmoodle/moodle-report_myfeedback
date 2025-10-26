@@ -32,7 +32,6 @@ namespace report_myfeedback\event;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class myfeedbackreport_viewed extends \core\event\base {
-
     /**
      * Init method.
      *
@@ -82,5 +81,4 @@ class myfeedbackreport_viewed extends \core\event\base {
             throw new \coding_exception('The \'relateduserid\' must be set.');
         }
     }
-
 }

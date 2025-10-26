@@ -34,7 +34,6 @@ function xmldb_report_myfeedback_upgrade($oldversion) {
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2016031700) {
-
         // Define table report_myfeedback to be created.
         $table = new xmldb_table('report_myfeedback');
 

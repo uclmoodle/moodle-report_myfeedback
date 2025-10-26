@@ -42,7 +42,7 @@ echo "<div class=\"ac-year-right\"><p class=\"my\">" . $modheading . ": " . $mod
         . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
         . '<select multiple="multiple" id="modSelect" name="modselect[]">';
 foreach ($mytutormods as $val1) {
-    echo "<option value=\"" . $val1->shortname."\"";
+    echo "<option value=\"" . $val1->shortname . "\"";
     foreach ($m as $v2) {
         if ($v2 == $val1->shortname) {
             echo ' selected';
@@ -50,5 +50,5 @@ foreach ($mytutormods as $val1) {
     }
     echo ">" . $val1->shortname;
 }
-echo "</select><input type='submit' value='".get_string('analyse', 'report_myfeedback')."'>
+echo "</select><input type='submit' value='" . get_string('analyse', 'report_myfeedback') . "'>
     </form></p></div>";

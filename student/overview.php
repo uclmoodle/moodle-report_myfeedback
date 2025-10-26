@@ -90,7 +90,7 @@ if ($userid != $USER->id) {
         $m1 = get_string('more', 'report_myfeedback');
         $m2 = get_string('moreinfo', 'report_myfeedback');
         $more = "<span><a href='$CFG->wwwroot/user/profile.php?id=$userid&showallcourses=1' title = '$m2' rel='tooltip'>$m1</a>";
-        uasort($allcourses, function($a, $b) {
+        uasort($allcourses, function ($a, $b) {
             return strcasecmp($a->shortname, $b->shortname);
         });
         foreach ($allcourses as $eachcourse) {

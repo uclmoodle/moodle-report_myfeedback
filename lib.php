@@ -36,8 +36,8 @@
  * @param global_navigation $navigation The navigation node to extend
  */
 function report_myfeedback_extend_navigation(global_navigation $navigation) {
-    // TODO: Segun Babalola. Where does $course come from?
-    // TODO: Check that pix_icon is not deprecated.
+    // Todo: Segun Babalola. Where does $course come from?
+    // Todo: Check that pix_icon is not deprecated.
     $url = new moodle_url('/report/myfeedback/index.php', ['course' => $course->id]);
     $navigation->add(get_string('pluginname', 'report_myfeedback'), $url, null, null, null, new pix_icon('i/report', ''));
 }
@@ -56,8 +56,14 @@ function report_myfeedback_extend_navigation_user($navigation, $user, $course) {
     // Backward compatibility to v2.8 and earlier versions.
     $context = context_user::instance($user->id, MUST_EXIST);
     $url = new moodle_url('/report/myfeedback/index.php', ['userid' => $user->id]);
-    $navigation->add(get_string('pluginname', 'report_myfeedback'),
-        $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+    $navigation->add(
+        get_string('pluginname', 'report_myfeedback'),
+        $url,
+        navigation_node::TYPE_SETTING,
+        null,
+        null,
+        new pix_icon('i/report', '')
+    );
 }
 
 /**
@@ -74,8 +80,14 @@ function report_myfeedback_extend_navigation_user_settings($navigation, $user, $
         'userid' => $user->id,
         'sesskey' => sesskey(),
     ]);
-    $navigation->add(get_string('pluginname', 'report_myfeedback'), $url,
-        navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+    $navigation->add(
+        get_string('pluginname', 'report_myfeedback'),
+        $url,
+        navigation_node::TYPE_SETTING,
+        null,
+        null,
+        new pix_icon('i/report', '')
+    );
 }
 
 /**
@@ -90,8 +102,14 @@ function report_myfeedback_extend_navigation_course($navigation, $course, $conte
     $url = has_capability('report/myfeedback:modtutor', $context)
         ? new moodle_url('/report/myfeedback/index.php', ['userid' => $USER->id, 'currenttab' => 'mymodules']) :
             new moodle_url('/report/myfeedback/index.php', ['userid' => $USER->id]);
-    $navigation->add(get_string('pluginname', 'report_myfeedback'),
-        $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+    $navigation->add(
+        get_string('pluginname', 'report_myfeedback'),
+        $url,
+        navigation_node::TYPE_SETTING,
+        null,
+        null,
+        new pix_icon('i/report', '')
+    );
 }
 
 /**
@@ -107,10 +125,13 @@ function report_myfeedback_extend_navigation_course($navigation, $course, $conte
  */
 function report_myfeedback_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
     // For compatibility with v2.9 and later.
-    $url = new moodle_url('/report/myfeedback/index.php', [
+    $url = new moodle_url(
+        '/report/myfeedback/index.php',
+        [
             'userid' => $user->id,
             'sesskey' => sesskey(),
-    ]);
+        ]
+    );
     if (!empty($course)) {
         $url->param('course', $course->id);
     }
