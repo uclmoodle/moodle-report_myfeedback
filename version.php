@@ -37,8 +37,9 @@
 
  defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2024100801;
+$plugin->version = 2025102600;
 $plugin->component = 'report_myfeedback';
-$plugin->requires = 2022112800;
-$plugin->release = '4.2';
+$plugin->requires = 2024100700; // Moodle 4.5
+$plugin->release = '4.5';
 $plugin->maturity = MATURITY_STABLE;
+$plugin->incompatible = 500;
