@@ -28,6 +28,7 @@
 
 require('../../config.php');
 require_login();
+require_sesskey();
 
 require_once($CFG->dirroot . '/report/myfeedback/lib.php');
 
