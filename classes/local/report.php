@@ -26,6 +26,7 @@ namespace report_myfeedback\local;
 
 use context;
 use context_course;
+use context_system;
 use context_user;
 use core_course_category;
 use core_plugin_manager;
@@ -768,7 +769,8 @@ class report {
         if ($rubrics) {
             foreach ($rubrics as $rubric) {
                 if ($rubric->description || $rubric->definition) {
-                    $out .= "<strong>" . $rubric->description . ": </strong>" . $rubric->definition . "<br/>";
+                    $out .= "<strong>" . format_text($rubric->description, FORMAT_HTML) . ": </strong>" .
+                        format_text($rubric->definition, FORMAT_HTML) . "<br/>";
                 }
             }
         }
@@ -806,7 +808,8 @@ class report {
         if ($guides) {
             foreach ($guides as $guide) {
                 if ($guide->shortname || $guide->remark) {
-                    $out .= "<strong>" . $guide->shortname . ": </strong>" . $guide->remark . "<br/>";
+                    $out .= "<strong>" . format_text($guide->shortname, FORMAT_HTML) . ": </strong>" .
+                        format_text($guide->remark, FORMAT_HTML) . "<br/>";
                 }
             }
         }
@@ -5343,12 +5346,15 @@ class report {
                     $gradedisplay = $record->display;
                     $gradetype = $record->gradetype;
                     $cfggradetype = $this->get_course_grade_displaytype($record->courseid);
+                    if (!empty($record->feedbacklink)) {
+                        $record->feedbacklink = format_text($record->feedbacklink, FORMAT_HTML, ['context' => context_system::instance()]);
+                    }
                     $feedbacktextlink = "";
                     $feedbacktext = "";
                     $submission = "-";
                     $feedbackfileicon = "";
                     $quizgrade = 'yes';
-                    $assignment = $record->assessmentname;
+                    $assignment = s($record->assessmentname);
                     $subs = 'allsubmissions';
                     $utp = 2;
                     $allparts = "";
@@ -5359,13 +5365,13 @@ class report {
                         $assignsingle = "";
                     }
                     $assignmentname = "<a href=\"" . $CFG->wwwroot . "/mod/" . $record->assessmenttype .
-                        "/view.php?id=" . $record->assignmentid . "\" title=\"" . $record->assessmentname .
+                        "/view.php?id=" . $record->assignmentid . "\" title=\"" . s($record->assessmentname) .
                         "\" rel=\"tooltip\">" . $assignment .
                         "</a>";
 
                     if ($archive) {// If an archive year then change the domain.
                         $assignmentname = "<a href=\"" . $archivedomain . $archiveyear . "/mod/" . $record->assessmenttype .
-                            "/view.php?id=" . $record->assignmentid . "\" target=\"_blank\" title=\"" . $record->assessmentname .
+                            "/view.php?id=" . $record->assignmentid . "\" target=\"_blank\" title=\"" . s($record->assessmentname) .
                             "\" rel=\"tooltip\">" . $assignment .
                             "</a> $newwindowicon";
                     }
@@ -5870,14 +5876,14 @@ class report {
                             // Bring the student to their user report in the gradebook.
                             $assignmentname = "<a href=\"" . $CFG->wwwroot . "/grade/report/user/index.php?id="
                                 . $record->courseid .
-                                "&userid=" . $record->userid . "\" title=\"" . $record->assessmentname .
+                                "&userid=" . $record->userid . "\" title=\"" . s($record->assessmentname) .
                                 "\" rel=\"tooltip\">" . $assignment . "</a>";
 
                             if ($archive) {
                                 // If an archive year then change the domain.
                                 $assignmentname = "<a href=\"" . $archivedomain . $archiveyear
                                     . "/grade/report/user/index.php?id=" . $record->courseid .
-                                    "&userid=" . $record->userid . "\" target=\"_blank\" title=\"" . $record->assessmentname .
+                                    "&userid=" . $record->userid . "\" target=\"_blank\" title=\"" . s($record->assessmentname) .
                                     "\" rel=\"tooltip\">" . $assignment . "</a> $newwindowicon";
                             }
 
@@ -5962,7 +5968,7 @@ class report {
                             $submissiondate = "<span style=\"color: #990000;\">"
                                 . get_string('draft', 'report_myfeedback') . "</span>";
                         }
-                        $shortname = $record->shortname;
+                        $shortname = s($record->shortname);
                         // Display grades in the format defined within each Moodle course.
                         $realgrade = null;
                         $mingrade = null;
@@ -6498,12 +6504,12 @@ class report {
                         $usercontext = context_user::instance($record->userid);
 
                         $modulename = ($record->coursename && $record->courseid ? "<a href=\"" . $CFG->wwwroot .
-                            "/course/view.php?id=" . $record->courseid . "\" title=\"" . $record->coursename .
+                            "/course/view.php?id=" . $record->courseid . "\" title=\"" . s($record->coursename) .
                             "\" rel=\"tooltip\">" . $shortname . "</a>" : "&nbsp;");
                         if ($archive) {
                             // If an archive year then change the domain.
                             $modulename = ($record->coursename && $record->courseid ? "<a href=\"" . $archivedomain . $archiveyear .
-                                "/course/view.php?id=" . $record->courseid . "\" target=\"_blank\" title=\"" . $record->coursename .
+                                "/course/view.php?id=" . $record->courseid . "\" target=\"_blank\" title=\"" . s($record->coursename) .
                                 "\" rel=\"tooltip\">" . $shortname . "</a> $newwindowicon" : "&nbsp;");
                         }
 

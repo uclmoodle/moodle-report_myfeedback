@@ -41,7 +41,7 @@ define(['jquery'], function($) {
 
                     target.removeAttr('title');
                     tooltip.css('opacity', 0)
-                        .html(tip)
+                        .text(tip)
                         .appendTo('body');
 
                     const initTooltip = () => {
