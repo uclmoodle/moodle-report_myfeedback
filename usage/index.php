@@ -70,7 +70,7 @@ if ($report->get_dashboard_capability($USER->id, 'report/myfeedback:usage')) {
     echo "<input type=\"hidden\" name=\"categoryid\" value=\"$categoryid\" />";
     echo "<input type=\"hidden\" name=\"courseid\" value=\"$courseid\" />";
     echo "<input type=\"hidden\" name=\"currenttab\" value=\"usage\" />";
-    echo "<select id=\"reportSelect\" value=\"$reporttype\" name=\"reporttype\">";
+    echo "<select id=\"reportSelect\" value=\"" . s($reporttype) . "\" name=\"reporttype\">";
     echo "<option value=\"\">" . get_string('choosedots') . "</option>";
     foreach ($reportmenu as $rvalue => $rname) {
         echo "<option value=\"" . $rvalue . "\"";

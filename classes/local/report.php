@@ -1126,14 +1126,14 @@ class report {
      */
     public function get_dashboard_capability($uid, $cap, $context = null): bool {
         global $currentdb;
-        $params = [$uid, $cap];
+        $params = [$uid, $cap, CAP_ALLOW];
         $sql = "SELECT DISTINCT min(c.id) as id, r.roleid FROM {role_capabilities} c
             JOIN {role_assignments} r ON r.roleid=c.roleid ";
         if ($context) {
             $sql .= "AND r.contextid = ? ";
             array_unshift($params, $context);
         }
-        $sql .= "AND userid = ? AND capability = ? GROUP BY c.id, r.roleid";
+        $sql .= "AND userid = ? AND capability = ? AND c.permission = ? GROUP BY c.id, r.roleid";
         $capy = $currentdb->get_records_sql($sql, $params);
         return count($capy) ? true : false;
     }

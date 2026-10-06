@@ -73,13 +73,13 @@ $padmin = $report->get_prog_admin_dept_prog($adminmods);
 $x = 0;
 $exceltable = [];
 $curdept = 0;
-$deptview = (isset($_COOKIE['curdept']) ? $_COOKIE['curdept'] : $deptview);
+$deptview = (isset($_COOKIE['curdept']) ? clean_param($_COOKIE['curdept'], PARAM_NOTAGS) : $deptview);
 if ($padmin) {
     // Start of top level category.
     echo "<form method=\"POST\" id=\"prog_form_dept\" class=\"prog_form\" action=\"\">"
             . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
             . get_string('faculty', 'report_myfeedback')
-            . "<select id=\"deptSelect\" value=$deptview name=\"deptselect\"><option>"
+            . "<select id=\"deptSelect\" value=\"" . s($deptview) . "\" name=\"deptselect\"><option>"
             . get_string('choosedots')
             . '</option>';
     foreach ($padmin as $k => $pro) {
@@ -103,14 +103,15 @@ if ($padmin) {
 // If top level category is selected.
 // Start of the second level category.
 $curprog = 0;
-$progview = (isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots ? $_COOKIE['curprog'] : $progview);
+$progview = (isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots
+                ? clean_param($_COOKIE['curprog'], PARAM_NOTAGS) : $progview);
 if ($curdept) {
     echo "<form method=\"POST\" id=\"prog_form_prog\" class=\"prog_form\" action=\"\">"
             . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
             . get_string('programme', 'report_myfeedback')
             . "</span>
-    <input type=\"hidden\" name=\"deptselect\" value=$deptview />
-    <select id=\"progSelect\" value=$progview name=\"progselect\"><option>" . get_string('choosedots') . "</option>";
+    <input type=\"hidden\" name=\"deptselect\" value=\"" . s($deptview) . "\" />
+    <select id=\"progSelect\" value=\"" . s($progview) . "\" name=\"progselect\"><option>" . get_string('choosedots') . "</option>";
     $pg = $padmin;
     foreach ($pg[$curdept]['prog'] as $tky => $tre) {
         $p1 = str_replace(' ', '%20', $tre['name']);
@@ -127,15 +128,16 @@ if ($curdept) {
 // If a second level category is selected - start of module.
 $curmod = 0;
 $progmodview = (isset($_COOKIE['curmodprog']) && isset($_COOKIE['curprog']) && isset($_COOKIE['curdept']) && $deptview != $dots
-                    && $progview != $dots ? $_COOKIE['curmodprog'] : $progmodview);
+                    && $progview != $dots ? clean_param($_COOKIE['curmodprog'], PARAM_NOTAGS) : $progmodview);
 if ($curprog) {
     echo "<form method=\"POST\" id=\"prog_form_mod\" class=\"prog_form\" action=\"\">"
             . '<input type="hidden" name="sesskey" value="' . sesskey() . '" />'
             . get_string('coursecolon', 'report_myfeedback')
             . "</span>
-    <input type=\"hidden\" name=\"deptselect\" value=$deptview />
-    <input type=\"hidden\" name=\"progselect\" value=$progview />
-    <select id=\"progmodSelect\" value=$progmodview name=\"progmodselect\"><option>" . get_string('choosedots') . "</option>";
+    <input type=\"hidden\" name=\"deptselect\" value=\"" . s($deptview) . "\" />
+    <input type=\"hidden\" name=\"progselect\" value=\"" . s($progview) . "\" />
+    <select id=\"progmodSelect\" value=\"" . s($progmodview) . "\" name=\"progmodselect\"><option>" .
+    get_string('choosedots') . "</option>";
     $pg1 = $padmin;
     foreach ($pg1[$curdept]['prog'][$curprog]['mod'] as $cs1 => $cses) {
         $c1 = str_replace(' ', '%20', $cses);
@@ -335,8 +337,8 @@ if ($curdept && $curprog) {
             $progtable .= '<form method="POST" class="prog_form_mod_click">
             <input type="hidden" name="sesskey" value="' . sesskey() . '" />
             <input type="hidden" name="currenttab" value="progadmin" />
-        <input type="hidden" name="deptselect" value="' . $deptview . '" />
-        <input type="hidden" name="progselect" value="' . $progview . '" />
+        <input type="hidden" name="deptselect" value="' . s($deptview) . '" />
+        <input type="hidden" name="progselect" value="' . s($progview) . '" />
         <input type="hidden" name="progmodselect" value="' . str_replace(' ', '_', $pgeach1[$k1]) . '">
             </form></td><td class="overallgrade">' . $each->modgraph . '</td><td>' . $each->due . '</td><td><span class="'
                 . $scol1 . '">' . $each->nonsub . '</span></td><td><span class="' . $scol2 . '">' . $each->latesub
