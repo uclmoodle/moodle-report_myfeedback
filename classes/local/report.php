@@ -1373,7 +1373,7 @@ class report {
         $search = trim($search);
         // If there is a search input and it's not the text that tells the user to enter search input.
         if ($search != "" && $search != get_string("searchusers", "report_myfeedback")) {
-            $searchu = addslashes(strip_tags($search)); // We escape the quotes etc and strip all html tags.
+            $searchu = strip_tags($search); // Strip any html tags; quoting is handled by bound SQL parameters.
             $userresult = [];
             if (strpos($searchu, '@')) {
                 // If it is an email address search for the full input.
@@ -1386,8 +1386,11 @@ class report {
                 // Suggest this checks to see how many words are entered in the search box.
                 // Suggest the query then CHANGE from OR to AND for 2 word entries,
                 // as otherwise you get back a lot of inaccurate results.
+                $SQllikefname = $currentdb->sql_like('firstname', '?');
+                $SQllikelname = $currentdb->sql_like('lastname', '?');
                 $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email, department FROM {user}
-                    WHERE deleted = 0 AND (firstname LIKE ('$namef[0]%') OR lastname LIKE ('$namel[0]%')) limit 10", []);
+                    WHERE deleted = 0 AND ($SQllikefname OR $SQllikelname) limit 10",
+                    [$namef[0] . '%', $namel[0] . '%']);
             }
             if ($userresult) {
                 foreach ($userresult as $a) {
@@ -1477,7 +1480,7 @@ class report {
         $search = trim($search);
         // If there is a search input and it's not the text that tells the user to enter search input.
         if ($search && $search != get_string("searchusers", "report_myfeedback")) {
-            $searchu = addslashes(strip_tags($search)); // We escape the quotes etc and strip all html tags.
+            $searchu = strip_tags($search); // Strip any html tags; quoting is handled by bound SQL parameters.
 
             if (strpos($searchu, '@')) {
                 // If it is an email address search for the full input.
@@ -1490,8 +1493,11 @@ class report {
                 // Suggest this checks to see how many words are entered in the search box.
                 // Suggest the query then CHANGE from OR to AND for 2 word entries,
                 // as otherwise you get back a lot of inaccurate results.
+                $SQllikefname = $currentdb->sql_like('firstname', '?');
+                $SQllikelname = $currentdb->sql_like('lastname', '?');
                 $userresult = $currentdb->get_records_sql("SELECT id,firstname,lastname,email FROM {user}
-                    WHERE deleted = 0 AND (firstname LIKE ('$namef[0]%') OR lastname LIKE ('$namel[0]%')) limit 10", []);
+                    WHERE deleted = 0 AND ($SQllikefname OR $SQllikelname) limit 10",
+                    [$namef[0] . '%', $namel[0] . '%']);
             }
             $progs = [];
             $mymods = [];
