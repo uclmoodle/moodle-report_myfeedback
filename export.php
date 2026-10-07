@@ -110,6 +110,13 @@ $exc = '';
 
 foreach ($data as $row) {
     $row = str_replace(",", ";", $row);
+    // Prevent CSV/formula injection by escaping cells starting with =, +, -, @, tab, or CR.
+    $row = array_map(function ($cell) {
+        if (is_string($cell) && preg_match('/^[=+\-@\t\r]/', $cell)) {
+            return "'" . $cell;
+        }
+        return $cell;
+    }, $row);
     $exc .= "\r\n" . implode(",", $row);
 }
 echo $headingtext;
