@@ -6516,7 +6516,8 @@ class report {
                         if (
                             $show &&
                             (
-                                $userid == $USER->id || $USER->id == 2 ||
+                                // Removed hardcoded id==2 bypass that skipped per-course capability checks.
+                                $userid == $USER->id ||
                                 has_capability('moodle/user:viewdetails', $usercontext) ||
                                 has_capability('report/myfeedback:progadmin', $libcoursecontext, $USER->id, false) ||
                                 has_capability('report/myfeedback:modtutor', $libcoursecontext, $USER->id, false)
